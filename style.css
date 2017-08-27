@@ -1,0 +1,147 @@
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+body {
+  padding-bottom: 40px;
+  color: #5a5a5a;
+}
+
+#nav {
+  background-color: #889DB5;
+  padding: 5px;
+}
+
+.nav-wrapper a{
+  margin-left: 10px;
+}
+
+.nav-wrapper a:hover{
+  color: #fff;
+  text-decoration: none;
+
+}
+
+.main{
+  padding: 5px;
+}
+
+.header{
+  padding:10px;
+  text-align: center;
+  color: #607185;
+}
+
+.debugger{
+  width: 95%;
+  margin: 10px auto;
+  border:1px solid #889DB5;
+    padding:5px;
+}
+
+.top-bar{
+  width: 100%;
+    padding: 5px;
+  display: inline-block;
+}
+
+.row{
+    padding:0px;
+    margin: 0px;
+}
+
+.btn{
+    margin: 10px;
+    background-color: #889DB5;
+    height:50px;
+    width: 80px;
+    padding: 0px 5px 0px 5px ;
+}
+
+.footer{
+  padding: 10px;
+  text-align:center;
+}
+
+.graph{
+    border: groove #889DB5;
+    margin: 10px;
+    height: 550px;
+    overflow: scroll;
+}
+
+.openList{
+    border: groove #889DB5;
+    height: 220px;
+    width: 100%;
+    overflow: scroll;
+
+}
+
+.closedList{
+    border: groove #889DB5;
+    height: 220px;
+    width: 100%;
+    overflow: scroll;
+
+}
+
+.eventLog{
+    border: groove #889DB5;
+    margin: 10px;
+    height: 220px;
+    padding: 5px;
+    overflow: scroll;
+}
+
+.eventDec{
+    padding: 10px 10px 2px 10px;
+}
+
+.graphBox h4{
+    padding-left: 10px;
+}
+
+.eventLog ol{
+padding: 2px 5px 2px 35px;
+}
+
+.btn i{
+    font-size: 35px;
+    padding: 0px;
+}
+
+.btn:active{
+    background: #fff;
+}
+
+.lists{
+    padding: 5px;
+    margin: 10px;
+}
+
+#eventList li:hover{
+    background-color: #297ba4;
+    color: #000;
+}
+
+#eventList li:focus{
+    background-color: #297ba4;
+    color: #000;
+}
+
+.modal .modal-footer{
+    height: 70px;
+}
+
+#nameForm textarea {
+    width: 100%;
+    height: 100%;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    resize: none;
+}
