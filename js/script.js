@@ -44,52 +44,39 @@ $(document).ready(function () {
 
     });
 
+    $('.playbtn').click(function(){
+        console.log("Play button");
+        var eventItems = $('.eventLog');
+        eventItems.each(function(idx, li){
+            var event = $(li);
+            var xcoordinate = event.children(".x").val();
+            console.log(event)
+        })
+
+    });
+
     $('.stepbtn').click(function () {
-        var eventli = document.createElement("LI");
-        if (currentEventNum <= dataReceived.length) {
-            var newMainItem = document.createTextNode(dataReceived[currentEventNum].type + ", x= " + dataReceived[currentEventNum].x + ", y= " + dataReceived[currentEventNum].y + ", g= " + dataReceived[currentEventNum].g + ", h= " + dataReceived[currentEventNum].h);
-            currentEventNum += 1;
-            if (dataReceived[currentEventNum].type == 'expanding') {
-                var openListli = document.createElement("LI");
-                openList.push(dataReceived[currentEventNum].x);
-                var openListItem = document.createTextNode("[" + openList + "]");
-                openListli.appendChild(openListItem)
-            }
-            if (dataReceived[currentEventNum].type == 'closing') {
-                openList.pop(dataReceived[currentEventNum].x);
-                var closedListli = document.createElement("LI");
-                closedList.push(eventItems[0][i].x);
-                var closedListItem = document.createTextNode("[" + closedList + "]");
-                closedListli.appendChild(closedListItem)
-            }
-            // Append the text to <li>
-            eventli.appendChild(newMainItem);
-            $('#openListConsole').append(openListli);
-            $('#closedListConsole').append(closedListli);
-            $('#eventList').append(eventli);
-            var mydiv = $(".eventLog");
-            mydiv.scrollTop(mydiv.prop("scrollHeight"));
-        }
+        console.log("Step button");
+
+    });
+
+    $('.pausebtn').click(function () {
+        console.log("Pause button");
+
     });
 
     $(document).ready(function(){
         $('.modal').modal();
     });
 
+
     $("#submit1btn").click(function () {
         var getText = document.getElementById('JSONinput').value;
         var currentJSON = JSON.parse(getText);
-        firebase.database().ref('/').set({
-            data:currentJSON
-        });
-        var ref = firebase.database().ref("/data/");
-        ref.once("value").then(function (snapshot) {
-            dataReceived = snapshot.val();
-            dataReceived = dataReceived.eventList;
-            if (dataReceived != null) {
-                window.alert("Data is loaded. Build to show data");
+        dataReceived = currentJSON.eventList;
+        if (dataReceived != null) {
+            window.alert("Data is loaded. Build to show data");
             }
-        });
     });
 
 });
