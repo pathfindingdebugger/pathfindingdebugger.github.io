@@ -5,7 +5,7 @@ var eventItems;
 var openList = [];
 var closedList = [];
 var dataReceived;
-
+console.log("CAKE");
 $(document).ready(function () {
 
 
