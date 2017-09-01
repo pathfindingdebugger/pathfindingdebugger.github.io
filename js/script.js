@@ -5,7 +5,7 @@ var eventItems;
 var openList = [];
 var closedList = [];
 var dataReceived;
-console.log("CAKE");
+console.log("GOD DAMN IT WORK!");
 $(document).ready(function () {
 
 
