@@ -70,7 +70,7 @@ body {
     overflow: scroll;
 }
 
-.openList{
+#openList{
     border: groove #889DB5;
     height: 220px;
     width: 100%;
@@ -78,7 +78,7 @@ body {
 
 }
 
-.closedList{
+#closedList{
     border: groove #889DB5;
     height: 220px;
     width: 100%;

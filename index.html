@@ -31,21 +31,6 @@
     <!-- Custom styles for ths template -->
     <link href="style.css" rel="stylesheet">
 
-    <!--Firebase Authentication-->
-    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-          apiKey: "AIzaSyCKIviEEAWT68NEpD61aIAdH-hyGbO4f-E",
-          authDomain: "warthogresearch.firebaseapp.com",
-          databaseURL: "https://warthogresearch.firebaseio.com",
-          projectId: "warthogresearch",
-          storageBucket: "",
-          messagingSenderId: "1050168913974"
-      };
-      firebase.initializeApp(config);
-    </script>
-
   </head>
 
 
@@ -134,10 +119,8 @@
                     <h4>Open List:</h4>
 
                     <!--OpenList console-->
-                    <div class="lists openList col-lg-6">
-                        <ol>
-                            <div id="openListConsole"></div>
-                        </ol>
+                    <div id="openList" class="col-lg-6">
+
                     </div>
 
                 </div>
@@ -145,10 +128,11 @@
                     <h4>Closed List:</h4>
 
                     <!--ClosedList console-->
-                    <div class="lists closedList col-lg-6">
-                        <ol>
-                            <div id="closedListConsole"></div>
-                        </ol>
+                    <!--<div class="lists closedList col-lg-6">-->
+                    <div id="closedList" class="col-lg-6">
+                        <!--<ol>-->
+                            <!--<div id="closedListConsole"></div>-->
+                        <!--</ol>-->
                     </div>
 
                 </div>
