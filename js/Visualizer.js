@@ -4,6 +4,7 @@ function drawRectsEvents()
     left = svg.getBoundingClientRect().left;
     top = svg.getBoundingClientRect().top;
     console.log("THIS IS REGISTERING");
+    console.log("Test");
 
 }
 
