@@ -61,12 +61,12 @@ $(document).ready(function () {
 
     $('.playbtn').click(function(){
         console.log("Play button");
-        visual.loadMap(3,3,15,"@.@.@.@.@");
+        visual.loadMap(3,3,100,"@.@.@.@.@");
     });
 
     $('.stepbtn').click(function () {
         console.log("Step button");
-        visual.loadMap(3,3,15,".@.@.@.@.");
+        visual.loadMap(5,5,100,".@.@....@..@.@..@.@......");
     });
 
     $('.pausebtn').click(function () {
