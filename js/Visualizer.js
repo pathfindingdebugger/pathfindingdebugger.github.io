@@ -20,7 +20,7 @@ class gridVisulizer
 {
 
 
-    constructor(mapWidth,mapHeight,mapString)
+    constructor(mapWidth,mapHeight,tileSize,mapString)
     {
         this.svg = document.getElementById("viewport");
         this.tileArray = new Array(mapWidth*mapHeight);
@@ -29,12 +29,14 @@ class gridVisulizer
         {
             for(let j = 0; j < mapWidth;j++)
             {
-                console.log(10*j + ":" + 10*i);
+                const stringIndex = i*mapWidth+j;
+                console.log(tileSize*j + ":" + tileSize*i + " String pos: "+ stringIndex);
                 this.tileArray[i*mapWidth+j] = new Elem(this.svg, 'rect')
-                    .attr('x', 10*j).attr('y', 10*i)
-                    .attr('width', 10).attr('height', 10)
-                    .attr('fill', 'white')
+                    .attr('x', tileSize*j).attr('y', tileSize*i)
+                    .attr('width', tileSize).attr('height', tileSize)
+                    .attr('fill', (mapString[stringIndex] == "@")? 'white':'black' )
                     .attr('stroke','black');
+
             }
         }
     }
@@ -45,6 +47,6 @@ class gridVisulizer
 
 if (typeof window != 'undefined')
     window.onload = function(){
-    visual = new gridVisulizer(10,10,"")
+    visual = new gridVisulizer(3,3,100,"@@@@.@@@@")
 
 };

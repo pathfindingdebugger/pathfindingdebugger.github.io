@@ -41,7 +41,7 @@ $(document).ready(function () {
             mydiv.scrollTop(mydiv.prop("scrollHeight"));
 
 
-            $('.graph').load('android.svg');
+            $('.graph').load('tiger.svg');
 
         } else {
             window.alert("No data loaded. Please select file and load data.")
