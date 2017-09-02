@@ -1,6 +1,6 @@
 function drawRectsEvents()
 {
-    const svg = document.getElementById("animatedRect");
+    const svg = document.getElementById("viewport");
     left = svg.getBoundingClientRect().left;
     top = svg.getBoundingClientRect().top;
     console.log("THIS IS REGISTERING");
@@ -22,7 +22,7 @@ class gridVisulizer
 
     constructor(mapWidth,mapHeight,mapString)
     {
-        this.svg = document.getElementById("animatedRect");
+        this.svg = document.getElementById("viewport");
         this.tileArray = new Array(mapWidth*mapHeight);
 
         for(let i = 0; i < mapHeight;i++)
