@@ -1,3 +1,5 @@
+//Created 2/9/17 by Jay
+
 function drawRectsEvents()
 {
     const svg = document.getElementById("viewport");
@@ -18,11 +20,18 @@ function drawRectsEvents()
 }
 class gridVisulizer
 {
-
-
     constructor(mapWidth,mapHeight,tileSize,mapString)
     {
         this.svg = document.getElementById("viewport");
+        this.tileArray = null;
+        this.breakPoints = [];
+    }
+    loadMap(mapWidth,mapHeight,tileSize,mapString)
+    {
+        if(this.tileArray !== null)
+        {
+            this.svg.childNodes.forEach(child=>child.remove());
+        }
         this.tileArray = new Array(mapWidth*mapHeight);
 
         for(let i = 0; i < mapHeight;i++)
@@ -34,8 +43,9 @@ class gridVisulizer
                 this.tileArray[i*mapWidth+j] = new Elem(this.svg, 'rect')
                     .attr('x', tileSize*j).attr('y', tileSize*i)
                     .attr('width', tileSize).attr('height', tileSize)
-                    .attr('fill', (mapString[stringIndex] == "@")? 'white':'black' )
-                    .attr('stroke','black');
+                    .attr('fill', (mapString[stringIndex] === ".")? 'white':'black' )
+                    .attr('stroke','black')
+                    .observe(Observable.fromEvent<MouseEvent>("mousedown").filter(e=>e.shift()).subscribe(i=>console.log(this.attr(x)+","+this.attr(y))));
 
             }
         }
@@ -45,8 +55,9 @@ class gridVisulizer
 
 
 
-if (typeof window != 'undefined')
+if (typeof window !== 'undefined')
     window.onload = function(){
-    visual = new gridVisulizer(3,3,100,"@@@@.@@@@")
+    visual = new gridVisulizer()
 
 };
+
