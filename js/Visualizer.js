@@ -6,7 +6,7 @@ function drawRectsEvents()
     console.log("THIS IS REGISTERING");
     console.log("Test");
 
-    var rect = new Elem(svg, 'rect')
+    let rect = new Elem(svg, 'rect')
         .attr('x', 100).attr('y', 70)
         .attr('width', 120).attr('height', 80)
         .attr('fill', '#95B3D7');
