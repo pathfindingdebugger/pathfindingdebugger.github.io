@@ -10,7 +10,7 @@ $(document).ready(function () {
 
 
     $('.buildbtn').click(function () {
-        if (dataReceived != null) {
+        if (dataReceived !== null) {
             for (i = currentEventNum; i <= dataReceived.length - 1; i++) {
                 var eventli = document.createElement("LI");
                 eventli.setAttribute("id", i);

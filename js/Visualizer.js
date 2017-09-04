@@ -23,8 +23,10 @@ class gridVisulizer
     constructor(mapWidth,mapHeight,tileSize,mapString)
     {
         this.svg = document.getElementById("viewport");
+
         this.tileArray = null;
         this.breakPoints = new Array(0);
+        this.breakPointVisual = new Array(0);
     }
     generateBreakPoint(xInput,yInput)
     {
@@ -44,17 +46,34 @@ class gridVisulizer
                 .filter((e)=>e.which === 3)
                 .subscribe( _ => {this.breakPoints.splice(this.breakPoints.indexOf(xInput+":"+yInput),1);breakPoint.elem.remove()});
 
-
+            this.breakPointVisual.push(breakPoint);
         }
     }
     loadMap(mapWidth,mapHeight,tileSize,mapString)
     {
+        //Destroy old map
         this.tileSize = tileSize;
+        console.log(this.mapWidth + " : " + this.mapHeight);
         if(this.tileArray !== null)
         {
-            this.svg.childNodes.forEach(child=>child.remove());
+            for(let i = 0; i < this.mapHeight;i++ )
+            {
+                for(let j = 0; j < this.mapWidth;j++)
+                {
+                    this.tileArray[i*this.mapWidth+j].removeElement();
+                }
+            }
+            for(let i = 0; i < this.breakPoints.length;i++)
+            {
+                console.log("Should get them all");
+                this.breakPointVisual[i].removeElement();
+            }
         }
 
+        // build a new one
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
+        this.breakPoints = new Array(0);
         this.tileArray = new Array(mapWidth*mapHeight);
 
         for(let i = 0; i < mapHeight;i++)
@@ -62,7 +81,6 @@ class gridVisulizer
             for(let j = 0; j < mapWidth;j++)
             {
                 const stringIndex = i*mapWidth+j;
-                console.log(tileSize*j + ":" + tileSize*i + " String pos: "+ stringIndex);
                 this.tileArray[i*mapWidth+j] = new Elem(this.svg, 'rect')
                     .attr('x', tileSize*j).attr('y', tileSize*i)
                     .attr('width', tileSize).attr('height', tileSize)
