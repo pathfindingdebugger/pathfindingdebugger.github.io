@@ -5,8 +5,7 @@ function drawRectsEvents()
     const svg = document.getElementById("viewport");
     left = svg.getBoundingClientRect().left;
     top = svg.getBoundingClientRect().top;
-    console.log("THIS IS REGISTERING");
-    console.log("Test");
+
 
     let rect = new Elem(svg, 'rect')
         .attr('x', 100).attr('y', 70)
