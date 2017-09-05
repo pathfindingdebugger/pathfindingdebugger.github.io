@@ -32,7 +32,7 @@ class Observable {
     }
     static fromEvent(el, name) {
         return new Observable((observer) => {
-            const listener = (e) => { e.stopPropagation(); observer.next(e); };
+            const listener = (e) => { /*e.stopPropagation();*/ observer.next(e); };
             el.addEventListener(name, listener);
             return () => { };
         });

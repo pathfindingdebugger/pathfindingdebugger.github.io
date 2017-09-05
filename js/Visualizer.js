@@ -17,6 +17,7 @@ function drawRectsEvents()
         clearInterval(timer);
         }, 1000);
 }
+
 class gridVisulizer
 {
     constructor(mapWidth,mapHeight,tileSize,mapString)
@@ -26,30 +27,38 @@ class gridVisulizer
         this.tileArray = null;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
+
+        this.scroll(this.svg)
     }
     generateBreakPoint(xInput,yInput)
     {
+
         if(this.breakPoints.indexOf(xInput+":"+yInput) === -1 )
         {
             this.breakPoints.push(xInput+":"+yInput);
             console.log("Still making");
-            const breakPoint = new Elem(this.svg,'rect')
-                .attr("height",this.tileSize*0.5)
-                .attr("width",this.tileSize*0.5)
-                .attr("x",xInput*this.tileSize+0.25*this.tileSize)
-                .attr("y",yInput*this.tileSize+0.25*this.tileSize)
+            const breakPoint = new Elem(this.svg,'circle')
+                .attr("r",this.tileSize*0.25)
+                .attr("cx",xInput*this.tileSize+0.5*this.tileSize)
+                .attr("cy",yInput*this.tileSize+0.5*this.tileSize)
                 .attr("stroke","black")
                 .attr("fill","red");
-
+            this.breakPointVisual.push(breakPoint);
             breakPoint.observeEvent('mousedown')
                 .filter((e)=>e.which === 3)
                 .subscribe( _ => {this.breakPoints.splice(this.breakPoints.indexOf(xInput+":"+yInput),1);breakPoint.elem.remove()});
 
-            this.breakPointVisual.push(breakPoint);
+
         }
+    }
+    SetNodeState(x,y,state)
+    {
+        //switch()
+        //this.tileArray[y*this.mapWidth+x].attr()
     }
     loadMap(mapWidth,mapHeight,tileSize,mapString)
     {
+        this.svg.setAttribute("viewBox","0 0 500 500");
         //Destroy old map
         this.tileSize = tileSize;
         console.log(this.mapWidth + " : " + this.mapHeight);
@@ -64,8 +73,8 @@ class gridVisulizer
             }
             for(let i = 0; i < this.breakPoints.length;i++)
             {
-                console.log("Should get them all");
-                this.breakPointVisual[i].removeElement();
+                console.log(i+" Should get them all");
+                this.breakPointVisual[i].elem.remove();
             }
         }
 
@@ -79,6 +88,7 @@ class gridVisulizer
         {
             for(let j = 0; j < mapWidth;j++)
             {
+
                 const stringIndex = i*mapWidth+j;
                 this.tileArray[i*mapWidth+j] = new Elem(this.svg, 'rect')
                     .attr('x', tileSize*j).attr('y', tileSize*i)
@@ -94,6 +104,51 @@ class gridVisulizer
 
             }
         }
+    }
+
+    scroll(svg)
+    {
+    const mousedrag = Observable.fromEvent(svg, 'mousedown')
+        .filter(e=>e.which === 1)
+        .map(e=>({event:e, svgBounds: svg.getBoundingClientRect()}))
+        .map(({event, svgBounds})=> {
+            const ob = {sx:event.clientX - svgBounds.left,
+                sy: event.clientY - svgBounds.top,
+                svgBounds: svgBounds};
+
+            return ob; })
+        .subscribe(({sx,sy,svgBounds})=>{
+
+            const ox = sx, oy = sy;
+            Observable.fromEvent(svg, 'mousemove')
+                .takeUntil(Observable.fromEvent(svg, 'mouseup'))
+                .takeUntil(Observable.fromEvent(svg,'onmouseout'))
+                .map(({clientX, clientY})=>({
+                    ox, oy,
+                    x: clientX - svgBounds.left,
+                    y: clientY - svgBounds.top}))
+                .subscribe((input)=> {
+                        const viewBoxData = svg.getAttribute("viewBox");
+                        if(viewBoxData === null)
+                        {
+                            svg.setAttribute("viewBox",0 + " " +0+" 50 50")
+
+                        }
+                        else
+                        {
+                            console.log(viewBoxData);
+                            const data = viewBoxData.split(/\s+|,/);
+                            console.log(data);
+                            const x = Math.min(Math.max(parseFloat(data[0])+(input.x - input.ox)/2,0),this.mapWidth*this.tileSize);
+                            const y =  Math.min(Math.max(parseFloat(data[1])+(input.y - input.oy)/2,0),this.mapHeight*this.tileSize);
+                            svg.setAttribute("viewBox", x+" "+y+" 500 500")
+
+                        }
+                    }
+
+
+                );
+        });
     }
 
 

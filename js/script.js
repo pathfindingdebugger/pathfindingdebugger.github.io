@@ -5,6 +5,13 @@ var eventItems;
 var openList = [];
 var closedList = [];
 var dataReceived;
+
+states = {
+    NotSearched:0,
+    inFrontier:1,
+    expanded:2
+};
+
 console.log("GOD DAMN IT WORK!");
 $(document).ready(function () {
 
