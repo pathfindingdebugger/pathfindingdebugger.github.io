@@ -107,7 +107,7 @@ function setupHandlers(root){
  * Retrieves the root element for SVG manipulation. The element is then cached into the svgRoot global variable.
  */
 function getRoot(root) {
-	if(svgRoot == null) {
+	if(root == null) {
 		var r = root.getElementById("viewport") ? root.getElementById("viewport") : root.documentElement, t = r;
 
 		while(t != root) {

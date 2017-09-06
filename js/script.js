@@ -6,10 +6,12 @@ var openList = [];
 var closedList = [];
 var dataReceived;
 
-states = {
+const states = {
     NotSearched:0,
     inFrontier:1,
-    expanded:2
+    expanded:2,
+    start:3,
+    goal:4,
 };
 
 console.log("GOD DAMN IT WORK!");
@@ -89,6 +91,11 @@ $(document).ready(function () {
     $("#submit1btn").click(function () {
         var getText = document.getElementById('JSONinput').value;
         var currentJSON = JSON.parse(getText);
+
+        var mapData = currentJSON.map;
+        visual.loadMap(currentJSON.map.width,currentJSON.map.hieght,currentJSON.map.mapdata);
+
+
         dataReceived = currentJSON.eventList;
         if (dataReceived != null) {
             window.alert("Data is loaded. Build to show data");

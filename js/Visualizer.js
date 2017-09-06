@@ -44,6 +44,7 @@ class gridVisulizer
                 .attr("stroke","black")
                 .attr("fill","red");
             this.breakPointVisual.push(breakPoint);
+
             breakPoint.observeEvent('mousedown')
                 .filter((e)=>e.which === 3)
                 .subscribe( _ => {this.breakPoints.splice(this.breakPoints.indexOf(xInput+":"+yInput),1);breakPoint.elem.remove()});
@@ -51,10 +52,29 @@ class gridVisulizer
 
         }
     }
-    SetNodeState(x,y,state)
+    //This function sets the node colour the states are given in the states enum
+    setNodeState(x,y,state)
     {
-        //switch()
-        //this.tileArray[y*this.mapWidth+x].attr()
+        switch(state)
+        {
+            case states.NotSearched:
+                this.tileArray[y*this.mapWidth+x].attr("fill","#ffffff");
+                break;
+            case states.expanded:
+                this.tileArray[y*this.mapWidth+x].attr("fill","#00f6ff");
+                break;
+            case states.inFrontier:
+                this.tileArray[y*this.mapWidth+x].attr("fill","#0032ff");
+                break;
+            case states.start:
+                this.tileArray[y*this.mapWidth+x].attr("fill","#09ff00");
+                break;
+            case states.goal:
+                this.tileArray[y*this.mapWidth+x].attr("fill","#fff220");
+                break;
+
+        }
+
     }
     loadMap(mapWidth,mapHeight,tileSize,mapString)
     {
@@ -79,11 +99,12 @@ class gridVisulizer
         }
 
         // build a new one
+        print(mapWidth + "  " + mapHeight + " " + mapString);
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.breakPoints = new Array(0);
         this.tileArray = new Array(mapWidth*mapHeight);
-
+        mapString = mapString.replace('\n','');
         for(let i = 0; i < mapHeight;i++)
         {
             for(let j = 0; j < mapWidth;j++)
@@ -93,7 +114,7 @@ class gridVisulizer
                 this.tileArray[i*mapWidth+j] = new Elem(this.svg, 'rect')
                     .attr('x', tileSize*j).attr('y', tileSize*i)
                     .attr('width', tileSize).attr('height', tileSize)
-                    .attr('fill', (mapString[stringIndex] === ".")? 'white':'black' )
+                    .attr('fill', (mapString[stringIndex] === ".")? 'white': (mapString[stringIndex] === "@")? 'black' :"#777679" )
                     .attr('stroke','black');
 
                 this.tileArray[i*mapWidth+j].observeEvent('mousedown')
@@ -104,6 +125,8 @@ class gridVisulizer
 
             }
         }
+
+
     }
 
     scroll(svg)
