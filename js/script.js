@@ -30,6 +30,15 @@ $(document).ready(function () {
                 eventli.appendChild(newMainItem);
                 $('#eventList').append(eventli);
             }
+            var getText = document.getElementById('JSONinput').value;
+            var currentJSON = JSON.parse(getText);
+
+            var mapData = currentJSON.Map;
+
+            console.log(mapData);
+            visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
+
+
             var mydiv = $(".eventLog");
             mydiv.scrollTop(mydiv.prop("scrollHeight"));
 
@@ -92,11 +101,10 @@ $(document).ready(function () {
         var getText = document.getElementById('JSONinput').value;
         var currentJSON = JSON.parse(getText);
 
-        var mapData = currentJSON.Map;
-
-        console.log(mapData);
-        visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
-
+        // var mapData = currentJSON.Map;
+        //
+        // console.log(mapData);
+        // visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
 
         dataReceived = currentJSON.eventList;
         if (dataReceived != null) {
