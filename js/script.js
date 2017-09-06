@@ -95,7 +95,7 @@ $(document).ready(function () {
         var mapData = currentJSON.Map;
 
         console.log(mapData);
-        visual.loadMap(mapData.mapWidth,mapData.mapWieght,mapData.mapdata);
+        visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
 
 
         dataReceived = currentJSON.eventList;

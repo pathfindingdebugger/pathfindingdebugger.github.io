@@ -99,25 +99,26 @@ class gridVisulizer
         }
 
         // build a new one
-        print(mapWidth + " tse " + mapHeight + " " + mapString);
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
+        console.log(mapWidth + " tse " + mapHeight + " " + mapString);
+        this.mapWidth = parseInt(mapWidth);
+        this.mapHeight = parseInt(mapHeight);
         this.breakPoints = new Array(0);
-        this.tileArray = new Array(mapWidth*mapHeight);
+        const size = parseInt(mapWidth)*parseInt(mapHeight);
+        this.tileArray = new Array(size);
         //mapString = mapString.replace('\n','');
-        for(let i = 0; i < mapHeight;i++)
+        for(let i = 0; i < this.mapHeight;i++)
         {
-            for(let j = 0; j < mapWidth;j++)
+            for(let j = 0; j < this.mapWidth;j++)
             {
 
-                const stringIndex = i*mapWidth+j;
-                this.tileArray[i*mapWidth+j] = new Elem(this.svg, 'rect')
-                    .attr('x', tileSize*j).attr('y', tileSize*i)
-                    .attr('width', tileSize).attr('height', tileSize)
+                const stringIndex = i*this.mapWidth+j;
+                this.tileArray[i*this.mapWidth+j] = new Elem(this.svg, 'rect')
+                    .attr('x', this.tileSize*j).attr('y', this.tileSize*i)
+                    .attr('width', this.tileSize).attr('height', this.tileSize)
                     .attr('fill', (mapString[stringIndex] === ".")? 'white': (mapString[stringIndex] === "@")? 'black' :"#777679" )
                     .attr('stroke','black');
 
-                this.tileArray[i*mapWidth+j].observeEvent('mousedown')
+                this.tileArray[i*this.mapWidth+j].observeEvent('mousedown')
                     .filter(e=>e.shiftKey)
                     .map(e=>{return {i,j}})
                     .subscribe(data=>this.generateBreakPoint(j,i));
