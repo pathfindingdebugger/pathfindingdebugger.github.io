@@ -92,8 +92,10 @@ $(document).ready(function () {
         var getText = document.getElementById('JSONinput').value;
         var currentJSON = JSON.parse(getText);
 
-        var mapData = currentJSON.map;
-        visual.loadMap(currentJSON.map.width,currentJSON.map.hieght,currentJSON.map.mapdata);
+        var mapData = currentJSON.Map;
+
+        console.log(mapData);
+        visual.loadMap(mapData.mapWidth,mapData.mapWieght,mapData.mapdata);
 
 
         dataReceived = currentJSON.eventList;

@@ -99,12 +99,12 @@ class gridVisulizer
         }
 
         // build a new one
-        print(mapWidth + "  " + mapHeight + " " + mapString);
+        print(mapWidth + " tse " + mapHeight + " " + mapString);
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.breakPoints = new Array(0);
         this.tileArray = new Array(mapWidth*mapHeight);
-        mapString = mapString.replace('\n','');
+        //mapString = mapString.replace('\n','');
         for(let i = 0; i < mapHeight;i++)
         {
             for(let j = 0; j < mapWidth;j++)
