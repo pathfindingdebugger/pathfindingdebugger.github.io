@@ -99,11 +99,15 @@ class gridVisulizer
         }
 
         // build a new one
-        print(mapWidth + " tse " + mapHeight + " " + mapString);
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
+        console.log(mapWidth + " tse " + mapHeight + " " + mapString);
+        this.mapWidth = parseInt(mapWidth);
+        this.mapHeight = parseInt(mapHeight);
+
+
+
+        this.tileArray = new Array(parseInt(mapWidth)*parseInt(mapHeight));
         this.breakPoints = new Array(0);
-        this.tileArray = new Array(mapWidth*mapHeight);
+
         //mapString = mapString.replace('\n','');
         for(let i = 0; i < mapHeight;i++)
         {
