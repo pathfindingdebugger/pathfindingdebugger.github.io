@@ -20,31 +20,24 @@ $(document).ready(function () {
 
 
     $('.buildbtn').click(function () {
-        if (dataReceived !== null) {
-            for (i = currentEventNum; i <= dataReceived.length - 1; i++) {
-                var eventli = document.createElement("LI");
-                eventli.setAttribute("id", i);
-                var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
-                currentEventNum += 1;
-
-                eventli.appendChild(newMainItem);
-                $('#eventList').append(eventli);
-            }
-            var getText = document.getElementById('JSONinput').value;
-            var currentJSON = JSON.parse(getText);
-
-            var mapData = currentJSON.Map;
-
-            console.log(mapData);
-            visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
-
-
-            var mydiv = $(".eventLog");
-            mydiv.scrollTop(mydiv.prop("scrollHeight"));
-
-        } else {
-            window.alert("No data loaded. Please select file and load data.")
-        }
+        // if (dataReceived !== null) {
+        //     for (i = currentEventNum; i <= dataReceived.length - 1; i++) {
+        //         var eventli = document.createElement("LI");
+        //         eventli.setAttribute("id", i);
+        //         var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
+        //         currentEventNum += 1;
+        //
+        //         eventli.appendChild(newMainItem);
+        //         $('#eventList').append(eventli);
+        //     }
+        //
+        //
+        //     var mydiv = $(".eventLog");
+        //     mydiv.scrollTop(mydiv.prop("scrollHeight"));
+        //
+        // } else {
+        //     window.alert("No data loaded. Please select file and load data.")
+        // }
 
     });
 
@@ -100,16 +93,26 @@ $(document).ready(function () {
     $("#submit1btn").click(function () {
         var getText = document.getElementById('JSONinput').value;
         var currentJSON = JSON.parse(getText);
-
-        // var mapData = currentJSON.Map;
-        //
-        // console.log(mapData);
-        // visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
-
         dataReceived = currentJSON.eventList;
-        if (dataReceived != null) {
-            window.alert("Data is loaded. Build to show data");
+        var mapData = currentJSON.Map;
+
+        console.log(mapData);
+        visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
+
+            for (i = currentEventNum; i <= dataReceived.length - 1; i++) {
+                var eventli = document.createElement("LI");
+                eventli.setAttribute("id", i);
+                var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
+                currentEventNum += 1;
+
+                eventli.appendChild(newMainItem);
+                $('#eventList').append(eventli);
             }
+
+
+            var mydiv = $(".eventLog");
+            mydiv.scrollTop(mydiv.prop("scrollHeight"));
+
     });
 
 });
