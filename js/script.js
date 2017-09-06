@@ -15,6 +15,7 @@ const states = {
 };
 
 console.log("GOD DAMN IT WORK!");
+console.log("AHAHAHAHAA");
 $(document).ready(function () {
 
 
@@ -25,32 +26,12 @@ $(document).ready(function () {
                 eventli.setAttribute("id", i);
                 var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
                 currentEventNum += 1;
-                //
-                // if (dataReceived[i].type == 'expanding') {
-                //     var openListli = document.createElement("LI");
-                //     openList.push(dataReceived[i].x);
-                //     var openListItem = document.createTextNode("[" + openList + "]");
-                //     openListli.appendChild(openListItem)
-                // }
-                //
-                // if (dataReceived[i].type == 'closing') {
-                //     openList.pop(dataReceived[i].x);
-                //     var closedListli = document.createElement("LI");
-                //     closedList.push(dataReceived[i].x);
-                //     var closedListItem = document.createTextNode("[" + closedList + "]");
-                //     closedListli.appendChild(closedListItem)
-                // }
 
                 eventli.appendChild(newMainItem);
-                // $('#openListConsole').append(openListli);
-                // $('#closedListConsole').append(closedListli);
                 $('#eventList').append(eventli);
             }
             var mydiv = $(".eventLog");
             mydiv.scrollTop(mydiv.prop("scrollHeight"));
-
-
-            $('.graph').load('tiger.svg');
 
         } else {
             window.alert("No data loaded. Please select file and load data.")
@@ -67,26 +48,45 @@ $(document).ready(function () {
 
     });
 
+    $('.playbtn').click(function() {
+        if(dataReceived!= null) {
+            $('.eventList li').each(function () {
+                // console.log($(this).text);
+                console.log("Done")
+            })
 
-    $('.playbtn').click(function(){
-        console.log("Play button");
-        visual.loadMap(3,3,100,"@.@.@.@.@");
+        }
+
     });
+
+        // listItems = $('.eventOl').find('li');
+        // for (var li in listItems){
+        //     var item = $(li);
+        //     var id = item.id;
+        //     console.log(id)
+        // }
+
+        // var eventList = document.getElementById(eventList);
+        // var eventOl = eventList.getElementById(eventOl);
+        // var eventLi = eventOl.getElementsByTagName("li");
+        // for (var i = 0; i< eventLi.length; i++){
+        //     console.log(eventLi)
+        // }
+    // });
 
     $('.stepbtn').click(function () {
         console.log("Step button");
-        visual.loadMap(5,5,100,".@.@....@..@.@..@.@......");
+        visual.loadMap(5,5,100,".@.@....@..@.@..@.@..........");
     });
 
     $('.pausebtn').click(function () {
         console.log("Pause button");
-
+        visual.loadMap(3,3,100,"@.@.@.@.@");
     });
 
     $(document).ready(function(){
         $('.modal').modal();
     });
-
 
     $("#submit1btn").click(function () {
         var getText = document.getElementById('JSONinput').value;
