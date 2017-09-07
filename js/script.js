@@ -16,6 +16,7 @@ const states = {
 
 
 $(document).ready(function () {
+    console.log("new1");
 
     $('#eventList').on('click', 'li', function(ev) {
         var id = this.id;
@@ -33,9 +34,11 @@ $(document).ready(function () {
             var eventList = $("#eventList li");
             eventList.each(function (idx, li) {
                 var items = $(li).attr('id');
-                console.log("x= "+eventItems[items][0]+","+" y= "+eventItems[items][1]);
-                visual.setNodeState(eventItems[items][0],eventItems[items][1]-1,states.goal);
-            });
+                // if(eventItems[items][2] == "expanding") {
+                    console.log("x= " + eventItems[items][1] + "," + " y= " + eventItems[items][0] + "type: "+eventItems[items][2] );
+                    visual.setNodeState(eventItems[items][1], (eventItems[items][0]) , states.goal);
+                // }
+                });
         }
         run();
         }else{
@@ -72,7 +75,7 @@ $(document).ready(function () {
             var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
             currentEventNum += 1;
 
-            eventItems.push([dataReceived[i].x,dataReceived[i].y]);
+            eventItems.push([dataReceived[i].x,dataReceived[i].y,dataReceived[i].type]);
 
             eventli.appendChild(newMainItem);
             $('#eventList').append(eventli);
