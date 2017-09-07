@@ -46,7 +46,7 @@ class gridVisulizer
             this.breakPointVisual.push(breakPoint);
 
             breakPoint.observeEvent('mousedown')
-                .filter((e)=>e.which === 3)
+                .filter(e=>e.shiftKey)
                 .subscribe( _ => {this.breakPoints.splice(this.breakPoints.indexOf(xInput+":"+yInput),1);breakPoint.elem.remove()});
 
 
@@ -126,7 +126,6 @@ class gridVisulizer
 
             }
         }
-
 
     }
 
