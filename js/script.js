@@ -18,7 +18,6 @@ const states = {
 
 
 $(document).ready(function () {
-    console.log("new1");
 
     $('#eventList').on('click', 'li', function(ev) {
         var id = this.id;
@@ -28,6 +27,7 @@ $(document).ready(function () {
         document.getElementById('closedList').innerHTML = thisList;
 
     });
+
 
     function run(event) {
         console.log(event.x, event.y);
@@ -112,7 +112,8 @@ $(document).ready(function () {
 
         var mydiv = $(".eventLog");
         mydiv.scrollTop(mydiv.prop("scrollHeight"));
-
     });
+
+
 
 });
