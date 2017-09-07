@@ -55,24 +55,29 @@ class gridVisulizer
     //This function sets the node colour the states are given in the states enum
     setNodeState(x,y,state)
     {
-        switch(state)
-        {
-            case states.NotSearched:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#ffffff");
-                break;
-            case states.expanded:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#00f6ff");
-                break;
-            case states.inFrontier:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#0032ff");
-                break;
-            case states.start:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#09ff00");
-                break;
-            case states.goal:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#fff220");
-                break;
 
+        if(0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight)
+        {
+            console.log(x,this.mapWidth,y,this.mapHeight);
+            switch(state)
+            {
+                case states.NotSearched:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#ffffff");
+                    break;
+                case states.expanded:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#00f6ff");
+                    break;
+                case states.inFrontier:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#0032ff");
+                    break;
+                case states.start:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#09ff00");
+                    break;
+                case states.goal:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#fff220");
+                    break;
+
+            }
         }
 
     }
@@ -140,6 +145,7 @@ class gridVisulizer
                 svgBounds: svgBounds};
 
             return ob; })
+
         .subscribe(({sx,sy,svgBounds})=>{
 
             const ox = sx, oy = sy;
