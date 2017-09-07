@@ -72,7 +72,7 @@ body {
 
 #openList{
     border: groove #889DB5;
-    height: 220px;
+    height: 50px;
     width: 100%;
     overflow: scroll;
 
@@ -80,10 +80,52 @@ body {
 
 #closedList{
     border: groove #889DB5;
-    height: 220px;
+    height: 50px;
     width: 100%;
     overflow: scroll;
 
+}
+
+
+#legend{
+    border: groove #889DB5;
+    height: 320px;
+    width: 100%;
+    padding:10px;
+}
+
+#legend ul li{
+    padding: 10px;
+}
+
+#id1{
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    display: inline-block;
+    border: 1px solid #000000;
+}
+
+#id2{
+    width: 40px;
+    height: 40px;
+    background-color: #000000;
+    display: inline-block;
+    /*done*/
+}
+
+#id3{
+    width: 40px;
+    height: 40px;
+    background-color: #5bc0de;
+    display: inline-block;
+}
+
+#id4{
+    width: 40px;
+    height: 40px;
+    background-color: #3b6ade;
+    display: inline-block;
 }
 
 .eventLog{
@@ -103,7 +145,7 @@ body {
 }
 
 .eventLog ol{
-padding: 2px 5px 2px 35px;
+padding: 2px 5px 2px 60px;
 }
 
 .btn i{
@@ -113,6 +155,10 @@ padding: 2px 5px 2px 35px;
 
 .btn:active{
     background: #fff;
+}
+
+.changeSpeed{
+    width: 100%;
 }
 
 .lists{

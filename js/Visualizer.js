@@ -36,7 +36,7 @@ class gridVisulizer
         if(this.breakPoints.indexOf(xInput+":"+yInput) === -1 )
         {
             this.breakPoints.push(xInput+":"+yInput);
-            console.log("Still making");
+            // console.log("Still making");
             const breakPoint = new Elem(this.svg,'circle')
                 .attr("r",this.tileSize*0.25)
                 .attr("cx",xInput*this.tileSize+0.5*this.tileSize)
@@ -46,7 +46,7 @@ class gridVisulizer
             this.breakPointVisual.push(breakPoint);
 
             breakPoint.observeEvent('mousedown')
-                .filter((e)=>e.which === 3)
+                .filter(e=>e.shiftKey)
                 .subscribe( _ => {this.breakPoints.splice(this.breakPoints.indexOf(xInput+":"+yInput),1);breakPoint.elem.remove()});
 
 
@@ -55,24 +55,30 @@ class gridVisulizer
     //This function sets the node colour the states are given in the states enum
     setNodeState(x,y,state)
     {
-        switch(state)
+        y = y-3;
+        // console.log("CAKE");
+        if(0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight)
         {
-            case states.NotSearched:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#ffffff");
-                break;
-            case states.expanded:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#00f6ff");
-                break;
-            case states.inFrontier:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#0032ff");
-                break;
-            case states.start:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#09ff00");
-                break;
-            case states.goal:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#fff220");
-                break;
+            // console.log(x,this.mapWidth,y,this.mapHeight);
+            switch(state)
+            {
+                case states.NotSearched:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#ffffff");
+                    break;
+                case states.expanded:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#00f6ff");
+                    break;
+                case states.inFrontier:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#0032ff");
+                    break;
+                case states.start:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#09ff00");
+                    break;
+                case states.goal:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#fff220");
+                    break;
 
+            }
         }
 
     }
@@ -81,7 +87,7 @@ class gridVisulizer
         this.svg.setAttribute("viewBox","0 0 500 500");
         //Destroy old map
         this.tileSize = tileSize;
-        console.log(this.mapWidth + " : " + this.mapHeight);
+        // console.log(this.mapWidth + " : " + this.mapHeight);
         if(this.tileArray !== null)
         {
             for(let i = 0; i < this.mapHeight;i++ )
@@ -93,35 +99,32 @@ class gridVisulizer
             }
             for(let i = 0; i < this.breakPoints.length;i++)
             {
-                console.log(i+" Should get them all");
+                // console.log(i+" Should get them all");
                 this.breakPointVisual[i].elem.remove();
             }
         }
 
         // build a new one
-        console.log(mapWidth + " tse " + mapHeight + " " + mapString);
+        // console.log(mapWidth + " tse " + mapHeight + " " + mapString);
         this.mapWidth = parseInt(mapWidth);
         this.mapHeight = parseInt(mapHeight);
-
-
-
-        this.tileArray = new Array(parseInt(mapWidth)*parseInt(mapHeight));
         this.breakPoints = new Array(0);
-
+        const size = parseInt(mapWidth)*parseInt(mapHeight);
+        this.tileArray = new Array(size);
         //mapString = mapString.replace('\n','');
-        for(let i = 0; i < mapHeight;i++)
+        for(let i = 0; i < this.mapHeight;i++)
         {
-            for(let j = 0; j < mapWidth;j++)
+            for(let j = 0; j < this.mapWidth;j++)
             {
 
-                const stringIndex = i*mapWidth+j;
-                this.tileArray[i*mapWidth+j] = new Elem(this.svg, 'rect')
-                    .attr('x', tileSize*j).attr('y', tileSize*i)
-                    .attr('width', tileSize).attr('height', tileSize)
+                const stringIndex = i*this.mapWidth+j;
+                this.tileArray[i*this.mapWidth+j] = new Elem(this.svg, 'rect')
+                    .attr('x', this.tileSize*j).attr('y', this.tileSize*i)
+                    .attr('width', this.tileSize).attr('height', this.tileSize)
                     .attr('fill', (mapString[stringIndex] === ".")? 'white': (mapString[stringIndex] === "@")? 'black' :"#777679" )
                     .attr('stroke','black');
 
-                this.tileArray[i*mapWidth+j].observeEvent('mousedown')
+                this.tileArray[i*this.mapWidth+j].observeEvent('mousedown')
                     .filter(e=>e.shiftKey)
                     .map(e=>{return {i,j}})
                     .subscribe(data=>this.generateBreakPoint(j,i));
@@ -129,7 +132,6 @@ class gridVisulizer
 
             }
         }
-
 
     }
 
@@ -144,6 +146,7 @@ class gridVisulizer
                 svgBounds: svgBounds};
 
             return ob; })
+
         .subscribe(({sx,sy,svgBounds})=>{
 
             const ox = sx, oy = sy;
@@ -163,9 +166,9 @@ class gridVisulizer
                         }
                         else
                         {
-                            console.log(viewBoxData);
+                            //console.log(viewBoxData);
                             const data = viewBoxData.split(/\s+|,/);
-                            console.log(data);
+                            //console.log(data);
                             const x = Math.min(Math.max(parseFloat(data[0])+(input.x - input.ox)/2,0),this.mapWidth*this.tileSize);
                             const y =  Math.min(Math.max(parseFloat(data[1])+(input.y - input.oy)/2,0),this.mapHeight*this.tileSize);
                             svg.setAttribute("viewBox", x+" "+y+" 500 500")
