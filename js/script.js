@@ -5,7 +5,7 @@ var eventItems = [];
 var openList = [];
 var closedList = [];
 var dataReceived;
-var i = 0;
+let i = 0;
 
 const states = {
     NotSearched:0,
@@ -28,47 +28,28 @@ $(document).ready(function () {
 
     });
 
+    function run(event) {
+        console.log(event.x, event.y);
+
+        switch (event.type) {
+            case "generating":
+                visual.setNodeState(event.x, event.y, states.inFrontier);
+                break;
+            case "updating":
+                visual.setNodeState(event.x, event.y, states.inFrontier);
+                break;
+            case "closing":
+                visual.setNodeState(event.x, event.y, states.expanded);
+                break;
+
+        }
+    }
 
     $('.playbtn').click(function() {
         if(dataReceived!= null) {
-
-        // Getting eventList contents
-        // function run() {
-        //     var eventList = $("#eventList li");
-        //     eventList.each(function (idx, li) {
-        //         var items = $(li).attr('id');
-        //         if(eventItems[items][2] == "closing") {
-        //             // console.log("x= " + eventItems[items][0]+ "," + " y= " + eventItems[items][1] + "type: "+eventItems[items][2] );
-        //             visual.setNodeState(eventItems[items][0], (eventItems[items][1]) , states.goal);
-        //             set
-        //         }
-        //         });
-        // }
-        // run();
-
-        function run(event) {
-            console.log(event.x,event.y);
-
-            switch(event.type)
-            {
-                case "generating":
-                    visual.setNodeState(event.x,event.y,states.inFrontier);
-                    break;
-                case "updating":
-                    visual.setNodeState(event.x,event.y,states.inFrontier);
-                    break;
-                case "closing":
-                    visual.setNodeState(event.x,event.y,states.expanded);
-                    break;
-
-            }
-        }
-
-        let i = 0;
         const timerId = setInterval(
             function () {
                 console.log(i,eventItems[i]);
-                // if i < length events
                 if(i < eventItems.length)
                 {
                     run(eventItems[i]);
@@ -78,7 +59,7 @@ $(document).ready(function () {
                     clearInterval(timerId);
                 }
                 i++;
-        },500);
+        },1);
 
 
         }else{
@@ -87,23 +68,23 @@ $(document).ready(function () {
     });
 
     $('.stepbtn').click(function () {
-        // console.log("Step button");
-        // visual.loadMap(5,5,100,".@.@....@..@.@..@.@..........");
 
-    //     var eventList = $("#eventList li");
-    //     function step(idx, li, i) {
-    //         var items = $(li).attr('id');
-    //         if(eventItems[items][2] == "closing") {
-    //             run(eventItems[items][0],(eventItems[items][1]));
-    //         }
-    //     };
-    //     step()
-    //
+        if(dataReceived!= null) {
+                    console.log(i,eventItems[i]);
+                    if(i < eventItems.length) {
+                        run(eventItems[i]);
+                    }
+                    i++;
+        }else{
+            window.alert("No data loaded!")
+        }
     });
 
     $('.pausebtn').click(function () {
-        console.log("Pause button");
-        visual.loadMap(3,3,100,"@.@.@.@.@");
+        // console.log("Pause button");
+        // visual.loadMap(3,3,100,"@.@.@.@.@");
+
+
     });
 
     $(document).ready(function(){
@@ -116,7 +97,6 @@ $(document).ready(function () {
         dataReceived = currentJSON.eventList;
         var mapData = currentJSON.Map;
 
-        // console.log(mapData);
         visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
 
         eventItems = currentJSON.eventList;
