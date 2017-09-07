@@ -46,18 +46,23 @@ $(document).ready(function () {
         // }
         // run();
 
-        function run(eventItems0, eventItems1) {
-            visual.setNodeState(eventItems0, eventItems1, states.goal);
+        function run(event) {
+            visual.setNodeState(event.x, event.y, states.goal);
         }
 
-        var eventList = $("#eventList li");
-        eventList.each(setInterval(
-            function (idx, li) {
-            var items = $(li).attr('id');
-            // if(eventItems[items][2] == "closing") {
-                run(eventItems[items][0],(eventItems[items][1]))
-            // }
-        },2000));
+        let i = 0;
+        const timerId = setInterval(
+            function () {
+                // if i < length events
+                if(i < eventItems.length)
+                {
+                    run(eventItems[i]);
+                }
+                else
+                {
+                    clearInterval(timerId);
+                }
+        },2000);
 
 
         }else{
