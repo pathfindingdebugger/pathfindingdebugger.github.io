@@ -55,7 +55,7 @@ class gridVisulizer
     //This function sets the node colour the states are given in the states enum
     setNodeState(x,y,state)
     {
-
+        console.log("CKAE");
         if(0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight)
         {
             console.log(x,this.mapWidth,y,this.mapHeight);
