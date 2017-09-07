@@ -101,18 +101,15 @@ $(document).ready(function () {
 
         eventItems = currentJSON.eventList;
 
-        /*for (i = currentEventNum; i <= dataReceived.length - 1; i++) {
+        for (i = currentEventNum; i <= dataReceived.length - 1; i++) {
             var eventli = document.createElement("LI");
             eventli.setAttribute("id", i);
             var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
             currentEventNum += 1;
-
-            eventItems.push([dataReceived[i].x,dataReceived[i].y,dataReceived[i].type]);
-
             eventli.appendChild(newMainItem);
             $('#eventList').append(eventli);
         }
-        */
+
         var mydiv = $(".eventLog");
         mydiv.scrollTop(mydiv.prop("scrollHeight"));
 
