@@ -47,12 +47,27 @@ $(document).ready(function () {
         // run();
 
         function run(event) {
-            visual.setNodeState(event.x, event.y, states.goal);
+            console.log(event.x,event.y);
+
+            switch(event.type)
+            {
+                case "generating":
+                    visual.setNodeState(event.x,event.y,states.inFrontier);
+                    break;
+                case "updating":
+                    visual.setNodeState(event.x,event.y,states.inFrontier);
+                    break;
+                case "closing":
+                    visual.setNodeState(event.x,event.y,states.expanded);
+                    break;
+
+            }
         }
 
         let i = 0;
         const timerId = setInterval(
             function () {
+                console.log(i,eventItems[i]);
                 // if i < length events
                 if(i < eventItems.length)
                 {
@@ -62,7 +77,8 @@ $(document).ready(function () {
                 {
                     clearInterval(timerId);
                 }
-        },2000);
+                i++;
+        },500);
 
 
         }else{
@@ -103,7 +119,9 @@ $(document).ready(function () {
         // console.log(mapData);
         visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
 
-        for (i = currentEventNum; i <= dataReceived.length - 1; i++) {
+        eventItems = currentJSON.eventList;
+
+        /*for (i = currentEventNum; i <= dataReceived.length - 1; i++) {
             var eventli = document.createElement("LI");
             eventli.setAttribute("id", i);
             var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
@@ -114,7 +132,7 @@ $(document).ready(function () {
             eventli.appendChild(newMainItem);
             $('#eventList').append(eventli);
         }
-
+        */
         var mydiv = $(".eventLog");
         mydiv.scrollTop(mydiv.prop("scrollHeight"));
 
