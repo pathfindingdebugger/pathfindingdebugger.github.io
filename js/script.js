@@ -36,7 +36,7 @@ $(document).ready(function () {
                 var items = $(li).attr('id');
                 // if(eventItems[items][2] == "expanding") {
                     console.log("x= " + eventItems[items].x+ "," + " y= " + eventItems[items].y + "type: "+eventItems[items][2] );
-                    visual.setNodeState(eventItems[items][1], (eventItems[items][0]) , states.goal);
+                    visual.setNodeState(eventItems[items].x, (eventItems[items].y) , states.goal);
                 // }
                 });
         }
