@@ -1,7 +1,7 @@
 //Created by surayezrahman on 23/8/17.
 
 var currentEventNum = 0;
-var eventItems;
+var eventItems = [];
 var openList = [];
 var closedList = [];
 var dataReceived;
@@ -14,8 +14,7 @@ const states = {
     goal:4,
 };
 
-console.log("GOD DAMN IT WORK!");
-console.log("AHAHAHAHAA");
+
 $(document).ready(function () {
 
     $('#eventList').on('click', 'li', function(ev) {
@@ -29,14 +28,18 @@ $(document).ready(function () {
 
     $('.playbtn').click(function() {
         if(dataReceived!= null) {
-
         // Getting eventList contents
-        var eventList = $("#eventList li");
-        eventList.each(function (idx, li) {
-            var items = $(li).text();
-            document.getElementById('closedList').innerHTML += items + "</br>";
-
-        });
+        function run() {
+            var eventList = $("#eventList li");
+            eventList.each(function (idx, li) {
+                var items = $(li).attr('id');
+                console.log("x= "+eventItems[items][0]+","+" y= "+eventItems[items][1]);
+                visual.setNodeState(eventItems[items][0],eventItems[items][1]-1,states.goal);
+            });
+        }
+        run();
+        }else{
+            window.alert("No data loaded!")
         }
     });
 
@@ -69,9 +72,10 @@ $(document).ready(function () {
             var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
             currentEventNum += 1;
 
+            eventItems.push([dataReceived[i].x,dataReceived[i].y]);
+
             eventli.appendChild(newMainItem);
             $('#eventList').append(eventli);
-
         }
 
         var mydiv = $(".eventLog");
