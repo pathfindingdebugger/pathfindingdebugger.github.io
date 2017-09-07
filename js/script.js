@@ -110,6 +110,7 @@ $(document).ready(function () {
         //     $('#eventList').append(eventli);
         // }
 
+        //
         var mydiv = $(".eventLog");
         mydiv.scrollTop(mydiv.prop("scrollHeight"));
 
