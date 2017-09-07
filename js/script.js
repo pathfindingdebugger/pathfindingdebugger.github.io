@@ -34,10 +34,10 @@ $(document).ready(function () {
             var eventList = $("#eventList li");
             eventList.each(function (idx, li) {
                 var items = $(li).attr('id');
-                // if(eventItems[items][2] == "expanding") {
+                if(eventItems[items][2] == "closing") {
                     console.log("x= " + eventItems[items][0]+ "," + " y= " + eventItems[items][1] + "type: "+eventItems[items][2] );
                     visual.setNodeState(eventItems[items][0], (eventItems[items][1]) , states.goal);
-                // }
+                }
                 });
         }
         run();
