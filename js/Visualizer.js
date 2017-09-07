@@ -167,9 +167,9 @@ class gridVisulizer
                         }
                         else
                         {
-                            console.log(viewBoxData);
+                            //console.log(viewBoxData);
                             const data = viewBoxData.split(/\s+|,/);
-                            console.log(data);
+                            //console.log(data);
                             const x = Math.min(Math.max(parseFloat(data[0])+(input.x - input.ox)/2,0),this.mapWidth*this.tileSize);
                             const y =  Math.min(Math.max(parseFloat(data[1])+(input.y - input.oy)/2,0),this.mapHeight*this.tileSize);
                             svg.setAttribute("viewBox", x+" "+y+" 500 500")

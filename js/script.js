@@ -35,8 +35,8 @@ $(document).ready(function () {
             eventList.each(function (idx, li) {
                 var items = $(li).attr('id');
                 // if(eventItems[items][2] == "expanding") {
-                    console.log("x= " + eventItems[items].x+ "," + " y= " + eventItems[items].y + "type: "+eventItems[items][2] );
-                    visual.setNodeState(eventItems[items].x, (eventItems[items].y) , states.goal);
+                    console.log("x= " + eventItems[items][0]+ "," + " y= " + eventItems[items][1] + "type: "+eventItems[items][2] );
+                    visual.setNodeState(eventItems[items][0], (eventItems[items][1]) , states.goal);
                 // }
                 });
         }
