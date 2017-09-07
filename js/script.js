@@ -6,6 +6,7 @@ var openList = [];
 var closedList = [];
 var dataReceived;
 let i = 0;
+var j = 0;
 
 const states = {
     NotSearched:0,
@@ -84,7 +85,6 @@ $(document).ready(function () {
         // console.log("Pause button");
         // visual.loadMap(3,3,100,"@.@.@.@.@");
 
-
     });
 
     $(document).ready(function(){
@@ -101,16 +101,15 @@ $(document).ready(function () {
 
         eventItems = currentJSON.eventList;
 
-        // for (i = currentEventNum; i <= dataReceived.length - 1; i++) {
-        //     var eventli = document.createElement("LI");
-        //     eventli.setAttribute("id", i);
-        //     var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
-        //     currentEventNum += 1;
-        //     eventli.appendChild(newMainItem);
-        //     $('#eventList').append(eventli);
-        // }
+        for (j = currentEventNum; j <= dataReceived.length - 1; j++) {
+            var eventli = document.createElement("LI");
+            eventli.setAttribute("id", i);
+            var newMainItem = document.createTextNode(dataReceived[j].type + ", x= " + dataReceived[j].x + ", y= " + dataReceived[j].y + ", g= " + dataReceived[j].g + ", h= " + dataReceived[j].h);
+            currentEventNum += 1;
+            eventli.appendChild(newMainItem);
+            $('#eventList').append(eventli);
+        }
 
-        //
         var mydiv = $(".eventLog");
         mydiv.scrollTop(mydiv.prop("scrollHeight"));
 
