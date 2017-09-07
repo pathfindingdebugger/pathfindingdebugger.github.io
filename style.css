@@ -157,6 +157,10 @@ padding: 2px 5px 2px 60px;
     background: #fff;
 }
 
+.changeSpeed{
+    width: 100%;
+}
+
 .lists{
     padding: 5px;
     margin: 10px;

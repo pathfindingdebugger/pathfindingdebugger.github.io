@@ -7,6 +7,7 @@ var closedList = [];
 var dataReceived;
 let i = 0;
 var j = 0;
+var speed = 1;
 
 const states = {
     NotSearched:0,
@@ -16,9 +17,14 @@ const states = {
     goal:4,
 };
 
-
+function changeSpeed(num) {
+    speed = num;
+    console.log(speed)
+}
 $(document).ready(function () {
+
     $("#defaultSubmit").click(function(event){
+        console.log(speed)
         $.getJSON('temp2.json', function(currentJSON) {
             eventItems = currentJSON.eventList;
             dataReceived = currentJSON.eventList;
@@ -83,7 +89,7 @@ $(document).ready(function () {
                     clearInterval(timerId);
                 }
                 i++;
-        },1);
+        },speed);
 
 
         }else{

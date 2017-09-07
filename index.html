@@ -84,15 +84,28 @@
             <a class="pausebtn btn"><i class="material-icons">pause_circle_outline</i></a>
             <span style="padding-left: 10px">Pause</span>
         </div>
-        <div class="btn1 col-sm-1 col-md-1 col-lg-1">
+        <div class="btn5 col-sm-2 col-md-2 col-lg-2">
+          <a class="changeSpeed dropdown-button btn"  href='#' data-activates='speedOptions'><i class="material-icons">flash_on</i></a>
+          <span style="padding-left: 10px">Change Speed</span>
         </div>
-        <div class="btn3 col-lg-3 col-md-3 col-ls-3" style="margin: 10px">
+
+          <!--DropdownItems-->
+          <ul id='speedOptions' class='dropdown-content'>
+              <li><a href="#" onclick="changeSpeed(500)" style="color: #7592B5">Slow</a></li>
+              <li><a href="#!" onclick="changeSpeed(100)" style="color: #7592B5">Moderate</a></li>
+              <li><a href="#!" onclick="changeSpeed(1)" style="color: #7592B5">Fast</a></li>
+          </ul>
+
+
+
+
+          <div class="btn3 col-lg-4 col-md-4 col-ls-4" style="margin: 10px">
             <p>Map Name and Algorithm</p>
         </div>
 
-        <div class="btn3 col-lg-2 col-md-2 col-ls-2" style="margin: 10px">
-          <!--<button id="dataLoader" class="btn" style="width: 100%">Load Data</button>-->
-        </div>
+        <!--<div class="btn3 col-lg-2 col-md-2 col-ls-2" style="margin: 10px">-->
+          <!--&lt;!&ndash;<button id="dataLoader" class="btn" style="width: 100%">Load Data</button>&ndash;&gt;-->
+        <!--</div>-->
 
         <div id="uploadzone" class="uploadbtn col-sm-2 col-md-2">
           <!--<button id="uploader" class="btn">Upload</button>-->
