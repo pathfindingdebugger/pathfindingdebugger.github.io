@@ -61,7 +61,7 @@ class gridVisulizer
                 this.tileArray[y*this.mapWidth+x].attr("fill","#ffffff");
                 break;
             case states.expanded:
-                this.tileArray[y*this.mapWidth+x].attr("fill","#00f6ff");
+                this.tileArray[y*this.mapWidth+x].attr("fill","#63c8ff");
                 break;
             case states.inFrontier:
                 this.tileArray[y*this.mapWidth+x].attr("fill","#0032ff");
