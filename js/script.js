@@ -16,7 +16,7 @@ const states = {
 
 
 $(document).ready(function () {
-    console.log("new1");
+    console.log("new2");
 
     $('#eventList').on('click', 'li', function(ev) {
         var id = this.id;
