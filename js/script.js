@@ -18,6 +18,29 @@ const states = {
 
 
 $(document).ready(function () {
+    $("#defaultSubmit").click(function(event){
+        $.getJSON('temp2.json', function(currentJSON) {
+            eventItems = currentJSON.eventList;
+            dataReceived = currentJSON.eventList;
+            var mapData = currentJSON.Map;
+
+            visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
+
+            for (j = currentEventNum; j <= dataReceived.length - 1; j++) {
+                var eventli = document.createElement("LI");
+                eventli.setAttribute("id", i);
+                var newMainItem = document.createTextNode(dataReceived[j].type + ", x= " + dataReceived[j].x + ", y= " + dataReceived[j].y + ", g= " + dataReceived[j].g + ", h= " + dataReceived[j].h);
+                currentEventNum += 1;
+                eventli.appendChild(newMainItem);
+                $('#eventList').append(eventli);
+            }
+            var mydiv = $(".eventLog");
+            mydiv.scrollTop(mydiv.prop("scrollHeight"));
+
+        });
+
+    });
+
 
     $('#eventList').on('click', 'li', function(ev) {
         var id = this.id;
