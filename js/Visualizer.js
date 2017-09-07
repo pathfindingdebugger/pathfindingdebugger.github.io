@@ -36,7 +36,7 @@ class gridVisulizer
         if(this.breakPoints.indexOf(xInput+":"+yInput) === -1 )
         {
             this.breakPoints.push(xInput+":"+yInput);
-            console.log("Still making");
+            // console.log("Still making");
             const breakPoint = new Elem(this.svg,'circle')
                 .attr("r",this.tileSize*0.25)
                 .attr("cx",xInput*this.tileSize+0.5*this.tileSize)
@@ -56,10 +56,10 @@ class gridVisulizer
     setNodeState(x,y,state)
     {
         y = y-3;
-        console.log("CAKE");
+        // console.log("CAKE");
         if(0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight)
         {
-            console.log(x,this.mapWidth,y,this.mapHeight);
+            // console.log(x,this.mapWidth,y,this.mapHeight);
             switch(state)
             {
                 case states.NotSearched:
@@ -87,7 +87,7 @@ class gridVisulizer
         this.svg.setAttribute("viewBox","0 0 500 500");
         //Destroy old map
         this.tileSize = tileSize;
-        console.log(this.mapWidth + " : " + this.mapHeight);
+        // console.log(this.mapWidth + " : " + this.mapHeight);
         if(this.tileArray !== null)
         {
             for(let i = 0; i < this.mapHeight;i++ )
@@ -99,13 +99,13 @@ class gridVisulizer
             }
             for(let i = 0; i < this.breakPoints.length;i++)
             {
-                console.log(i+" Should get them all");
+                // console.log(i+" Should get them all");
                 this.breakPointVisual[i].elem.remove();
             }
         }
 
         // build a new one
-        console.log(mapWidth + " tse " + mapHeight + " " + mapString);
+        // console.log(mapWidth + " tse " + mapHeight + " " + mapString);
         this.mapWidth = parseInt(mapWidth);
         this.mapHeight = parseInt(mapHeight);
         this.breakPoints = new Array(0);

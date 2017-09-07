@@ -5,6 +5,7 @@ var eventItems = [];
 var openList = [];
 var closedList = [];
 var dataReceived;
+var i = 0;
 
 const states = {
     NotSearched:0,
@@ -16,7 +17,7 @@ const states = {
 
 
 $(document).ready(function () {
-    console.log("new2");
+    console.log("new1");
 
     $('#eventList').on('click', 'li', function(ev) {
         var id = this.id;
@@ -27,28 +28,56 @@ $(document).ready(function () {
 
     });
 
+
     $('.playbtn').click(function() {
         if(dataReceived!= null) {
+
         // Getting eventList contents
-        function run() {
-            var eventList = $("#eventList li");
-            eventList.each(function (idx, li) {
-                var items = $(li).attr('id');
-                if(eventItems[items][2] == "closing") {
-                    console.log("x= " + eventItems[items][0]+ "," + " y= " + eventItems[items][1] + "type: "+eventItems[items][2] );
-                    visual.setNodeState(eventItems[items][0], (eventItems[items][1]) , states.goal);
-                }
-                });
+        // function run() {
+        //     var eventList = $("#eventList li");
+        //     eventList.each(function (idx, li) {
+        //         var items = $(li).attr('id');
+        //         if(eventItems[items][2] == "closing") {
+        //             // console.log("x= " + eventItems[items][0]+ "," + " y= " + eventItems[items][1] + "type: "+eventItems[items][2] );
+        //             visual.setNodeState(eventItems[items][0], (eventItems[items][1]) , states.goal);
+        //             set
+        //         }
+        //         });
+        // }
+        // run();
+
+        function run(eventItems0, eventItems1) {
+            visual.setNodeState(eventItems0, eventItems1, states.goal);
         }
-        run();
+
+        var eventList = $("#eventList li");
+        eventList.each(setInterval(
+            function (idx, li) {
+            var items = $(li).attr('id');
+            // if(eventItems[items][2] == "closing") {
+                run(eventItems[items][0],(eventItems[items][1]))
+            // }
+        },2000));
+
+
         }else{
             window.alert("No data loaded!")
         }
     });
 
     $('.stepbtn').click(function () {
-        console.log("Step button");
-        visual.loadMap(5,5,100,".@.@....@..@.@..@.@..........");
+        // console.log("Step button");
+        // visual.loadMap(5,5,100,".@.@....@..@.@..@.@..........");
+
+    //     var eventList = $("#eventList li");
+    //     function step(idx, li, i) {
+    //         var items = $(li).attr('id');
+    //         if(eventItems[items][2] == "closing") {
+    //             run(eventItems[items][0],(eventItems[items][1]));
+    //         }
+    //     };
+    //     step()
+    //
     });
 
     $('.pausebtn').click(function () {
