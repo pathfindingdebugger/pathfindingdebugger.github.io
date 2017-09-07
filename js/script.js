@@ -22,7 +22,7 @@ function changeSpeed(num) {
     console.log(speed)
 }
 $(document).ready(function () {
-
+    //
     $("#defaultSubmit").click(function(event){
         console.log(speed)
         $.getJSON('temp2.json', function(currentJSON) {
