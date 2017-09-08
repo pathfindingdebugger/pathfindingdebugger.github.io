@@ -8,7 +8,7 @@ var dataReceived;
 let i = 0;
 var j = 0;
 var speed = 1;
-
+let control;
 const states = {
     NotSearched:0,
     inFrontier:1,
@@ -24,7 +24,7 @@ function changeSpeed(num) {
 $(document).ready(function () {
     //
     $("#defaultSubmit").click(function(event){
-        console.log(speed)
+        console.log(speed);
         $.getJSON('temp2.json', function(currentJSON) {
             eventItems = currentJSON.eventList;
             dataReceived = currentJSON.eventList;
@@ -58,38 +58,11 @@ $(document).ready(function () {
     });
 
 
-    function run(event) {
-        console.log(event.x, event.y);
 
-        switch (event.type) {
-            case "generating":
-                visual.setNodeState(event.x, event.y, states.inFrontier);
-                break;
-            case "updating":
-                visual.setNodeState(event.x, event.y, states.inFrontier);
-                break;
-            case "closing":
-                visual.setNodeState(event.x, event.y, states.expanded);
-                break;
-
-        }
-    }
 
     $('.playbtn').click(function() {
-        if(dataReceived!= null) {
-        const timerId = setInterval(
-            function () {
-                console.log(i,eventItems[i]);
-                if(i < eventItems.length)
-                {
-                    run(eventItems[i]);
-                }
-                else
-                {
-                    clearInterval(timerId);
-                }
-                i++;
-        },speed);
+        if(control!== null) {
+            control.play(speed);
 
 
         }else{
@@ -99,12 +72,8 @@ $(document).ready(function () {
 
     $('.stepbtn').click(function () {
 
-        if(dataReceived!= null) {
-                    console.log(i,eventItems[i]);
-                    if(i < eventItems.length) {
-                        run(eventItems[i]);
-                    }
-                    i++;
+        if(control!== null) {
+                  control.stepForward();
         }else{
             window.alert("No data loaded!")
         }
@@ -128,8 +97,12 @@ $(document).ready(function () {
 
         visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
 
-        eventItems = currentJSON.eventList;
+        visual.setNodeState(currentJSON.startId.x,currentJSON.startId.y,states.start);
+        visual.setNodeState(currentJSON.endId.x,currentJSON.endId.y,states.goal);
 
+        control = new DebugCommand(currentJSON.eventList,visual);
+        console.log("ready");
+        /*
         for (j = currentEventNum; j <= dataReceived.length - 1; j++) {
             var eventli = document.createElement("LI");
             eventli.setAttribute("id", i);
@@ -138,6 +111,7 @@ $(document).ready(function () {
             eventli.appendChild(newMainItem);
             $('#eventList').append(eventli);
         }
+        */
 
         var mydiv = $(".eventLog");
         mydiv.scrollTop(mydiv.prop("scrollHeight"));
