@@ -176,7 +176,7 @@ class gridVisulizer {
 }
 
 
-/*
+/*dg
 function addPanObserver(drawSVG, obj) {
     const svg = document.getElementById("diagrameditor");
     const mousemove = Observable.fromEvent(svg, 'mousemove');
