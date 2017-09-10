@@ -42,6 +42,7 @@
     <script src="js/Utility/svgelement.js"></script>
     <script src="js/Visualizer.js"></script>
     <script src="js/Utility/observable.js"></script>
+    <script src="js/DebugCommand.js"></script>
     <!-- <script src="js/SVGPan.js"></script> -->
   </head>
 
@@ -66,7 +67,7 @@
           </div>
       </div>
 
-    <!-- Wrap the rest of the page in another container to center all the content. -->
+    <!-- Wrap the rest of the page in another container to center all the content -->
 
     <div class="debugger">
 
@@ -84,15 +85,28 @@
             <a class="pausebtn btn"><i class="material-icons">pause_circle_outline</i></a>
             <span style="padding-left: 10px">Pause</span>
         </div>
-        <div class="btn1 col-sm-1 col-md-1 col-lg-1">
+        <div class="btn5 col-sm-2 col-md-2 col-lg-2">
+          <a class="changeSpeed dropdown-button btn"  href='#' data-activates='speedOptions'><i class="material-icons">flash_on</i></a>
+          <span style="padding-left: 10px">Change Speed</span>
         </div>
-        <div class="btn3 col-lg-3 col-md-3 col-ls-3" style="margin: 10px">
+
+          <!--DropdownItems-->
+          <ul id='speedOptions' class='dropdown-content'>
+              <li><a onclick="changeSpeed(500)" style="color: #7592B5">Slow</a></li>
+              <li><a onclick="changeSpeed(100)" style="color: #7592B5">Moderate</a></li>
+              <li><a onclick="changeSpeed(1)" style="color: #7592B5">Fast</a></li>
+          </ul>
+
+
+
+
+          <div class="btn3 col-lg-4 col-md-4 col-ls-4" style="margin: 10px">
             <p>Map Name and Algorithm</p>
         </div>
 
-        <div class="btn3 col-lg-2 col-md-2 col-ls-2" style="margin: 10px">
-          <!--<button id="dataLoader" class="btn" style="width: 100%">Load Data</button>-->
-        </div>
+        <!--<div class="btn3 col-lg-2 col-md-2 col-ls-2" style="margin: 10px">-->
+          <!--&lt;!&ndash;<button id="dataLoader" class="btn" style="width: 100%">Load Data</button>&ndash;&gt;-->
+        <!--</div>-->
 
         <div id="uploadzone" class="uploadbtn col-sm-2 col-md-2">
           <!--<button id="uploader" class="btn">Upload</button>-->
@@ -107,11 +121,12 @@
                 <h4>Enter JSON here:</h4>
                 <form id='nameForm' style="height: 90%;">
                     <!--<input id='nameField' type='text' maxlength='25'></input>-->
-                    <textarea id="JSONinput" placeholder="Paste your JSON here..."></textarea>
+                    <textarea id="JSONinput" placeholder="Paste your JSON here..." value=></textarea>
                 </form>
             </div>
 
             <div class="modal-footer">
+                <button id="defaultSubmit" class="modal-action modal-close btn" type='button' style="width:150px">Load Default</button>
                 <button class="modal-close btn" type='button'>Cancel</button>
                 <button id='submit1btn' class="modal-action modal-close btn" type='button'>Submit</button>
             </div>
@@ -144,9 +159,24 @@
                         <!--<ol>-->
                             <!--<div id="closedListConsole"></div>-->
                         <!--</ol>-->
+                        <!--</ol>-->
                     </div>
 
                 </div>
+
+                <div class="row">
+                    <h4>Legend:</h4>
+                    <div id="legend" class="col-lg-6">
+                        <ul><li><div id="id1" class="legendItems"></div><span> - Explorable area</span></li>
+                            <li><div id="id2" class="legendItems"></div><span> - Boundaries/Walls</span></li>
+                            <li><div id="id3" class="legendItems"></div><span> - Expanded Nodes</span></li>
+                            <li><div id="id4" class="legendItems"></div><span> - Frontier Nodes</span></li>
+
+                        </ul>
+                    </div>
+
+                </div>
+
 
             </div>
         </div>
@@ -168,7 +198,7 @@
         <!--Footer-->
         <div class="footer">
             <p>As part of the units: FIT1041 and FIT2028 at Monash University, this is a research project supervised by Daniel Harabor and Michael Wybrow, and conducted by Jay John Wingate and Surayez Rahman</p>
-            <h4>Developed in 🇦🇺</h4>
+            <h4>Developed at Monash University <img width="40px" height="40px" src="images/monash.png"></h4>
         </div>
   </body>
 </html>

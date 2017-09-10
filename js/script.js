@@ -5,8 +5,10 @@ var eventItems = [];
 var openList = [];
 var closedList = [];
 var dataReceived;
-var i = 0;
-
+let i = 0;
+var j = 0;
+var speed = 1;
+let control;
 const states = {
     NotSearched:0,
     inFrontier:1,
@@ -15,9 +17,36 @@ const states = {
     goal:4,
 };
 
-
+function changeSpeed(num) {
+    speed = num;
+    console.log(speed)
+}
 $(document).ready(function () {
-    console.log("new1");
+    //
+    $("#defaultSubmit").click(function(event){
+        console.log(speed);
+        $.getJSON('temp2.json', function(currentJSON) {
+            eventItems = currentJSON.eventList;
+            dataReceived = currentJSON.eventList;
+            var mapData = currentJSON.Map;
+
+            visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
+
+            for (j = currentEventNum; j <= dataReceived.length - 1; j++) {
+                var eventli = document.createElement("LI");
+                eventli.setAttribute("id", i);
+                var newMainItem = document.createTextNode(dataReceived[j].type + ", x= " + dataReceived[j].x + ", y= " + dataReceived[j].y + ", g= " + dataReceived[j].g + ", h= " + dataReceived[j].h);
+                currentEventNum += 1;
+                eventli.appendChild(newMainItem);
+                $('#eventList').append(eventli);
+            }
+            var mydiv = $(".eventLog");
+            mydiv.scrollTop(mydiv.prop("scrollHeight"));
+
+        });
+
+    });
+
 
     $('#eventList').on('click', 'li', function(ev) {
         var id = this.id;
@@ -29,42 +58,11 @@ $(document).ready(function () {
     });
 
 
+
+
     $('.playbtn').click(function() {
-        if(dataReceived!= null) {
-
-        function runEvent(event) {
-            console.log(event.x,event.y);
-
-            switch(event.type)
-            {
-                case "generating":
-                    visual.setNodeState(event.x,event.y,states.inFrontier);
-                    break;
-                case "updating":
-                    visual.setNodeState(event.x,event.y,states.inFrontier);
-                    break;
-                case "closing":
-                    visual.setNodeState(event.x,event.y,states.expanded);
-                    break;
-
-            }
-        }
-
-        let i = 0;
-        const timerId = setInterval(
-            function () {
-                console.log(i,eventItems[i]);
-                // if i < length events
-                if(i < eventItems.length)
-                {
-                    runEvent(eventItems[i]);
-                }
-                else
-                {
-                    clearInterval(timerId);
-                }
-                i++;
-        },20);
+        if(control!== null) {
+            control.play(speed);
 
 
         }else{
@@ -73,23 +71,18 @@ $(document).ready(function () {
     });
 
     $('.stepbtn').click(function () {
-        // console.log("Step button");
-        // visual.loadMap(5,5,100,".@.@....@..@.@..@.@..........");
 
-    //     var eventList = $("#eventList li");
-    //     function step(idx, li, i) {
-    //         var items = $(li).attr('id');
-    //         if(eventItems[items][2] == "closing") {
-    //             run(eventItems[items][0],(eventItems[items][1]));
-    //         }
-    //     };
-    //     step()
-    //
+        if(control!== null) {
+                  control.stepForward();
+        }else{
+            window.alert("No data loaded!")
+        }
     });
 
     $('.pausebtn').click(function () {
-        console.log("Pause button");
-        visual.loadMap(3,3,100,"@.@.@.@.@");
+        // console.log("Pause button");
+        // visual.loadMap(3,3,100,"@.@.@.@.@");
+
     });
 
     $(document).ready(function(){
@@ -102,26 +95,28 @@ $(document).ready(function () {
         dataReceived = currentJSON.eventList;
         var mapData = currentJSON.Map;
 
-        // console.log(mapData);
         visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
 
-        eventItems = currentJSON.eventList;
+        visual.setNodeState(currentJSON.startId.x,currentJSON.startId.y,states.start);
+        visual.setNodeState(currentJSON.endId.x,currentJSON.endId.y,states.goal);
 
-        /*for (i = currentEventNum; i <= dataReceived.length - 1; i++) {
+        control = new DebugCommand(currentJSON.eventList,visual);
+        console.log("ready");
+        /*
+        for (j = currentEventNum; j <= dataReceived.length - 1; j++) {
             var eventli = document.createElement("LI");
             eventli.setAttribute("id", i);
-            var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
+            var newMainItem = document.createTextNode(dataReceived[j].type + ", x= " + dataReceived[j].x + ", y= " + dataReceived[j].y + ", g= " + dataReceived[j].g + ", h= " + dataReceived[j].h);
             currentEventNum += 1;
-
-            eventItems.push([dataReceived[i].x,dataReceived[i].y,dataReceived[i].type]);
-
             eventli.appendChild(newMainItem);
             $('#eventList').append(eventli);
         }
         */
+
         var mydiv = $(".eventLog");
         mydiv.scrollTop(mydiv.prop("scrollHeight"));
-
     });
+
+
 
 });
