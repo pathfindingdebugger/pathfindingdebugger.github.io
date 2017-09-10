@@ -32,21 +32,7 @@ $(document).ready(function () {
     $('.playbtn').click(function() {
         if(dataReceived!= null) {
 
-        // Getting eventList contents
-        // function run() {
-        //     var eventList = $("#eventList li");
-        //     eventList.each(function (idx, li) {
-        //         var items = $(li).attr('id');
-        //         if(eventItems[items][2] == "closing") {
-        //             // console.log("x= " + eventItems[items][0]+ "," + " y= " + eventItems[items][1] + "type: "+eventItems[items][2] );
-        //             visual.setNodeState(eventItems[items][0], (eventItems[items][1]) , states.goal);
-        //             set
-        //         }
-        //         });
-        // }
-        // run();
-
-        function run(event) {
+        function runEvent(event) {
             console.log(event.x,event.y);
 
             switch(event.type)
@@ -71,14 +57,14 @@ $(document).ready(function () {
                 // if i < length events
                 if(i < eventItems.length)
                 {
-                    run(eventItems[i]);
+                    runEvent(eventItems[i]);
                 }
                 else
                 {
                     clearInterval(timerId);
                 }
                 i++;
-        },500);
+        },20);
 
 
         }else{
