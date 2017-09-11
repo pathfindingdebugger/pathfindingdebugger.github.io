@@ -25,8 +25,8 @@ class gridVisulizer {
         this.tileArray = null;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
-
-        this.scroll(this.svg)
+        addZoomObserver(this.svg,this.svg);
+        //this.scroll(this.svg)
     }
 
     generateBreakPoint(xInput, yInput) {
@@ -115,7 +115,7 @@ class gridVisulizer {
                     .attr('width', this.tileSize).attr('height', this.tileSize)
                     .attr('fill', (mapString[stringIndex] === ".") ? 'white' : (mapString[stringIndex] === "@") ? 'black' : "#777679")
                     .attr('stroke', 'black');
-
+                addPanObserver(this.tileArray[i*this.mapWidth+j]);
                 this.tileArray[i * this.mapWidth + j].observeEvent('mousedown')
                     .filter(e => e.shiftKey)
                     .map(e => {
@@ -176,7 +176,7 @@ class gridVisulizer {
 }
 
 
-/*dg
+
 function addPanObserver(drawSVG, obj) {
     const svg = document.getElementById("diagrameditor");
     const mousemove = Observable.fromEvent(svg, 'mousemove');
@@ -219,7 +219,6 @@ function addZoomObserver(svg, zoomingElement) {
     });
 }
 
- */
 
 
 if (typeof window !== 'undefined')
