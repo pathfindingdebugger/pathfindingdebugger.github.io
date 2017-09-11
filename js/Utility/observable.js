@@ -75,6 +75,13 @@ class Observable {
             return this.subscribe(v => fired ? observer.complete() : observer.next(v), () => observer.complete());
         });
     }
+    takeLast(o) {
+        return new Observable((observer) => {
+            let last = null;
+            o.subscribe((v) => { last = v; });
+            return this.subscribe(v => observer.next(last), () => observer.complete());
+        });
+    }
     flatMap(streamCreator) {
         return new Observable((observer) => {
             return this.subscribe(v => streamCreator(v).subscribe((i) => { observer.next(i); }, () => { }), () => observer.complete());

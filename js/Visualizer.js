@@ -1,32 +1,15 @@
 //Created 2/9/17 by Jay
 
-function drawRectsEvents()
-{
-    const svg = document.getElementById("viewport");
-    left = svg.getBoundingClientRect().left;
-    top = svg.getBoundingClientRect().top;
-
-
-    let rect = new Elem(svg, 'rect')
-        .attr('x', 100).attr('y', 70)
-        .attr('width', 120).attr('height', 80)
-        .attr('fill', '#0100d7');
-    const animate = setInterval(()=> {rect.attr('x', 1 + Number(rect.attr('x')))}, 10);
-    const timer = setInterval(()=>{
-        clearInterval(animate);
-        clearInterval(timer);
-        }, 1000);
-}
-
 class gridVisulizer {
     constructor(mapWidth, mapHeight, tileSize, mapString) {
         this.svg = document.getElementById("viewport");
-
+        this.svg.setAttribute("viewBox", "0 0 900 600");
+        //setSVGZoom(this.svg,this.svg.getBBox().width,this.svg.getBBox().height);
         this.tileArray = null;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
-        addZoomObserver(this.svg,this.svg);
-        //this.scroll(this.svg)
+        addZoomObserver(this.svg);
+        addPanObserver(this.svg)
     }
 
     generateBreakPoint(xInput, yInput) {
@@ -115,7 +98,6 @@ class gridVisulizer {
                     .attr('width', this.tileSize).attr('height', this.tileSize)
                     .attr('fill', (mapString[stringIndex] === ".") ? 'white' : (mapString[stringIndex] === "@") ? 'black' : "#777679")
                     .attr('stroke', 'black');
-                addPanObserver(this.tileArray[i*this.mapWidth+j]);
                 this.tileArray[i * this.mapWidth + j].observeEvent('mousedown')
                     .filter(e => e.shiftKey)
                     .map(e => {
@@ -177,30 +159,44 @@ class gridVisulizer {
 
 
 
-function addPanObserver(drawSVG, obj) {
-    const svg = document.getElementById("diagrameditor");
-    const mousemove = Observable.fromEvent(svg, 'mousemove');
+function addPanObserver(svg) {
+    const mousemove = Observable.fromEvent(svg, 'mousemove').map(e => { return { x: e.clientX, y: e.clientY }; });
     const mouseup = Observable.fromEvent(svg, 'mouseup');
     const mouseout = Observable.fromEvent(svg, 'mouseleave');
-    Observable.fromEvent(svg, 'mousedown')
-        .filter(e => e.which == 1)
+    Observable.fromEvent(svg,'mousedown')
+        .filter(e => e.which === 1)
         .map(e => { return { ox: e.clientX, oy: e.clientY }; })
         .subscribe((o) => {
         Observable.interval(10)
             .takeUntil(mouseup)
             .takeUntil(mouseout)
-            .map(e => { return { x: null, y: null }; })
-            .takeLast(mousemove.map(e => { return { x: e.clientX, y: e.clientY }; }))
-            .subscribe((e) => changePosition(obj, -(e.x - o.ox) * (getZoomScale(drawSVG).y / 50), -(e.y - o.oy) * (getZoomScale(drawSVG).y / 50)));
+            .map(e => ({ x: null, y: null }))
+            .takeLast(mousemove)
+            .subscribe((e) => {
+
+
+                    const data = getSVGPos(svg);
+
+                    console.log(data,e,o);
+                    if(e != null)
+                    {
+                        const x = Math.min(Math.max(data.x + (e.x - o.x) / 2, 0), this.mapWidth * this.tileSize);
+                        const y = Math.min(Math.max(data.y + (e.y - o.y) / 2, 0), this.mapHeight * this.tileSize);
+                        console.log(x,y,data);
+                        setSVGPos(svg,x,y);
+                    }
+
+
+            });
     });
 }
 
-function addZoomObserver(svg, zoomingElement) {
-    const mousemove = Observable.fromEvent(svg, 'mousemove');
+function addZoomObserver(svg) {
+
     const mouseup = Observable.fromEvent(svg, 'mouseup');
     const mouseout = Observable.fromEvent(svg, 'mouseleave');
     Observable.fromEvent(svg, 'mousedown')
-        .filter(e => e.which == 3)
+        .filter(e => e.which === 3)
         .map(e => { return { ox: e.clientX, oy: e.clientY }; })
         .subscribe((o) => {
         Observable.fromEvent(svg, 'mousemove')
@@ -208,19 +204,40 @@ function addZoomObserver(svg, zoomingElement) {
             .takeUntil(mouseout)
             .map(e => { return { nx: e.clientX, ny: e.clientY }; })
             .subscribe(e => {
-            const viewBoxData = zoomingElement.getAttribute("viewBox");
+            const viewBoxData = svg.getAttribute("viewBox");
             const data = viewBoxData.split(/\s+|,/);
-            const newX = Math.max(0, (parseFloat(data[2]) - (o.oy - e.ny)));
-            const newY = Math.max(0, (parseFloat(data[3]) - (o.oy - e.ny)));
+            const newX = Math.max(0, (data.x - (o.oy - e.ny)));
+            const newY = Math.max(0, (data.y - (o.oy - e.ny)));
             if (newY / 600 >= 1) {
-                zoomingElement.setAttribute("viewBox", -newX / 2 + " " + -newY / 2 + " " + newX + " " + newY);
+                svg.setAttribute("viewBox", -newX / 2 + " " + -newY / 2 + " " + newX + " " + newY);
             }
         });
     });
 }
 
-
-
+function getZoomScale(svg) {
+    return { x: getSVGZoom(svg).x / svg.width, y: getSVGZoom(svg).y / svg.height };
+}
+function getSVGZoom(svg) {
+    const viewBoxData = svg.getAttribute("viewBox");
+    const data = viewBoxData.split(/\s+|,/);
+    return { x: Number(data[2]), y: Number(data[3]) };
+}
+function getSVGPos(svg) {
+    const viewBoxData = svg.getAttribute("viewBox");
+    const data = viewBoxData.split(/\s+|,/);
+    return { x: Number(data[0]), y: Number(data[1]) };
+}
+function setSVGZoom(svg,newX,newY)
+{
+    pos = getSVGPos(svg);
+    svg.setAttribute("viewBox", pos.x + " " +  pos.y  + " " + newX + " " + newY);
+}
+function setSVGPos(svg,newX,newY)
+{
+    zoom = getSVGZoom(svg);
+    svg.setAttribute("viewBox", newX + " " +  newY  + " " + zoom.x + " " + zoom.y);
+}
 if (typeof window !== 'undefined')
     window.onload = function(){
     visual = new gridVisulizer()
