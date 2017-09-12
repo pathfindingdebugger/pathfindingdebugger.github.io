@@ -28,7 +28,7 @@ class gridVisulizer
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
 
-        this.scroll(this.svg)
+        //this.scroll(this.svg)
     }
     generateBreakPoint(xInput,yInput)
     {

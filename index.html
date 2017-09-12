@@ -43,7 +43,7 @@
     <script src="js/Visualizer.js"></script>
     <script src="js/Utility/observable.js"></script>
     <script src="js/DebugCommand.js"></script>
-    <!-- <script src="js/SVGPan.js"></script> -->
+
   </head>
 
 
@@ -136,8 +136,8 @@
         <div id="graphBox" class="graphBox row">
             <h4>Graph:</h4>
             <div id="graph" class="graph col-lg-6">
-                <svg id="viewport" width="100%" height="100%">
-                    <script src="js/SVGPan.js"></script>
+                <svg id="svg" width="100%" height="100%">
+                    <g id="viewport"></g>
                 </svg>
             </div>
             <div class="lists col-lg-5">
@@ -200,5 +200,8 @@
             <p>As part of the units: FIT1041 and FIT2028 at Monash University, this is a research project supervised by Daniel Harabor and Michael Wybrow, and conducted by Jay John Wingate and Surayez Rahman</p>
             <h4>Developed at Monash University <img width="40px" height="40px" src="images/monash.png"></h4>
         </div>
+
+     <script src="js/jquery-svgpan.js"></script>
+    <script> $('svg').svgPan('viewport'); </script>
   </body>
 </html>
