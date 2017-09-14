@@ -31,7 +31,7 @@ $(document).ready(function () {
             var mapData = currentJSON.Map;
 
             visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
-
+            control = new DebugCommand(currentJSON.eventList,visual);
             for (j = currentEventNum; j <= dataReceived.length - 1; j++) {
                 var eventli = document.createElement("LI");
                 eventli.setAttribute("id", i);

@@ -41,7 +41,7 @@ class DebugCommand
         if(!this.complete())
         {
             this.runEvent(this.eventList[this.eventCounter]);
-
+            this.eventCounter++
         }
     }
     stepBack()
