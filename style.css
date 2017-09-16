@@ -19,7 +19,6 @@ body {
 .nav-wrapper a:hover{
   color: #fff;
   text-decoration: none;
-
 }
 
 .main{
@@ -143,6 +142,7 @@ body {
 
 .graphBox h4{
     padding-left: 10px;
+    width: 100%;
 }
 
 .eventLog ol{
