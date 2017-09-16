@@ -9,6 +9,7 @@ let i = 0;
 var j = 0;
 var speed = 1;
 let control;
+var playing = false;
 const states = {
     NotSearched:0,
     inFrontier:1,
@@ -18,8 +19,12 @@ const states = {
 };
 
 function changeSpeed(num) {
-    speed = num;
-    console.log(speed)
+    if(playing == true){
+        control.changeSpeed(num);
+    }
+    else{
+        speed = num;
+    }
 }
 
 $(document).ready(function () {
@@ -58,13 +63,12 @@ $(document).ready(function () {
 
     });
 
-
-
-
     $('.playbtn').click(function() {
         if(control!== null) {
-            control.play(speed);
-
+            if(playing == false){
+                control.play(speed);
+                playing = true
+            }
 
         }else{
             window.alert("No data loaded!")
@@ -72,7 +76,6 @@ $(document).ready(function () {
     });
 
     $('.stepbtn').click(function () {
-
         if(control!== null) {
                   control.stepForward();
         }else{
@@ -81,9 +84,13 @@ $(document).ready(function () {
     });
 
     $('.pausebtn').click(function () {
-        // console.log("Pause button");
-        // visual.loadMap(3,3,100,"@.@.@.@.@");
+        if(control!== null) {
+            control.stop();
+            playing = false
 
+        }else{
+            window.alert("No data loaded!")
+        }
     });
 
     $(document).ready(function(){
@@ -99,6 +106,7 @@ $(document).ready(function () {
 
 
     $("#submit1btn").click(function () {
+
         var getText = document.getElementById('JSONinput').value;
         var currentJSON = JSON.parse(getText);
         dataReceived = currentJSON.eventList;

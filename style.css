@@ -40,10 +40,6 @@ body {
     overflow: scroll;
 }
 
-#debuggerPart1{
-    height: 100%;
-}
-
 .top-bar{
   width: 100%;
     padding: 5px;
