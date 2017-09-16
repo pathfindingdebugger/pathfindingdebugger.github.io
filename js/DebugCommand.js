@@ -11,7 +11,26 @@ class DebugCommand
     {
         return this.eventCounter >= this.eventList.size
     }
-    play(speed)
+
+    // play(speed)
+    // {
+    //     this.currentId = setInterval(
+    //         () => {
+    //             console.log(this.eventCounter,this.eventList[this.eventCounter]);
+    //             if(!this.complete())
+    //             {
+    //                 this.runEvent(this.eventList[this.eventCounter]);
+    //             }
+    //             else
+    //             {
+    //                 clearInterval(this.currentId);
+    //             }
+    //             this.eventCounter++;
+    //         },speed);
+    // }
+
+    // Testing
+    play(speed, i,dataReceived, currentEventNum)
     {
         this.currentId = setInterval(
             () => {
@@ -19,6 +38,17 @@ class DebugCommand
                 if(!this.complete())
                 {
                     this.runEvent(this.eventList[this.eventCounter]);
+
+                    var eventli = document.createElement("LI");
+                    eventli.setAttribute("id", i);
+                    i++;
+                    var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
+                    currentEventNum += 1;
+                    eventli.appendChild(newMainItem);
+                    $('#eventList').append(eventli);
+
+                    var mydiv = $(".eventLog");
+                    mydiv.scrollTop(mydiv.prop("scrollHeight"));
                 }
                 else
                 {
@@ -27,6 +57,8 @@ class DebugCommand
                 this.eventCounter++;
             },speed);
     }
+
+
     stop()
     {
         clearInterval(this.currentId);
@@ -36,12 +68,34 @@ class DebugCommand
         this.stop();
         this.play(speed);
     }
+    //
+    // stepForward()
+    // {
+    //     if(!this.complete())
+    //     {
+    //         this.runEvent(this.eventList[this.eventCounter]);
+    //         this.eventCounter++;
+    //     }
+    // }
+
+    // Testing
     stepForward()
     {
         if(!this.complete())
         {
             this.runEvent(this.eventList[this.eventCounter]);
-            this.eventCounter++
+            this.eventCounter++;
+
+            var eventli = document.createElement("LI");
+            eventli.setAttribute("id", i);
+            i++;
+            var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
+            currentEventNum += 1;
+            eventli.appendChild(newMainItem);
+            $('#eventList').append(eventli);
+
+            var mydiv = $(".eventLog");
+            mydiv.scrollTop(mydiv.prop("scrollHeight"));
         }
     }
     stepBack()

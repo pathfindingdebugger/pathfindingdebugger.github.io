@@ -29,6 +29,31 @@ function changeSpeed(num) {
 
 $(document).ready(function () {
 
+    // $("#defaultSubmit").click(function(event){
+    //     console.log(speed);
+    //     $.getJSON('temp2.json', function(currentJSON) {
+    //         eventItems = currentJSON.eventList;
+    //         dataReceived = currentJSON.eventList;
+    //         var mapData = currentJSON.Map;
+    //
+    //         visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
+    //         control = new DebugCommand(currentJSON.eventList,visual);
+    //         for (j = currentEventNum; j <= dataReceived.length - 1; j++) {
+    //             var eventli = document.createElement("LI");
+    //             eventli.setAttribute("id", i);
+    //             var newMainItem = document.createTextNode(dataReceived[j].type + ", x= " + dataReceived[j].x + ", y= " + dataReceived[j].y + ", g= " + dataReceived[j].g + ", h= " + dataReceived[j].h);
+    //             currentEventNum += 1;
+    //             eventli.appendChild(newMainItem);
+    //             $('#eventList').append(eventli);
+    //         }
+    //         var mydiv = $(".eventLog");
+    //         mydiv.scrollTop(mydiv.prop("scrollHeight"));
+    //
+    //     });
+    //
+    // });
+
+    // Testing
     $("#defaultSubmit").click(function(event){
         console.log(speed);
         $.getJSON('temp2.json', function(currentJSON) {
@@ -38,16 +63,6 @@ $(document).ready(function () {
 
             visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
             control = new DebugCommand(currentJSON.eventList,visual);
-            for (j = currentEventNum; j <= dataReceived.length - 1; j++) {
-                var eventli = document.createElement("LI");
-                eventli.setAttribute("id", i);
-                var newMainItem = document.createTextNode(dataReceived[j].type + ", x= " + dataReceived[j].x + ", y= " + dataReceived[j].y + ", g= " + dataReceived[j].g + ", h= " + dataReceived[j].h);
-                currentEventNum += 1;
-                eventli.appendChild(newMainItem);
-                $('#eventList').append(eventli);
-            }
-            var mydiv = $(".eventLog");
-            mydiv.scrollTop(mydiv.prop("scrollHeight"));
 
         });
 
@@ -66,7 +81,7 @@ $(document).ready(function () {
     $('.playbtn').click(function() {
         if(control!== null) {
             if(playing == false){
-                control.play(speed);
+                control.play(speed, i,dataReceived, currentEventNum);
                 playing = true
             }
 
@@ -77,7 +92,8 @@ $(document).ready(function () {
 
     $('.stepbtn').click(function () {
         if(control!== null) {
-                  control.stepForward();
+            control.stepForward();
+
         }else{
             window.alert("No data loaded!")
         }
@@ -118,20 +134,7 @@ $(document).ready(function () {
         visual.setNodeState(currentJSON.endId.x,currentJSON.endId.y,states.goal);
 
         control = new DebugCommand(currentJSON.eventList,visual);
-        console.log("ready");
-        /*
-        for (j = currentEventNum; j <= dataReceived.length - 1; j++) {
-            var eventli = document.createElement("LI");
-            eventli.setAttribute("id", i);
-            var newMainItem = document.createTextNode(dataReceived[j].type + ", x= " + dataReceived[j].x + ", y= " + dataReceived[j].y + ", g= " + dataReceived[j].g + ", h= " + dataReceived[j].h);
-            currentEventNum += 1;
-            eventli.appendChild(newMainItem);
-            $('#eventList').append(eventli);
-        }
-        */
 
-        var mydiv = $(".eventLog");
-        mydiv.scrollTop(mydiv.prop("scrollHeight"));
     });
 
 
