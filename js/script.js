@@ -21,8 +21,12 @@ function changeSpeed(num) {
     speed = num;
     console.log(speed)
 }
+
 $(document).ready(function () {
-    //
+    $('.fullScreenbtn').click(function(e){
+        $("#graphBox").fullScreen(true);
+    });
+
     $("#defaultSubmit").click(function(event){
         console.log(speed);
         $.getJSON('temp2.json', function(currentJSON) {

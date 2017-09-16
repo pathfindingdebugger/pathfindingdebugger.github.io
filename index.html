@@ -43,6 +43,7 @@
     <script src="js/Visualizer.js"></script>
     <script src="js/Utility/observable.js"></script>
     <script src="js/DebugCommand.js"></script>
+    <script src="js/jquery.fullscreen-min.js"></script>
 
   </head>
 
@@ -100,8 +101,12 @@
 
 
 
-          <div class="btn3 col-lg-4 col-md-4 col-ls-4" style="margin: 10px">
+          <div class="btn3 col-lg-3 col-md-3 col-ls-3" style="margin: 10px">
             <p>Map Name and Algorithm</p>
+        </div>
+        <div class="btn4 col-sm-1 col-md-1 col-lg-1">
+          <a class="fullScreenbtn btn"><i class="material-icons">personal_video</i></a>
+          <span style="padding-left: 10px">Full Screen</span>
         </div>
 
         <!--<div class="btn3 col-lg-2 col-md-2 col-ls-2" style="margin: 10px">-->
@@ -135,12 +140,15 @@
 
         <div id="graphBox" class="graphBox row">
             <h4>Graph:</h4>
-            <div id="graph" class="graph col-lg-6">
+            <div id="graph" class="graph col-lg-8">
                 <svg id="svg" width="100%" height="100%">
                     <g id="viewport"></g>
                 </svg>
             </div>
-            <div class="lists col-lg-5">
+            <div class="lists col-lg-3">
+                <div class="row">
+
+                </div>
                 <div class="row">
                     <h4>Open List:</h4>
 
@@ -171,7 +179,6 @@
                             <li><div id="id2" class="legendItems"></div><span> - Boundaries/Walls</span></li>
                             <li><div id="id3" class="legendItems"></div><span> - Expanded Nodes</span></li>
                             <li><div id="id4" class="legendItems"></div><span> - Frontier Nodes</span></li>
-
                         </ul>
                     </div>
 
