@@ -23,6 +23,7 @@ function changeSpeed(num) {
 }
 
 $(document).ready(function () {
+
     $('.fullScreenbtn').click(function(e){
         $("#graphBox").fullScreen(true);
     });

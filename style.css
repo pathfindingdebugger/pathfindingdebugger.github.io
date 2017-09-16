@@ -65,8 +65,7 @@ body {
 .graph{
     border: groove #889DB5;
     margin: 10px;
-    /*height: 700px;*/
-    height: 100vh;
+    height: 700px;
 }
 
 
@@ -143,6 +142,7 @@ body {
 .graphBox h4{
     padding-left: 10px;
     width: 100%;
+    overflow: scroll;
 }
 
 .eventLog ol{
