@@ -32,10 +32,16 @@ body {
 }
 
 .debugger{
-  width: 95%;
-  margin: 10px auto;
-  border:1px solid #889DB5;
+    width: 95%;
+    height: 100%;
+    margin: 10px auto;
+    border:1px solid #889DB5;
     padding:5px;
+    overflow: scroll;
+}
+
+#debuggerPart1{
+    height: 100%;
 }
 
 .top-bar{

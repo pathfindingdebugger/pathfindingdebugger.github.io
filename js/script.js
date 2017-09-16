@@ -24,10 +24,6 @@ function changeSpeed(num) {
 
 $(document).ready(function () {
 
-    $('.fullScreenbtn').click(function(e){
-        $("#graphBox").fullScreen(true);
-    });
-
     $("#defaultSubmit").click(function(event){
         console.log(speed);
         $.getJSON('temp2.json', function(currentJSON) {
@@ -93,6 +89,14 @@ $(document).ready(function () {
     $(document).ready(function(){
         $('.modal').modal();
     });
+
+
+    // Full Screen Mode
+
+    $('.fullScreenbtn').click(function(e){
+        $("#debugger").fullScreen(true);
+    });
+
 
     $("#submit1btn").click(function () {
         var getText = document.getElementById('JSONinput').value;
