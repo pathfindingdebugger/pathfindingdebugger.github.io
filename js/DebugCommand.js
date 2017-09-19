@@ -3,6 +3,7 @@ class DebugCommand
     constructor(events,visual)
     {
         this.visulizer = visual;
+
         this.eventCounter = 0;
         this.eventList = events;
         this.currentId = null;
@@ -105,8 +106,6 @@ class DebugCommand
 
     runEvent(event)
     {
-        console.log(event.x, event.y);
-
         switch (event.type) {
             case "generating":
                 this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
@@ -119,6 +118,8 @@ class DebugCommand
                 break;
 
         }
+        console.log(event);
+        this.visulizer.setNodeValues(event.x,event.y,event.g,event.f)
     }
 
 }

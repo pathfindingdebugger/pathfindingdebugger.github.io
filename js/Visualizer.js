@@ -25,6 +25,7 @@ class gridVisulizer {
         this.tileArray = null;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
+        this.floatBox = null;
 
         //this.scroll(this.svg)
     }
@@ -53,6 +54,56 @@ class gridVisulizer {
         }
     }
 
+    generateFloatBox(mouseX,mouseY,gridX,gridY,gridElem)
+    {
+        if(this.floatBox !== null )
+        {
+            this.deleteFloatBox();
+            this.floatBox = null;
+        }
+        gridY = gridY - 3;
+        const svg = document.getElementById("svg");
+        console.log(gridX,gridY,gridElem.attr("g"),gridElem.attr("f"));
+
+        const newX = mouseX > svg.clientWidth/2? 0 : svg.clientWidth - 300;
+        const newY = mouseY > svg.clientHeight ? 0 : svg.clientHeight - 100;
+
+        this.floatBox = new Elem(svg,'g')
+            .attr('transform','translate('+newX+','+newY+')');
+
+        new Elem(this.floatBox.elem,'rect')
+            .attr('width',300)
+            .attr('height',100)
+            .attr('x',0)
+            .attr('y',0)
+            .attr('fill','white')
+            .attr('stroke','black');
+
+        const textElem = new Elem(this.floatBox.elem,'text')
+            .attr('x',0)
+            .attr('y',40)
+            .attr('font-size',30)
+            .attr('fill','black');
+
+        textElem.elem.append(document.createTextNode("x:"+gridX+"\n y:"+gridY+"\n g:"+gridElem.attr("g")+ "\n f:"+gridElem.attr("f")))
+        gridElem.observeEvent('mouseout')
+            .subscribe(e=>this.deleteFloatBox())
+
+
+
+    }
+    deleteFloatBox()
+    {
+        this.floatBox.elem.remove();
+    }
+
+    setNodeValues(x,y,g,f)
+    {
+        y = y - 3;
+        this.tileArray[y * this.mapWidth + x]
+            .attr('g',g)
+            .attr('f',f);
+    }
     //This function sets the node colour the states are given in the states enum
     setNodeState(x, y, state) {
         y = y - 3;
@@ -114,7 +165,14 @@ class gridVisulizer {
                     .attr('x', this.tileSize * j).attr('y', this.tileSize * i)
                     .attr('width', this.tileSize).attr('height', this.tileSize)
                     .attr('fill', (mapString[stringIndex] === ".") ? 'white' : (mapString[stringIndex] === "@") ? 'black' : "#777679")
-                    .attr('stroke', 'black');
+                    .attr('stroke', 'black')
+                    .attr('g',0)
+                    .attr('f',0)
+                    .attr('last','');
+
+                this.tileArray[i * this.mapWidth+j].observeEvent('mouseover')
+                    .filter(e => this.tileArray[i * this.mapWidth+j].attr("fill") === '#0032ff'||this.tileArray[i * this.mapWidth+j].attr("fill") === '#00f6ff')
+                    .subscribe(e=> this.generateFloatBox(e.clientX,e.clientY,j,i,this.tileArray[i * this.mapWidth + j]));
 
                 this.tileArray[i * this.mapWidth + j].observeEvent('mousedown')
                     .filter(e => e.shiftKey)
