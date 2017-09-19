@@ -82,10 +82,13 @@ class gridVisulizer {
         const textElem = new Elem(this.floatBox.elem,'text')
             .attr('x',0)
             .attr('y',40)
-            .attr('font-size',30)
+            .attr('font-size',28)
             .attr('fill','black');
 
-        textElem.elem.append(document.createTextNode("x:"+gridX+"\n y:"+gridY+"\n g:"+gridElem.attr("g")+ "\n f:"+gridElem.attr("f")))
+        const g = Number(gridElem.attr("g")).toPrecision(3);
+        const f = Number(gridElem.attr("f")).toPrecision(3);
+
+        textElem.elem.append(document.createTextNode("x:"+gridX+"\n y:"+gridY+"\n g:"+g+ "\n f:"+f));
         gridElem.observeEvent('mouseout')
             .subscribe(e=>this.deleteFloatBox())
 
@@ -108,6 +111,8 @@ class gridVisulizer {
     setNodeState(x, y, state) {
         y = y - 3;
         // console.log("CAKE");
+        if(this.tileArray[y*this.mapWidth+x].attr("fill") === "#09ff00")
+            return ;
         if (0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight) {
             // console.log(x,this.mapWidth,y,this.mapHeight);
             switch (state) {
