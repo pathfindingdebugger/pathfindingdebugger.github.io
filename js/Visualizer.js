@@ -87,7 +87,6 @@ class gridVisulizer {
 
         const g = Number(gridElem.attr("g")).toPrecision(3);
         const f = Number(gridElem.attr("f")).toPrecision(3);
-
         textElem.elem.append(document.createTextNode("x:"+gridX+"\n y:"+gridY+"\n g:"+g+ "\n f:"+f));
         gridElem.observeEvent('mouseout')
             .subscribe(e=>this.deleteFloatBox())
