@@ -2,27 +2,29 @@ class DebugCommand
 {
     constructor(events,visual)
     {
+        console.log(typeof events);
         this.visulizer = visual;
+
         this.eventCounter = 0;
         this.eventList = events;
         this.currentId = null;
     }
     complete()
     {
-        return this.eventCounter >= this.eventList.size
+        return this.eventCounter >= this.eventList.length
     }
 
     // play(speed)
     // {
     //     this.currentId = setInterval(
     //         () => {
-    //             console.log(this.eventCounter,this.eventList[this.eventCounter]);
     //             if(!this.complete())
     //             {
     //                 this.runEvent(this.eventList[this.eventCounter]);
     //             }
     //             else
     //             {
+    //                 console.log("Cleared");
     //                 clearInterval(this.currentId);
     //             }
     //             this.eventCounter++;
@@ -30,7 +32,7 @@ class DebugCommand
     // }
 
     // Testing
-    play(speed, i,dataReceived, currentEventNum)
+    play(speed)
     {
         this.currentId = setInterval(
             () => {
@@ -39,16 +41,6 @@ class DebugCommand
                 {
                     this.runEvent(this.eventList[this.eventCounter]);
 
-                    var eventli = document.createElement("LI");
-                    eventli.setAttribute("id", i);
-                    i++;
-                    var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
-                    currentEventNum += 1;
-                    eventli.appendChild(newMainItem);
-                    $('#eventList').append(eventli);
-
-                    var mydiv = $(".eventLog");
-                    mydiv.scrollTop(mydiv.prop("scrollHeight"));
                 }
                 else
                 {
@@ -69,35 +61,35 @@ class DebugCommand
         this.play(speed);
     }
     //
-    // stepForward()
-    // {
-    //     if(!this.complete())
-    //     {
-    //         this.runEvent(this.eventList[this.eventCounter]);
-    //         this.eventCounter++;
-    //     }
-    // }
-
-    // Testing
     stepForward()
     {
         if(!this.complete())
         {
             this.runEvent(this.eventList[this.eventCounter]);
             this.eventCounter++;
-
-            var eventli = document.createElement("LI");
-            eventli.setAttribute("id", i);
-            i++;
-            var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
-            currentEventNum += 1;
-            eventli.appendChild(newMainItem);
-            $('#eventList').append(eventli);
-
-            var mydiv = $(".eventLog");
-            mydiv.scrollTop(mydiv.prop("scrollHeight"));
         }
     }
+
+    // Testing
+    // stepForward()
+    // {
+    //     if(!this.complete())
+    //     {
+    //         this.runEvent(this.eventList[this.eventCounter]);
+    //         this.eventCounter++;
+    //
+    //         var eventli = document.createElement("LI");
+    //         eventli.setAttribute("id", i);
+    //         i++;
+    //         var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
+    //         currentEventNum += 1;
+    //         eventli.appendChild(newMainItem);
+    //         $('#eventList').append(eventli);
+    //
+    //         var mydiv = $(".eventLog");
+    //         mydiv.scrollTop(mydiv.prop("scrollHeight"));
+    //     }
+    // }
     stepBack()
     {
 
@@ -105,7 +97,14 @@ class DebugCommand
 
     runEvent(event)
     {
-        console.log(event.x, event.y);
+        var eventli = document.createElement("LI");
+        eventli.setAttribute("id", this.eventCounter);
+        var newMainItem = document.createTextNode(dataReceived[this.eventCounter].type + ", x= " + dataReceived[this.eventCounter].x + ", y= " + dataReceived[this.eventCounter].y + ", g= " + dataReceived[this.eventCounter].g + ", h= " + dataReceived[this.eventCounter].h);
+        eventli.appendChild(newMainItem);
+        $('#eventList').append(eventli);
+
+        var mydiv = $(".eventLog");
+        mydiv.scrollTop(mydiv.prop("scrollHeight"));
 
         switch (event.type) {
             case "generating":
@@ -119,6 +118,8 @@ class DebugCommand
                 break;
 
         }
+        console.log(event);
+        this.visulizer.setNodeValues(event.x,event.y,event.g,event.f)
     }
 
 }
