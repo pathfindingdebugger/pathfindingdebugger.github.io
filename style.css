@@ -41,13 +41,17 @@ body {
 }
 
 .top-bar{
-  width: 100%;
+    width: 100%;
     padding: 5px;
-  display: inline-block;
+    /*position: fixed;*/
+    /*margin-top:0px;*/
+    /*z-index: 100;*/
+    /*background: #fff;*/
+    display: inline-block;
 }
 
 .row{
-    padding:0px;
+    padding:10px;
     margin: 0px;
 }
 
@@ -66,23 +70,25 @@ body {
 
 .graph{
     border: groove #889DB5;
-    margin: 10px;
+    margin: 10px 0px;
     height: 700px;
 }
 
 
 #openList{
     border: groove #889DB5;
-    height: 200px;
+    height: 100px;
     width: 100%;
+    padding: 5px;
     overflow: scroll;
 
 }
 
 #closedList{
     border: groove #889DB5;
-    height: 200px;
+    height: 100px;
     width: 100%;
+    padding: 5px;
     overflow: scroll;
 
 }
@@ -112,7 +118,6 @@ body {
     height: 20px;
     background-color: #000000;
     display: inline-block;
-    /*done*/
 }
 
 #id3{
@@ -131,8 +136,9 @@ body {
 
 .eventLog{
     border: groove #889DB5;
+    width: 100%;
     margin: 10px;
-    height: 220px;
+    height: 650px;
     padding: 5px;
     overflow: scroll;
 }
@@ -164,9 +170,9 @@ padding: 2px 5px 2px 60px;
     width: 100%;
 }
 
-.lists{
-    padding: 5px;
-    margin: 10px;
+.eventPart{
+    /*padding: 15px;*/
+    /*margin: 10px;*/
 }
 
 #eventList li:hover{
