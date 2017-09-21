@@ -84,7 +84,7 @@ class DebugCommand
     //         currentEventNum += 1;
     //         eventli.appendChild(newMainItem);
     //         $('#eventList').append(eventli);
-    //
+
     //         var mydiv = $(".eventLog");
     //         mydiv.scrollTop(mydiv.prop("scrollHeight"));
     //     }
