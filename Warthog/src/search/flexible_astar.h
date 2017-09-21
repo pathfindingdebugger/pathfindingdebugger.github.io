@@ -153,7 +153,7 @@ class flexible_astar
 
 
 	private:
-		//Debugger debugger;
+		Debugger debugger;
 		H* heuristic_;
 		E* expander_;
 		warthog::pqueue* open_;
@@ -182,7 +182,7 @@ class flexible_astar
 			#ifndef NDEBUG
 			if(verbose_)
 			{
-				//debugger  = Debugger(startid,goalid,expander_->mapwidth());
+				debugger  = Debugger(startid,goalid,expander_->mapwidth());
 				std::cerr << "search: startid="<<startid<<" goalid=" <<goalid
 					<< std::endl;
 			}
@@ -230,7 +230,7 @@ class flexible_astar
 					y = (current->get_id() / expander_->mapwidth());
 					x = current->get_id() % expander_->mapwidth();
 					std::cerr << "expanding ("<<x<<", "<<y<<")...";
-					//debugger.AddEvent(expanding,x,y,current);
+					debugger.AddEvent(expanding,x,y,current);
 					
 					
 					current->print(std::cerr);
@@ -270,7 +270,7 @@ class flexible_astar
 								y = (n->get_id() / expander_->mapwidth());
 								x = n->get_id() % expander_->mapwidth();
 								std::cerr << "  updating ("<<x<<", "<<y<<")...";
-								//debugger.AddEvent(updating,x,y,n);
+								debugger.AddEvent(updating,x,y,n);
 								n->print(std::cerr);
 								std::cerr << std::endl;
 							}
@@ -285,7 +285,7 @@ class flexible_astar
 								y = (n->get_id() / expander_->mapwidth());
 								x = n->get_id() % expander_->mapwidth();
 								std::cerr << "  updating ("<<x<<", "<<y<<")...";
-								//debugger.AddEvent(updating,x,y,n);
+								debugger.AddEvent(updating,x,y,n);
 								n->print(std::cerr);
 								std::cerr << std::endl;
 							}
@@ -307,7 +307,7 @@ class flexible_astar
 							y = (n->get_id() / expander_->mapwidth());
 							x = n->get_id() % expander_->mapwidth();
 							std::cerr << "  generating ("<<x<<", "<<y<<")...";
-							//debugger.AddEvent(generating,x,y,n);
+							debugger.AddEvent(generating,x,y,n);
 							n->print(std::cerr);
 							std::cerr << std::endl;
 						}
@@ -322,7 +322,7 @@ class flexible_astar
 					y = (current->get_id() / expander_->mapwidth());
 					x = current->get_id() % expander_->mapwidth();
 					std::cerr <<"closing ("<<x<<", "<<y<<")...";
-					//debugger.AddEvent(closing,x,y,current);
+					debugger.AddEvent(closing,x,y,current);
 					current->print(std::cerr);
 					std::cerr << std::endl;
 			}
@@ -331,8 +331,10 @@ class flexible_astar
 
 			mytimer.stop();
 			search_time_ = mytimer.elapsed_time_micro();
-			//if(verbose_)
-				//debugger.printToDebugFile();
+			if(verbose_)
+			{
+				debugger.printToDebugFile();
+			}			
 			return goal;
 		}
 
