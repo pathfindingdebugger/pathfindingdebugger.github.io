@@ -13,23 +13,22 @@ enum EventType
 	updating,
 	closing
 };
-using namespace std;
 class Debugger
 {
 private:
 	int eventCount = 0;
-	string typeStrings[4] = {"expanding","generating","updating","closing"};
-	stringstream saveData;
+	std::string typeStrings[4] = {"expanding","generating","updating","closing"};
+	std::stringstream saveData;
 public:
     Debugger()
     {
-		saveData << "{ \"map\" : \"Null " ; 
+		saveData << "{ \"Map\" : \"Null\" " ; 
 		saveData << "\"eventList\" : [ \n";
 		
     }
 	Debugger(uint32_t start, uint32_t end,uint32_t mapWidth)
     {
-		saveData << "{ \"map\" : \"Null " ; 
+		saveData << "{ \"Map\" : \"Null\", " ; 
 		saveData << "\"startId\" : { \"x\":"<< start % mapWidth 
 				 << ", \"y\" :"<<(start / mapWidth) << "}, "
 				 << "\"endId\" : { \"x\":"<< end % mapWidth
@@ -47,7 +46,7 @@ public:
 				 << ", \"y\" :"<<(end / grid->width()) << "}, \n";
 		saveData << " \"eventList\" : [ \n";
 
-		cerr << grid->height() << " : " << grid ->width() << endl;
+		//std::cerr << grid->height() << " : " << grid ->width() << std::endl;
     }
 
 	Debugger(uint32_t start, uint32_t end,warthog::weighted_gridmap* grid)
@@ -98,15 +97,15 @@ public:
 		outputfile.open("temp.json");
 		saveData << "\n ] }"; //Add terminating curley bracket for Json		
 		
-		string data = saveData.str();
-		outputfile << data.substr(0,data.length()-3);
+		std::string data = saveData.str();
+		outputfile << data;//data.substr(0,data.length()-3);
 		outputfile.close();
 	}
-	string getMapString(const char* fileName)
+	std::string getMapString(const char* fileName)
 	{
-		string line;
+		std::string line;
 		std::ifstream file;
-		stringstream mapString;		
+		std::stringstream mapString;		
 		file.open(fileName);
 		for(int i = 0 ; i < 4; i++)
 		{
