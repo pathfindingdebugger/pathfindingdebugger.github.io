@@ -8,6 +8,7 @@ class DebugCommand
         this.eventCounter = 0;
         this.eventList = events;
         this.currentId = null;
+        this.currentNode = null;
     }
     complete()
     {
@@ -94,7 +95,7 @@ class DebugCommand
 
     }
 
-    runEvent(event)
+    runEvent(event) // NEED TO REFACTOR TO ALLOW FOR ALL NON EXPANSIONS TO OCCUR IN ONE ROUND
     {
         var eventli = document.createElement("LI");
         eventli.setAttribute("id", this.eventCounter);
@@ -106,6 +107,10 @@ class DebugCommand
         mydiv.scrollTop(mydiv.prop("scrollHeight"));
 
         switch (event.type) {
+            case "expanding":
+                this.currentNode = {x:event.x, y:event.y}; //If expanding then just set current node and return
+                return;
+
             case "generating":
                 this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
                 break;
@@ -117,7 +122,7 @@ class DebugCommand
                 break;
 
         }
-        this.visulizer.setNodeValues(event.x,event.y,event.g,event.f)
+        this.visulizer.setNodeValues(event.x,event.y,event.g,event.f,this.currentNode)
     }
 
 }

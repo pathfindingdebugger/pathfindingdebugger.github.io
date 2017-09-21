@@ -21,7 +21,7 @@ function drawRectsEvents()
 class gridVisulizer {
     constructor(mapWidth, mapHeight, tileSize, mapString) {
         this.svg = document.getElementById("viewport");
-
+        this.topPadding = 3;
         this.tileArray = null;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
@@ -61,7 +61,7 @@ class gridVisulizer {
             this.deleteFloatBox();
             this.floatBox = null;
         }
-        gridY = gridY - 3;
+        gridY = gridY - this.topPadding;
         const svg = document.getElementById("svg");
         //console.log(gridX,gridY,gridElem.attr("g"),gridElem.attr("f"));
         console.log(mouseX,mouseY);
@@ -114,6 +114,8 @@ class gridVisulizer {
         const f = Number(gridElem.attr("f")).toPrecision(3);
         fText.elem.append(document.createTextNode(" f:"+f));
 
+        console.log(gridElem.attr('px'),gridElem.attr('py'));
+
         gridElem.observeEvent('mouseout')
             .subscribe(e=>this.deleteFloatBox());
 
@@ -132,17 +134,20 @@ class gridVisulizer {
         this.floatBox.elem.remove();
     }
 
-    setNodeValues(x,y,g,f)
+    setNodeValues(x,y,g,f,parent)
     {
-        y = y - 3;
+        parent.y = parent.y - 3;
+        y = y - this.topPadding;
         this.tileArray[y * this.mapWidth + x]
             .attr('g',g)
             .attr('h',f-g)
-            .attr('f',f);
+            .attr('f',f)
+            .attr('px',parent.x)
+            .attr('py',parent.y);
     }
     //This function sets the node colour the states are given in the states enum
     setNodeState(x, y, state) {
-        y = y - 3;
+        y = y - this.topPadding;
         // console.log("CAKE");
         if(this.tileArray[y*this.mapWidth+x].attr("fill") === "#09ff00")
             return ;
@@ -207,6 +212,8 @@ class gridVisulizer {
                     .attr('g',0)
                     .attr('f',0)
                     .attr('h',0)
+                    .attr('px',0)
+                    .attr('py',0)
                     .attr('last','');
 
                 this.tileArray[i * this.mapWidth+j].observeEvent('mouseover')
