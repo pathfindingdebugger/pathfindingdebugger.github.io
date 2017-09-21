@@ -117,7 +117,6 @@ class DebugCommand
                 break;
 
         }
-        console.log(event);
         this.visulizer.setNodeValues(event.x,event.y,event.g,event.f)
     }
 

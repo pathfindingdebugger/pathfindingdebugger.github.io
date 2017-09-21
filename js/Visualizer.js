@@ -66,12 +66,9 @@ class gridVisulizer {
         //console.log(gridX,gridY,gridElem.attr("g"),gridElem.attr("f"));
         console.log(mouseX,mouseY);
 
-        left = svg.getBoundingClientRect().left;
-        top = svg.getBoundingClientRect().top;
 
-
-        const newX = mouseX-left;//These offsets corraspond to the svg
-        const newY = mouseY-top;
+        const newX = mouseX;//These offsets corraspond to the svg
+        const newY = mouseY;
         const textFont = 20;
         this.floatBox = new Elem(svg,'g')
             .attr('transform','translate('+newX+','+newY+')');
@@ -121,7 +118,13 @@ class gridVisulizer {
             .subscribe(e=>this.deleteFloatBox());
 
         Observable.fromEvent(this.svg,'mousemove')
-            .subscribe(e=>this.floatBox.attr('transform','translate('+(e.clientX-65)+','+(e.clientY-360)+')'));
+            .map(({clientX,clientY}) =>(
+                ({
+                    clientX:clientX - svg.getBoundingClientRect().left,
+                    clientY:clientY - svg.getBoundingClientRect().top-10
+                })
+            ))
+            .subscribe(e=>this.floatBox.attr('transform','translate('+(e.clientX)+','+(e.clientY)+')'));
 
     }
     deleteFloatBox()
