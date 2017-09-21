@@ -37,8 +37,9 @@ body {
     margin: 10px auto;
     border:1px solid #889DB5;
     padding:5px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
+
 
 .top-bar{
     width: 100%;

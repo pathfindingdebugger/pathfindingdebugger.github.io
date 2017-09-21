@@ -98,7 +98,7 @@ class DebugCommand
     {
         var eventli = document.createElement("LI");
         eventli.setAttribute("id", this.eventCounter);
-        var newMainItem = document.createTextNode(dataReceived[this.eventCounter].type + ", x= " + dataReceived[this.eventCounter].x + ", y= " + dataReceived[this.eventCounter].y + ", g= " + dataReceived[this.eventCounter].g + ", h= " + dataReceived[this.eventCounter].h);
+        var newMainItem = document.createTextNode(dataReceived[this.eventCounter].type + ", x= " + dataReceived[this.eventCounter].x + ", y= " + dataReceived[this.eventCounter].y + ", g= " + dataReceived[this.eventCounter].g + ", h= " + dataReceived[this.eventCounter].f);
         eventli.appendChild(newMainItem);
         $('#eventList').append(eventli);
 
