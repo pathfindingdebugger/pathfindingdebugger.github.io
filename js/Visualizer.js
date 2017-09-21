@@ -63,35 +63,60 @@ class gridVisulizer {
         }
         gridY = gridY - 3;
         const svg = document.getElementById("svg");
-        console.log(gridX,gridY,gridElem.attr("g"),gridElem.attr("f"));
-
-        const newX = mouseX > svg.clientWidth/2? 0 : svg.clientWidth - 300;
-        const newY = mouseY > svg.clientHeight ? 0 : svg.clientHeight - 100;
-
+        //console.log(gridX,gridY,gridElem.attr("g"),gridElem.attr("f"));
+        console.log(mouseX,mouseY);
+        const newX = mouseX-65;//These offsets corraspond to the svg
+        const newY = mouseY-360;
+        const textFont = 20;
         this.floatBox = new Elem(svg,'g')
             .attr('transform','translate('+newX+','+newY+')');
 
-        new Elem(this.floatBox.elem,'rect')
-            .attr('width',300)
-            .attr('height',100)
-            .attr('x',0)
-            .attr('y',0)
-            .attr('fill','white')
-            .attr('stroke','black');
+        new Elem(this.floatBox.elem,'polygon')
+            .attr("points","0,0 10,-10 50,-10 50,-150 -50,-150 -50,-10 -10,-10")
+            .attr("fill","white")
+            .attr("stroke-width",3)
+            .attr("stroke",gridElem.attr("fill"));
 
-        const textElem = new Elem(this.floatBox.elem,'text')
-            .attr('x',0)
-            .attr('y',40)
-            .attr('font-size',28)
+
+        const positionText = new Elem(this.floatBox.elem,'text')
+            .attr('x',-45)
+            .attr('y',-130)
+            .attr('font-size',textFont)
             .attr('fill','black');
 
+
+
+        positionText.elem.append(document.createTextNode("x:"+gridX+"\t y:"+gridY));
+
+        const gText = new Elem(this.floatBox.elem,'text')
+            .attr('x',-45)
+            .attr('y',-110)
+            .attr('font-size',textFont)
+            .attr('fill','black');
         const g = Number(gridElem.attr("g")).toPrecision(3);
+        gText.elem.append(document.createTextNode("g:"+g));
+
+        const hText = new Elem(this.floatBox.elem,'text')
+            .attr('x',-45)
+            .attr('y',-90)
+            .attr('font-size',textFont)
+            .attr('fill','black');
+        const h = Number(gridElem.attr("h")).toPrecision(3);
+        hText.elem.append(document.createTextNode("h:"+h));
+
+        const fText = new Elem(this.floatBox.elem,'text')
+            .attr('x',-45)
+            .attr('y',-70)
+            .attr('font-size',textFont)
+            .attr('fill','black');
         const f = Number(gridElem.attr("f")).toPrecision(3);
-        textElem.elem.append(document.createTextNode("x:"+gridX+"\n y:"+gridY+"\n g:"+g+ "\n f:"+f));
+        fText.elem.append(document.createTextNode(" f:"+f));
+
         gridElem.observeEvent('mouseout')
-            .subscribe(e=>this.deleteFloatBox())
+            .subscribe(e=>this.deleteFloatBox());
 
-
+        Observable.fromEvent(this.svg,'mousemove')
+            .subscribe(e=>this.floatBox.attr('transform','translate('+(e.clientX-65)+','+(e.clientY-360)+')'));
 
     }
     deleteFloatBox()
@@ -104,6 +129,7 @@ class gridVisulizer {
         y = y - 3;
         this.tileArray[y * this.mapWidth + x]
             .attr('g',g)
+            .attr('h',f-g)
             .attr('f',f);
     }
     //This function sets the node colour the states are given in the states enum
@@ -172,6 +198,7 @@ class gridVisulizer {
                     .attr('stroke', 'black')
                     .attr('g',0)
                     .attr('f',0)
+                    .attr('h',0)
                     .attr('last','');
 
                 this.tileArray[i * this.mapWidth+j].observeEvent('mouseover')
