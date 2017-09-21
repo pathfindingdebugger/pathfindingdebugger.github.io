@@ -36,7 +36,6 @@ class DebugCommand
     {
         this.currentId = setInterval(
             () => {
-                console.log(this.eventCounter,this.eventList[this.eventCounter]);
                 if(!this.complete())
                 {
                     this.runEvent(this.eventList[this.eventCounter]);
