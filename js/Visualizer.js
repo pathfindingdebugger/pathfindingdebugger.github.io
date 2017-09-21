@@ -65,8 +65,13 @@ class gridVisulizer {
         const svg = document.getElementById("svg");
         //console.log(gridX,gridY,gridElem.attr("g"),gridElem.attr("f"));
         console.log(mouseX,mouseY);
-        const newX = mouseX-65;//These offsets corraspond to the svg
-        const newY = mouseY-360;
+
+        left = svg.getBoundingClientRect().left;
+        top = svg.getBoundingClientRect().top;
+
+
+        const newX = mouseX-left;//These offsets corraspond to the svg
+        const newY = mouseY-top;
         const textFont = 20;
         this.floatBox = new Elem(svg,'g')
             .attr('transform','translate('+newX+','+newY+')');
