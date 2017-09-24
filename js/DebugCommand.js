@@ -2,7 +2,6 @@ class DebugCommand
 {
     constructor(events,visual)
     {
-        console.log(typeof events);
         this.visulizer = visual;
 
         this.eventCounter = 0;
@@ -99,7 +98,7 @@ class DebugCommand
     {
         var eventli = document.createElement("LI");
         eventli.setAttribute("id", this.eventCounter);
-        var newMainItem = document.createTextNode(dataReceived[this.eventCounter].type + ", x= " + dataReceived[this.eventCounter].x + ", y= " + dataReceived[this.eventCounter].y + ", g= " + dataReceived[this.eventCounter].g + ", h= " + (dataReceived[this.eventCounter].f - dataReceived[this.eventCounter].g ) +", f= " + dataReceived[this.eventCounter].f);
+        var newMainItem = document.createTextNode(event.type + ", x= " + event.x + ", y= " + event.y + ", g= " + event.g + ", h= " + (event.f - event.g ) +", f= " + event.f);
         eventli.appendChild(newMainItem);
         $('#eventList').append(eventli);
 
@@ -108,21 +107,28 @@ class DebugCommand
 
         switch (event.type) {
             case "expanding":
+                console.log("current = ",event.x,event.y);
                 this.currentNode = {x:event.x, y:event.y}; //If expanding then just set current node and return
-                return;
+                break;
 
             case "generating":
                 this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
+                this.visulizer.setNodeValues(event.x,event.y,event.g,event.f,this.currentNode);
                 break;
             case "updating":
                 this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
+                if (event.f < this.visulizer.getNodeData(event.x,event.y).f || (event.f === this.visulizer.getNodeData(event.x,event.y).f
+                        && event.g < this.visulizer.getNodeData(event.x,event.y).g))
+                {
+                    this.visulizer.setNodeValues(event.x,event.y,event.g,event.f,this.currentNode);
+                }
                 break;
             case "closing":
                 this.visulizer.setNodeState(event.x, event.y, states.expanded);
                 break;
 
         }
-        this.visulizer.setNodeValues(event.x,event.y,event.g,event.f,this.currentNode)
+
     }
 
 }

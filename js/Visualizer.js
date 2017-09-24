@@ -26,6 +26,7 @@ class gridVisulizer {
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
         this.floatBox = null;
+        this.lineVisual = null;
 
         //this.scroll(this.svg)
     }
@@ -88,7 +89,7 @@ class gridVisulizer {
 
 
 
-        positionText.elem.append(document.createTextNode("x:"+gridX+"\t y:"+gridY));
+        positionText.elem.append(document.createTextNode("x:"+gridX+"\t y:"+(gridY+this.topPadding)));
 
         const gText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
@@ -114,10 +115,9 @@ class gridVisulizer {
         const f = Number(gridElem.attr("f")).toPrecision(3);
         fText.elem.append(document.createTextNode(" f:"+f));
 
-        console.log(gridElem.attr('px'),gridElem.attr('py'));
 
         gridElem.observeEvent('mouseout')
-            .subscribe(e=>this.deleteFloatBox());
+            .subscribe(e=>{this.deleteFloatBox(); this.deleteLine()});
 
         Observable.fromEvent(this.svg,'mousemove')
             .map(({clientX,clientY}) =>(
@@ -134,16 +134,50 @@ class gridVisulizer {
         this.floatBox.elem.remove();
     }
 
+    drawLine(i,j)
+    {
+        this.lineVisual = new Elem(this.svg,'polyline');
+
+        const pointList = (x,y)=> {
+            if( x !== -1)
+            {
+                console.log(x,y);
+                console.log(this.tileArray[y*this.mapWidth+x].attr('px'),this.tileArray[y*this.mapWidth+x].attr('py'));
+                return (x*this.tileSize+this.tileSize/2)+','+(y*this.tileSize+this.tileSize/2)+" "+pointList(Number(this.tileArray[y*this.mapWidth+x].attr('px')), Number(this.tileArray[y*this.mapWidth+x].attr('py')))
+            }
+            else{
+                return ''
+            }
+        };
+
+
+
+        //const pointList = (x,y)=> x !== -1 ? pointList(this.tileArray[y*this.mapWidth+x].attr('px'), this.tileArray[y*this.mapWidth+x].attr('py'))+" "+x+','+y : "";
+        this.lineVisual.attr('points',pointList(i,j))
+            .attr('stroke',"red")
+            .attr('fill','none')
+            .attr('stroke-width',3)
+    }
+
+    deleteLine()
+    {
+        if(this.lineVisual !== null)
+        {
+            this.lineVisual.removeElement();
+            this.lineVisual = null;
+        }
+
+    }
+
     setNodeValues(x,y,g,f,parent)
     {
-        parent.y = parent.y - 3;
         y = y - this.topPadding;
         this.tileArray[y * this.mapWidth + x]
             .attr('g',g)
             .attr('h',f-g)
             .attr('f',f)
             .attr('px',parent.x)
-            .attr('py',parent.y);
+            .attr('py',parent.y- this.topPadding);
     }
     //This function sets the node colour the states are given in the states enum
     setNodeState(x, y, state) {
@@ -212,13 +246,16 @@ class gridVisulizer {
                     .attr('g',0)
                     .attr('f',0)
                     .attr('h',0)
-                    .attr('px',0)
-                    .attr('py',0)
+                    .attr('px',-1)
+                    .attr('py',-1)
                     .attr('last','');
 
                 this.tileArray[i * this.mapWidth+j].observeEvent('mouseover')
                     .filter(e => this.tileArray[i * this.mapWidth+j].attr("fill") === '#0032ff'||this.tileArray[i * this.mapWidth+j].attr("fill") === '#00f6ff')
-                    .subscribe(e=> this.generateFloatBox(e.clientX,e.clientY,j,i,this.tileArray[i * this.mapWidth + j]));
+                    .subscribe(e=> {
+                        this.generateFloatBox(e.clientX,e.clientY,j,i,this.tileArray[i * this.mapWidth + j]);
+                        this.drawLine(j,i)
+                    });
 
                 this.tileArray[i * this.mapWidth + j].observeEvent('mousedown')
                     .filter(e => e.shiftKey)
@@ -232,7 +269,10 @@ class gridVisulizer {
         }
 
     }
-
+    getNodeData(x,y)
+    {
+        return {g:Number(this.tileArray[y*this.mapWidth+x].attr('g')),f:Number(this.tileArray[y*this.mapWidth+x].attr('f'))};
+    }
 }
 
 if (typeof window !== 'undefined')
