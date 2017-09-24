@@ -14,7 +14,7 @@ class DebugCommand
         return this.eventCounter >= this.eventList.length
     }
 
-    // play(speed)
+    // play(speed) //cake
     // {
     //     this.currentId = setInterval(
     //         () => {
