@@ -141,15 +141,17 @@ class DebugCommand
                 this.closedList.push(" " + String(event.x)+ ":" +String(event.y));
                 break;
         }
-    }
-
-    eventClick()
-    {
-    //     id = id.split(".");
-    //     var getX = parseInt(id[0]);
-    //     var getY = parseInt(id[1]);
-    //     console.log("Event clicked = ", getX, getY);
         document.getElementById('closedList').innerHTML = String(this.closedList);
         document.getElementById('openList').innerHTML = String(this.openList);
     }
+
+    // eventClick()
+    // {
+    // //     id = id.split(".");
+    // //     var getX = parseInt(id[0]);
+    // //     var getY = parseInt(id[1]);
+    // //     console.log("Event clicked = ", getX, getY);
+    //     document.getElementById('closedList').innerHTML = String(this.closedList);
+    //     document.getElementById('openList').innerHTML = String(this.openList);
+    // }
 }
