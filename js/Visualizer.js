@@ -35,7 +35,7 @@ class gridVisulizer {
 
         if (this.breakPoints.indexOf(xInput + ":" + yInput) === -1) {
             this.breakPoints.push(xInput + ":" + yInput);
-            // console.log("Still making");
+            console.log("BreakPoints: ", this.breakPoints);
             const breakPoint = new Elem(this.svg, 'circle')
                 .attr("r", this.tileSize * 0.25)
                 .attr("cx", xInput * this.tileSize + 0.5 * this.tileSize)
@@ -202,6 +202,9 @@ class gridVisulizer {
                     break;
                 case states.goal:
                     this.tileArray[y * this.mapWidth + x].attr("fill", "#fff220");
+                    break;
+                case states.eventCheck:
+                    this.tileArray[y * this.mapWidth + x].attr("fill", "#ff1344");
                     break;
 
             }

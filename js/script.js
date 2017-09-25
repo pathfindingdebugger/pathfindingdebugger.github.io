@@ -16,6 +16,7 @@ const states = {
     expanded:2,
     start:3,
     goal:4,
+    eventCheck:5,
 };
 
 function changeSpeed(num) {
@@ -29,31 +30,6 @@ function changeSpeed(num) {
 
 $(document).ready(function () {
 
-    // $("#defaultSubmit").click(function(event){
-    //     console.log(speed);
-    //     $.getJSON('temp2.json', function(currentJSON) {
-    //         eventItems = currentJSON.eventList;
-    //         dataReceived = currentJSON.eventList;
-    //         var mapData = currentJSON.Map;
-    //
-    //         visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
-    //         control = new DebugCommand(currentJSON.eventList,visual);
-    //         for (j = currentEventNum; j <= dataReceived.length - 1; j++) {
-    //             var eventli = document.createElement("LI");
-    //             eventli.setAttribute("id", i);
-    //             var newMainItem = document.createTextNode(dataReceived[j].type + ", x= " + dataReceived[j].x + ", y= " + dataReceived[j].y + ", g= " + dataReceived[j].g + ", h= " + dataReceived[j].h);
-    //             currentEventNum += 1;
-    //             eventli.appendChild(newMainItem);
-    //             $('#eventList').append(eventli);
-    //         }
-    //         var mydiv = $(".eventLog");
-    //         mydiv.scrollTop(mydiv.prop("scrollHeight"));
-    //
-    //     });
-    //
-    // });
-
-    // Testing
     $("#defaultSubmit").click(function(event){
         console.log(speed);
         $.getJSON('temp2.json', function(currentJSON) {
@@ -66,7 +42,7 @@ $(document).ready(function () {
             visual.setNodeState(currentJSON.startId.x,currentJSON.startId.y,states.start);
             visual.setNodeState(currentJSON.endId.x,currentJSON.endId.y,states.goal);
 
-            control = new DebugCommand(currentJSON.eventList,visual);
+            control = new DebugCommand(currentJSON.eventList,visual, playing);
 
         });
 
@@ -75,12 +51,9 @@ $(document).ready(function () {
 
     $('#eventList').on('click', 'li', function(ev) {
         var id = this.id;
-        thisList = document.getElementById(id).innerHTML;
-        console.log("I was clicked! My ID is:"+id);
-        document.getElementById('openList').innerHTML = thisList;
-        document.getElementById('closedList').innerHTML = thisList;
-
+        control.eventClick(id)
     });
+
 
     $('.playbtn').click(function() {
         if(control!== null) {
@@ -137,19 +110,7 @@ $(document).ready(function () {
         visual.setNodeState(currentJSON.startId.x,currentJSON.startId.y,states.start);
         visual.setNodeState(currentJSON.endId.x,currentJSON.endId.y,states.goal);
 
-        control = new DebugCommand(currentJSON.eventList,visual);
-
-
-        // var eventli = document.createElement("LI");
-        // eventli.setAttribute("id", i);
-        // i++;
-        // var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
-        // currentEventNum += 1;
-        // eventli.appendChild(newMainItem);
-        // $('#eventList').append(eventli);
-        //
-        // var mydiv = $(".eventLog");
-        // mydiv.scrollTop(mydiv.prop("scrollHeight"));
+        control = new DebugCommand(currentJSON.eventList,visual, playing);
 
     });
 

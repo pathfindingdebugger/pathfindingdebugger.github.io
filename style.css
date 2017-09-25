@@ -37,17 +37,13 @@ body {
     margin: 10px auto;
     border:1px solid #889DB5;
     padding:5px;
-    overflow-y: scroll;
+    overflow: scroll;
 }
 
 
 .top-bar{
     width: 100%;
     padding: 5px;
-    /*position: fixed;*/
-    /*margin-top:0px;*/
-    /*z-index: 100;*/
-    /*background: #fff;*/
     display: inline-block;
 }
 
@@ -72,13 +68,13 @@ body {
 .graph{
     border: groove #889DB5;
     margin: 10px 0px;
-    height: 700px;
+    height: 650px;
 }
 
 
 #openList{
     border: groove #889DB5;
-    height: 100px;
+    height: 200px;
     width: 100%;
     padding: 5px;
     overflow: scroll;
@@ -87,7 +83,7 @@ body {
 
 #closedList{
     border: groove #889DB5;
-    height: 100px;
+    height: 200px;
     width: 100%;
     padding: 5px;
     overflow: scroll;
@@ -139,7 +135,7 @@ body {
     border: groove #889DB5;
     width: 100%;
     margin: 10px;
-    height: 650px;
+    height: 600px;
     padding: 5px;
     overflow: scroll;
 }
