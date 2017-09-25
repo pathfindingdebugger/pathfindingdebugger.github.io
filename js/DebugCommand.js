@@ -10,6 +10,7 @@ class DebugCommand
         this.currentNode = null;
         this.closedList = [];
         this.openList = [];
+        this.showEvent = false;
     }
     complete()
     {
@@ -128,6 +129,7 @@ class DebugCommand
                 this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
                 this.visulizer.setNodeValues(event.x,event.y,event.g,event.f,this.currentNode);
                 break;
+
             case "updating":
                 this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
                 if (event.f < this.visulizer.getNodeData(event.x,event.y).f || (event.f === this.visulizer.getNodeData(event.x,event.y).f
@@ -136,22 +138,32 @@ class DebugCommand
                     this.visulizer.setNodeValues(event.x,event.y,event.g,event.f,this.currentNode);
                 }
                 break;
+
             case "closing":
                 this.visulizer.setNodeState(event.x, event.y, states.expanded);
                 this.closedList.push(" " + String(event.x)+ ":" +String(event.y));
                 break;
+
         }
         document.getElementById('closedList').innerHTML = String(this.closedList);
         document.getElementById('openList').innerHTML = String(this.openList);
     }
 
-    // eventClick()
+    // eventClick(id)
     // {
-    // //     id = id.split(".");
-    // //     var getX = parseInt(id[0]);
-    // //     var getY = parseInt(id[1]);
-    // //     console.log("Event clicked = ", getX, getY);
-    //     document.getElementById('closedList').innerHTML = String(this.closedList);
-    //     document.getElementById('openList').innerHTML = String(this.openList);
+    //     id = id.split(".");
+    //     var getX = parseInt(id[0]);
+    //     var getY = parseInt(id[1]);
+    //     console.log("Event clicked = ", getX, getY);
+    //
+    //     if(this.showEvent == false){
+    //         this.visulizer.drawLine(getX,getY);
+    //         this.showEvent = true
+    //     }
+    //     else{
+    //         this.visulizer.deleteLine();
+    //         this.visulizer.drawLine(getX,getY);
+    //     }
+    //
     // }
 }

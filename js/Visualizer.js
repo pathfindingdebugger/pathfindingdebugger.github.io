@@ -68,7 +68,7 @@ class gridVisulizer {
         console.log(mouseX,mouseY);
 
 
-        const newX = mouseX;//These offsets corraspond to the svg
+        const newX = mouseX;//These offsets correspond to the svg
         const newY = mouseY;
         const textFont = 20;
         this.floatBox = new Elem(svg,'g')
@@ -135,8 +135,7 @@ class gridVisulizer {
     }
 
     drawLine(i,j)
-    {
-        this.lineVisual = new Elem(this.svg,'polyline');
+    {   this.lineVisual = new Elem(this.svg,'polyline');
 
         const pointList = (x,y)=> {
             if( x !== -1)
@@ -149,8 +148,6 @@ class gridVisulizer {
                 return ''
             }
         };
-
-
 
         //const pointList = (x,y)=> x !== -1 ? pointList(this.tileArray[y*this.mapWidth+x].attr('px'), this.tileArray[y*this.mapWidth+x].attr('py'))+" "+x+','+y : "";
         this.lineVisual.attr('points',pointList(i,j))
@@ -266,7 +263,6 @@ class gridVisulizer {
                         return {i, j}
                     })
                     .subscribe(data => this.generateBreakPoint(j, i));
-
 
             }
         }

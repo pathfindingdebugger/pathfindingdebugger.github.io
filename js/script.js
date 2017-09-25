@@ -43,6 +43,7 @@ $(document).ready(function () {
             visual.setNodeState(currentJSON.endId.x,currentJSON.endId.y,states.goal);
 
             control = new DebugCommand(currentJSON.eventList,visual, playing);
+            playing = false;
 
         });
 
@@ -111,7 +112,7 @@ $(document).ready(function () {
         visual.setNodeState(currentJSON.endId.x,currentJSON.endId.y,states.goal);
 
         control = new DebugCommand(currentJSON.eventList,visual, playing);
-
+        playing = false;
     });
 
 
