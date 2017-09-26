@@ -45,6 +45,10 @@ $(document).ready(function () {
             control = new DebugCommand(currentJSON.eventList,visual, playing);
             playing = false;
 
+            document.getElementById('eventList').innerHTML = '';
+            document.getElementById('closedList').innerHTML = '';
+            document.getElementById('openList').innerHTML = '';
+
         });
 
     });
@@ -91,7 +95,6 @@ $(document).ready(function () {
         $('.modal').modal();
     });
 
-
     // Full Screen Mode
 
     $('.fullScreenbtn').click(function(e){
@@ -113,6 +116,11 @@ $(document).ready(function () {
 
         control = new DebugCommand(currentJSON.eventList,visual, playing);
         playing = false;
+
+        document.getElementById('eventList').innerHTML = '';
+        document.getElementById('closedList').innerHTML = '';
+        document.getElementById('openList').innerHTML = '';
+
     });
 
 

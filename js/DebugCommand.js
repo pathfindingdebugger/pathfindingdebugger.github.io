@@ -37,13 +37,13 @@ class DebugCommand
 
     // Testing
     play(speed)
-    {   console.log("Play hit");
+    {
         this.currentId = setInterval(
             () => {
                 if(!this.complete())
                 {
                     var breakPointIndex = this.visulizer.breakPoints.indexOf(this.eventList[this.eventCounter].x+":"+(this.eventList[this.eventCounter].y-4));
-                    if (breakPointIndex == -1){
+                    if (breakPointIndex === -1){
                         this.runEvent(this.eventList[this.eventCounter]);
                     }else{
                         this.stop();
@@ -128,6 +128,7 @@ class DebugCommand
             case "generating":
                 this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
                 this.visulizer.setNodeValues(event.x,event.y,event.g,event.f,this.currentNode);
+                this.openList.push(" " + String(event.x)+ " " +String(event.y));
                 break;
 
             case "updating":
@@ -141,7 +142,9 @@ class DebugCommand
 
             case "closing":
                 this.visulizer.setNodeState(event.x, event.y, states.expanded);
-                this.closedList.push(" " + String(event.x)+ ":" +String(event.y));
+                this.closedList.push(" " + String(event.x)+ " " +String(event.y));
+                var openListItemIndex = this.openList.indexOf(" " + String(event.x)+ " " +String(event.y));
+                this.openList.splice(openListItemIndex, 1);
                 break;
 
         }
@@ -149,21 +152,21 @@ class DebugCommand
         document.getElementById('openList').innerHTML = String(this.openList);
     }
 
-    // eventClick(id)
-    // {
-    //     id = id.split(".");
-    //     var getX = parseInt(id[0]);
-    //     var getY = parseInt(id[1]);
-    //     console.log("Event clicked = ", getX, getY);
-    //
-    //     if(this.showEvent == false){
-    //         this.visulizer.drawLine(getX,getY);
-    //         this.showEvent = true
-    //     }
-    //     else{
-    //         this.visulizer.deleteLine();
-    //         this.visulizer.drawLine(getX,getY);
-    //     }
-    //
-    // }
+    eventClick(id)
+    {
+        id = id.split(".");
+        var getX = parseInt(id[0]);
+        var getY = parseInt(id[1]);
+        console.log("Event clicked = ", getX, getY);
+
+        if(this.showEvent == false){
+            this.visulizer.drawLine(getX,getY);
+            this.showEvent = true
+        }
+        else{
+            this.visulizer.deleteLine();
+            this.visulizer.drawLine(getX,getY);
+        }
+
+    }
 }
