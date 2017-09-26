@@ -198,9 +198,6 @@ class gridVisulizer {
                 case states.goal:
                     this.tileArray[y * this.mapWidth + x].attr("fill", "#fff220");
                     break;
-                case states.eventCheck:
-                    this.tileArray[y * this.mapWidth + x].attr("fill", "#ff1344");
-                    break;
 
             }
         }

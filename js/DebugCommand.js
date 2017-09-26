@@ -17,40 +17,14 @@ class DebugCommand
         return this.eventCounter >= this.eventList.length
     }
 
-    // play(speed)
-    // {
-    //     this.currentId = setInterval(
-    //         () => {
-    //             if(!this.complete())
-    //             {
-    //                 this.runEvent(this.eventList[this.eventCounter]);
-    //
-    //             }
-    //             else
-    //             {
-    //                 clearInterval(this.currentId);
-    //             }
-    //             this.eventCounter++;
-    //         },speed);
-    // }
-
-
-    // Testing
     play(speed)
     {
         this.currentId = setInterval(
             () => {
                 if(!this.complete())
                 {
-                    var breakPointIndex = this.visulizer.breakPoints.indexOf(this.eventList[this.eventCounter].x+":"+(this.eventList[this.eventCounter].y-4));
-                    if (breakPointIndex === -1){
-                        this.runEvent(this.eventList[this.eventCounter]);
-                    }else{
-                        this.stop();
-                        console.log("Stopped at: ",this.eventList[this.eventCounter].x+":"+(this.eventList[this.eventCounter].y-4));
-                        this.visulizer.breakPoints.splice(breakPointIndex);
-                        playing = false
-                    }
+                    this.runEvent(this.eventList[this.eventCounter]);
+
                 }
                 else
                 {
@@ -59,6 +33,32 @@ class DebugCommand
                 this.eventCounter++;
             },speed);
     }
+
+
+    // Testing
+    // play(speed)
+    // {
+    //     this.currentId = setInterval(
+    //         () => {
+    //             if(!this.complete())
+    //             {
+    //                 var breakPointIndex = this.visulizer.breakPoints.indexOf(this.eventList[this.eventCounter].x+":"+(this.eventList[this.eventCounter].y-4));
+    //                 if (breakPointIndex === -1){
+    //                     this.runEvent(this.eventList[this.eventCounter]);
+    //                 }else{
+    //                     this.stop();
+    //                     console.log("Stopped at: ",this.eventList[this.eventCounter].x+":"+(this.eventList[this.eventCounter].y-4));
+    //                     this.visulizer.breakPoints.splice(breakPointIndex);
+    //                     playing = false
+    //                 }
+    //             }
+    //             else
+    //             {
+    //                 clearInterval(this.currentId);
+    //             }
+    //             this.eventCounter++;
+    //         },speed);
+    // }
 
 
     stop()
@@ -106,11 +106,24 @@ class DebugCommand
 
     }
 
+    breakPointCheck() {
+        var breakPointIndex = this.visulizer.breakPoints.indexOf(this.eventList[this.eventCounter].x + ":" + (this.eventList[this.eventCounter].y - 4));
+        if (breakPointIndex === -1) {
+            return true
+        }
+        else {
+            this.stop();
+            console.log("Stopped at: ", this.eventList[this.eventCounter].x + ":" + (this.eventList[this.eventCounter].y - 4));
+            this.visulizer.breakPoints.splice(breakPointIndex);
+            playing = false
+        }
+    }
+
     runEvent(event) // NEED TO REFACTOR TO ALLOW FOR ALL NON EXPANSIONS TO OCCUR IN ONE ROUND
     {
         var eventli = document.createElement("LI");
-        eventli.setAttribute("id", (String(event.x)+ "." + String(event.y)));
-        var newMainItem = document.createTextNode(event.type + ", x= " + event.x + ", y= " + event.y + ", g= " + event.g + ", h= " + (event.f - event.g ) +", f= " + event.f);
+        eventli.setAttribute("id", (String(event.x) + "." + String(event.y)));
+        var newMainItem = document.createTextNode(event.type + ", x= " + event.x + ", y= " + event.y + ", g= " + event.g + ", h= " + (event.f - event.g ) + ", f= " + event.f);
         eventli.appendChild(newMainItem);
         $('#eventList').append(eventli);
 
@@ -118,39 +131,41 @@ class DebugCommand
         mydiv.scrollTop(mydiv.prop("scrollHeight"));
 
         console.log("current = ", event.x, event.y);
-        switch (event.type) {
 
+        switch (event.type) {
             case "expanding":
-                this.currentNode = {x:event.x, y:event.y}; //If expanding then just set current node and return
-                this.openList.push(" " + String(event.x)+ " " +String(event.y));
+                this.currentNode = {x: event.x, y: event.y}; //If expanding then just set current node and return
+                this.openList.push(" " + String(event.x) + " " + String(event.y));
                 break;
 
             case "generating":
+                this.breakPointCheck();
                 this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
-                this.visulizer.setNodeValues(event.x,event.y,event.g,event.f,this.currentNode);
-                this.openList.push(" " + String(event.x)+ " " +String(event.y));
+                this.visulizer.setNodeValues(event.x, event.y, event.g, event.f, this.currentNode);
+                this.openList.push(" " + String(event.x) + " " + String(event.y));
                 break;
 
             case "updating":
                 this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
-                if (event.f < this.visulizer.getNodeData(event.x,event.y).f || (event.f === this.visulizer.getNodeData(event.x,event.y).f
-                        && event.g < this.visulizer.getNodeData(event.x,event.y).g))
-                {
-                    this.visulizer.setNodeValues(event.x,event.y,event.g,event.f,this.currentNode);
+                if (event.f < this.visulizer.getNodeData(event.x, event.y).f || (event.f === this.visulizer.getNodeData(event.x, event.y).f
+                    && event.g < this.visulizer.getNodeData(event.x, event.y).g)) {
+                    this.visulizer.setNodeValues(event.x, event.y, event.g, event.f, this.currentNode);
                 }
                 break;
 
             case "closing":
+                // this.breakPointCheck();
                 this.visulizer.setNodeState(event.x, event.y, states.expanded);
-                this.closedList.push(" " + String(event.x)+ " " +String(event.y));
-                var openListItemIndex = this.openList.indexOf(" " + String(event.x)+ " " +String(event.y));
+                this.closedList.push(" " + String(event.x) + " " + String(event.y));
+                var openListItemIndex = this.openList.indexOf(" " + String(event.x) + " " + String(event.y));
                 this.openList.splice(openListItemIndex, 1);
                 break;
 
         }
         document.getElementById('closedList').innerHTML = String(this.closedList);
         document.getElementById('openList').innerHTML = String(this.openList);
-    }
+        }
+
 
     eventClick(id)
     {
