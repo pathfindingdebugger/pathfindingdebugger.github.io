@@ -21,7 +21,7 @@ function drawRectsEvents()
 class gridVisulizer {
     constructor(mapWidth, mapHeight, tileSize, mapString) {
         this.svg = document.getElementById("viewport");
-        this.topPadding = 3;
+        this.topPadding = 0;
         this.tileArray = null;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
@@ -33,8 +33,8 @@ class gridVisulizer {
 
     generateBreakPoint(xInput, yInput) {
 
-        if (this.breakPoints.indexOf(xInput + ":" + yInput) === -1) {
-            this.breakPoints.push(xInput + ":" + yInput);
+        if (this.breakPoints.indexOf(xInput + ":" + (yInput+this.topPadding)) === -1) {
+            this.breakPoints.push(xInput + ":" + (yInput+this.topPadding));
             console.log("BreakPoints: ", this.breakPoints);
             const breakPoint = new Elem(this.svg, 'circle')
                 .attr("r", this.tileSize * 0.25)
@@ -47,7 +47,7 @@ class gridVisulizer {
             breakPoint.observeEvent('mousedown')
                 .filter(e => e.shiftKey)
                 .subscribe(_ => {
-                    this.breakPoints.splice(this.breakPoints.indexOf(xInput + ":" + yInput), 1);
+                    this.breakPoints.splice(this.breakPoints.indexOf(xInput + ":" + yInput+this.topPadding), 1);
                     breakPoint.elem.remove()
                 });
 
@@ -89,7 +89,7 @@ class gridVisulizer {
 
 
 
-        positionText.elem.append(document.createTextNode("x:"+gridX+"\t y:"+(gridY+this.topPadding)));
+        positionText.elem.append(document.createTextNode("x:"+gridX+"\t y:"+(gridY+this.topPadding*2)));
 
         const gText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
@@ -166,15 +166,15 @@ class gridVisulizer {
 
     }
 
-    setNodeValues(x,y,g,f,parent)
+    setNodeValues(x,y,g,f,px,py)
     {
         y = y - this.topPadding;
         this.tileArray[y * this.mapWidth + x]
             .attr('g',g)
             .attr('h',f-g)
             .attr('f',f)
-            .attr('px',parent.x)
-            .attr('py',parent.y- this.topPadding);
+            .attr('px',px)
+            .attr('py',py);
     }
     //This function sets the node colour the states are given in the states enum
     setNodeState(x, y, state) {

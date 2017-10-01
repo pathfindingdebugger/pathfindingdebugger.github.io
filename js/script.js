@@ -35,15 +35,14 @@ $(document).ready(function () {
         $.getJSON('temp2.json', function(currentJSON) {
             eventItems = currentJSON.eventList;
             dataReceived = currentJSON.eventList;
-            var mapData = currentJSON.Map;
-
+            const mapData = currentJSON.Map;
+            console.log("cake");
             visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
-
-            visual.setNodeState(currentJSON.startId.x,currentJSON.startId.y,states.start);
-            visual.setNodeState(currentJSON.endId.x,currentJSON.endId.y,states.goal);
-
+            console.log("pie");
+            const playing = false;
             control = new DebugCommand(currentJSON.eventList,visual, playing);
-            playing = false;
+            console.log("defuck");
+
 
         });
 
@@ -105,14 +104,9 @@ $(document).ready(function () {
         var currentJSON = JSON.parse(getText);
         dataReceived = currentJSON.eventList;
         var mapData = currentJSON.Map;
-
         visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
-
-        visual.setNodeState(currentJSON.startId.x,currentJSON.startId.y,states.start);
-        visual.setNodeState(currentJSON.endId.x,currentJSON.endId.y,states.goal);
-
         control = new DebugCommand(currentJSON.eventList,visual, playing);
-        playing = false;
+
     });
 
 
