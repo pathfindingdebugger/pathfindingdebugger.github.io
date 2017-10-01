@@ -19,8 +19,9 @@ function drawRectsEvents()
 }
 
 class gridVisulizer {
-    constructor(mapWidth, mapHeight, tileSize, mapString) {
+    constructor() {
         this.svg = document.getElementById("viewport");
+
         this.topPadding = 0;
         this.tileArray = null;
         this.breakPoints = new Array(0);
@@ -53,7 +54,6 @@ class gridVisulizer {
 
         }
     }
-
     generateFloatBox(mouseX,mouseY,gridX,gridY,gridElem)
     {
         if(this.floatBox !== null )
@@ -167,6 +167,7 @@ class gridVisulizer {
     setNodeValues(x,y,g,f,px,py)
     {
         y = y - this.topPadding;
+        console.log(px,py);
         this.tileArray[y * this.mapWidth + x]
             .attr('g',g)
             .attr('h',f-g)
@@ -205,6 +206,7 @@ class gridVisulizer {
     }
 
     loadMap(mapWidth, mapHeight, tileSize, mapString) {
+        this.mapData = mapString;
         this.svg.setAttribute("viewBox", "0 0 500 500");
         //Destroy old map
         this.tileSize = tileSize;
@@ -262,6 +264,10 @@ class gridVisulizer {
             }
         }
 
+    }
+    reloadMap()
+    {
+        this.loadMap(this.mapWidth,this.mapHeight,10,this.mapData)
     }
     getNodeData(x,y)
     {
