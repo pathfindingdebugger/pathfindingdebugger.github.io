@@ -27,7 +27,6 @@ class gridVisulizer {
         this.breakPointVisual = new Array(0);
         this.floatBox = null;
         this.lineVisual = null;
-
         //this.scroll(this.svg)
     }
 
@@ -66,7 +65,6 @@ class gridVisulizer {
         const svg = document.getElementById("svg");
         //console.log(gridX,gridY,gridElem.attr("g"),gridElem.attr("f"));
         console.log(mouseX,mouseY);
-
 
         const newX = mouseX;//These offsets correspond to the svg
         const newY = mouseY;
@@ -199,9 +197,6 @@ class gridVisulizer {
                     break;
                 case states.goal:
                     this.tileArray[y * this.mapWidth + x].attr("fill", "#fff220");
-                    break;
-                case states.eventCheck:
-                    this.tileArray[y * this.mapWidth + x].attr("fill", "#ff1344");
                     break;
 
             }
