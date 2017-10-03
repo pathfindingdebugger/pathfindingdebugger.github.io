@@ -115,7 +115,7 @@ class DebugCommand
         else {
             this.stop();
             console.log("Stopped at: ", this.eventList[this.eventCounter].x + ":" + (this.eventList[this.eventCounter].y));
-            this.visulizer.breakPoints.splice(breakPointIndex);
+            // this.visulizer.breakPoints.splice(breakPointIndex);
             playing = false
         }
     }
