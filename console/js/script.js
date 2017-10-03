@@ -17,18 +17,26 @@ const states = {
     start:3,
     goal:4,
     eventCheck:5,
+    Current:6
 };
 
 function changeSpeed(num) {
-    if(playing == true){
-        control.changeSpeed(speed);
-    }
-    else{
-        speed = num;
-    }
+    control.stop();
+    playing = false;
+
+    // if(playing == true){
+    //     console.log("This is working");
+    control.changeSpeed(num);
+    control.play();
+    playing = true;
+    // }
+    // else{
+    //     speed = num;
+    // }
 }
 
 $(document).ready(function () {
+    // window.alert("what")
 
     $("#defaultSubmit").click(function(event){
         console.log(speed);
@@ -52,8 +60,13 @@ $(document).ready(function () {
             if(playing == false){
                 control.play(speed);
                 playing = true
+                console.log("play")
             }
-
+            else{
+                control.stop();
+                playing = false
+                console.log("stop")
+            }
         }else{
             window.alert("No data loaded!")
         }
@@ -68,15 +81,16 @@ $(document).ready(function () {
         }
     });
 
-    $('.pausebtn').click(function () {
-        if(control!== null) {
-            control.stop();
-            playing = false
-
-        }else{
-            window.alert("No data loaded!")
-        }
-    });
+    // $('.pausebtn').click(function () {
+    //     if(control!== null) {
+    //         control.stop();
+    //         playing = false;
+    //         console.log("Stoppped")
+    //
+    //     }else{
+    //         window.alert("No data loaded!")
+    //     }
+    // });
 
     $(document).ready(function(){
         $('.modal').modal();

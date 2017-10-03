@@ -27,8 +27,12 @@ class gridVisulizer {
         this.breakPointVisual = new Array(0);
         this.floatBox = null;
         this.lineVisual = null;
-    }
 
+    }
+    setLogChanger(debugFunction)
+    {
+        this.changeLog = debugFunction;
+    }
     generateBreakPoint(xInput, yInput) {
         if (this.breakPoints.indexOf(xInput + ":" + (yInput+this.topPadding)) === -1) {
             this.breakPoints.push(xInput + ":" + (yInput+this.topPadding));
@@ -184,6 +188,9 @@ class gridVisulizer {
                 case states.NotSearched:
                     this.tileArray[y * this.mapWidth + x].attr("fill", "#ffffff");
                     break;
+                case states.Current:
+                    this.tileArray[y * this.mapWidth + x].attr("fill", "#ff0016");
+                    break;
                 case states.expanded:
                     this.tileArray[y * this.mapWidth + x].attr("fill", "#00f6ff");
                     break;
@@ -251,27 +258,24 @@ class gridVisulizer {
                         this.drawLine(j,i)
                     });
 
-                this.tileArray[i * this.mapWidth + j].observeEvent('mousedown')
-                    .filter(e => e.shiftKey)
-                    .map(e => {
-                        return {i, j}
-                    })
-                    .subscribe(data => this.generateBreakPoint(j, i));
-
                 // this.tileArray[i * this.mapWidth + j].observeEvent('mousedown')
+                //     .filter(e => e.shiftKey)
                 //     .map(e => {
                 //         return {i, j}
                 //     })
-                //     .subscribe(data => this.alterEventList(j, i)
-                //     );
+                //     .subscribe(data => {
+                //         this.generateBreakPoint(j, i);
+                //         this.alterEventList(j, i);
+                //     });
+
             }
         }
     }
 
-    // alterEventList(events){
-    //     return [xInput, yInput]
-    //
-    // }
+    alterEventList(events){
+        this.changeLog(xInput, yInput)
+
+    }
 
     reloadMap()
     {

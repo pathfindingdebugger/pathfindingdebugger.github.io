@@ -3,7 +3,7 @@ class DebugCommand
     constructor(events,visual,playing)
     {
         this.visulizer = visual;
-
+        this.visulizer.setLogChanger();
         this.eventCounter = 0;
         this.eventList = events;
         this.currentId = null;
@@ -150,7 +150,9 @@ class DebugCommand
 
                 break;
             case "expanding":
-                this.currentNode = {x: event.x, y: event.y}; //If expanding then just set current node and return
+                this.visulizer.deleteLine();
+                this.visulizer.drawLine(event.x,event.y);
+                this.visulizer.setNodeState(event.x, event.y, states.Current);
                 this.openList.push(" " + String(event.x) + " " + String(event.y));
                 break;
 
