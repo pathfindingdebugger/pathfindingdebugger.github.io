@@ -258,15 +258,15 @@ class gridVisulizer {
                         this.drawLine(j,i)
                     });
 
-                // this.tileArray[i * this.mapWidth + j].observeEvent('mousedown')
-                //     .filter(e => e.shiftKey)
-                //     .map(e => {
-                //         return {i, j}
-                //     })
-                //     .subscribe(data => {
-                //         this.generateBreakPoint(j, i);
-                //         this.alterEventList(j, i);
-                //     });
+                this.tileArray[i * this.mapWidth + j].observeEvent('mousedown')
+                    .filter(e => e.shiftKey)
+                    .map(e => {
+                        return {i, j}
+                    })
+                    .subscribe(data => {
+                        this.generateBreakPoint(j, i);
+                        this.alterEventList(j, i);
+                    });
 
             }
         }
