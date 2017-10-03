@@ -2,6 +2,11 @@
 -------------------------------------------------- */
 /* Padding below the footer and lighter body text */
 
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
 body {
   padding-bottom: 40px;
   color: #5a5a5a;
@@ -45,7 +50,7 @@ body {
     width: 100%;
     position: fixed; /* Set the navbar to fixed position */
     top: 0; /* Position the navbar at the top of the page */
-    overflow: hidden;
+    overflow: visible;
     display: inline-block;
     background-color: #fff;
     border-bottom: #607185 solid;
@@ -171,12 +176,8 @@ body {
 }
 
 .changeSpeed{
-    /*width: 100%;*/
+    width: 100%;
 }
-
-/*.eventPart{*/
-    /*width: 100%;*/
-/*}*/
 
 #eventList li:hover{
     background-color: #297ba4;

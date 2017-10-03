@@ -60,23 +60,23 @@ $(document).ready(function () {
             visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
 
             control = new DebugCommand(currentJSON.eventList,visual, playing);
+            control.stop();
             playing = false;
 
         });
 
     });
 
-
     $('.playbtn').click(function() {
         if(control!== null) {
             if(playing == false){
                 control.play(speed);
-                playing = true
+                playing = true;
                 console.log("play")
             }
             else{
                 control.stop();
-                playing = false
+                playing = false;
                 console.log("stop")
             }
         }else{
@@ -92,17 +92,6 @@ $(document).ready(function () {
             window.alert("No data loaded!")
         }
     });
-
-    // $('.pausebtn').click(function () {
-    //     if(control!== null) {
-    //         control.stop();
-    //         playing = false;
-    //         console.log("Stoppped")
-    //
-    //     }else{
-    //         window.alert("No data loaded!")
-    //     }
-    // });
 
     $(document).ready(function(){
         $('.modal').modal();
@@ -126,6 +115,7 @@ $(document).ready(function () {
         visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
 
         control = new DebugCommand(currentJSON.eventList,visual, playing);
+        control.stop();
         playing = false;
     });
 

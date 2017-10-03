@@ -11,7 +11,7 @@ class DebugCommand
         this.closedList = [];
         this.openList = [];
         this.showEvent = false;
-
+        this.playing = playing;
         this.stepForward();
     }
     complete()
@@ -23,17 +23,16 @@ class DebugCommand
     {
         this.currentId = setInterval(
             () => {
-                if(!this.complete())
-                {
+                if (!this.complete()) {
                     this.runEvent(this.eventList[this.eventCounter]);
 
                 }
-                else
-                {
+                else {
                     clearInterval(this.currentId);
                 }
                 this.eventCounter++;
-            },speed);
+            }, speed);
+
     }
 
 
