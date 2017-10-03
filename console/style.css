@@ -82,7 +82,7 @@ body {
 }
 
 #graphBox{
-    padding-top: 85px;
+    padding-top: 95px;
 }
 
 .graphBox h4{
@@ -171,7 +171,7 @@ body {
 }
 
 .changeSpeed{
-    width: 100%;
+    /*width: 100%;*/
 }
 
 /*.eventPart{*/
