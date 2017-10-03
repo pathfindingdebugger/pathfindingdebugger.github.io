@@ -21,18 +21,15 @@ function drawRectsEvents()
 class gridVisulizer {
     constructor() {
         this.svg = document.getElementById("viewport");
-
         this.topPadding = 0;
         this.tileArray = null;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
         this.floatBox = null;
         this.lineVisual = null;
-        //this.scroll(this.svg)
     }
 
     generateBreakPoint(xInput, yInput) {
-
         if (this.breakPoints.indexOf(xInput + ":" + (yInput+this.topPadding)) === -1) {
             this.breakPoints.push(xInput + ":" + (yInput+this.topPadding));
             console.log("BreakPoints: ", this.breakPoints);
@@ -50,10 +47,10 @@ class gridVisulizer {
                     this.breakPoints.splice(this.breakPoints.indexOf(xInput + ":" + yInput+this.topPadding), 1);
                     breakPoint.elem.remove()
                 });
-
-
         }
     }
+
+
     generateFloatBox(mouseX,mouseY,gridX,gridY,gridElem)
     {
         if(this.floatBox !== null )
@@ -139,7 +136,7 @@ class gridVisulizer {
             if( x !== -1)
             {
                 console.log(x,y);
-                console.log(this.tileArray[y*this.mapWidth+x].attr('px'),this.tileArray[y*this.mapWidth+x].attr('py'));
+                // console.log(this.tileArray[y*this.mapWidth+x].attr('px'),this.tileArray[y*this.mapWidth+x].attr('py'));
                 return (x*this.tileSize+this.tileSize/2)+','+(y*this.tileSize+this.tileSize/2)+" "+pointList(Number(this.tileArray[y*this.mapWidth+x].attr('px')), Number(this.tileArray[y*this.mapWidth+x].attr('py')))
             }
             else{
@@ -261,10 +258,21 @@ class gridVisulizer {
                     })
                     .subscribe(data => this.generateBreakPoint(j, i));
 
+                // this.tileArray[i * this.mapWidth + j].observeEvent('mousedown')
+                //     .map(e => {
+                //         return {i, j}
+                //     })
+                //     .subscribe(data => this.alterEventList(j, i)
+                //     );
             }
         }
-
     }
+
+    // alterEventList(events){
+    //     return [xInput, yInput]
+    //
+    // }
+
     reloadMap()
     {
         this.loadMap(this.mapWidth,this.mapHeight,10,this.mapData)

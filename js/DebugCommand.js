@@ -121,6 +121,14 @@ class DebugCommand
         }
     }
 
+    emptyEventList(){
+        this.openList = [];
+        this.closedList = [];
+        var eventLi = $('#eventList');
+        eventLi.empty();
+        console.log("Reached here!")
+    }
+
     runEvent(event) // NEED TO REFACTOR TO ALLOW FOR ALL NON EXPANSIONS TO OCCUR IN ONE ROUND
     {
         if(event.type != "start" && event.type != "end")
@@ -135,7 +143,6 @@ class DebugCommand
             mydiv.scrollTop(mydiv.prop("scrollHeight"));
         }
         //console.log("current = ", event.x, event.y);
-
         switch (event.type) {
             case "start":
                 this.visulizer.setNodeState(event.startX,event.startY,states.start);
@@ -172,7 +179,9 @@ class DebugCommand
 
             case "end":
                 if(!(this.eventCounter+2 >= this.eventList.length))
+                    this.emptyEventList();
                     this.visulizer.reloadMap();
+                    mydiv = "";
                 break;
         }
         document.getElementById('closedList').innerHTML = String(this.closedList);
@@ -180,21 +189,9 @@ class DebugCommand
         }
 
 
-    eventClick(id)
+    svgItemClicked()
     {
-        id = id.split(".");
-        var getX = parseInt(id[0]);
-        var getY = parseInt(id[1]);
-        console.log("Event clicked = ", getX, getY);
 
-        if(this.showEvent == false){
-            this.visulizer.drawLine(getX,getY);
-            this.showEvent = true
-        }
-        else{
-            this.visulizer.deleteLine();
-            this.visulizer.drawLine(getX,getY);
         }
 
-    }
 }

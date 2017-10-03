@@ -39,18 +39,11 @@ $(document).ready(function () {
 
             visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
 
-
             control = new DebugCommand(currentJSON.eventList,visual, playing);
             playing = false;
 
         });
 
-    });
-
-
-    $('#eventList').on('click', 'li', function(ev) {
-        var id = this.id;
-        control.eventClick(id)
     });
 
 
