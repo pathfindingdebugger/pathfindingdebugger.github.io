@@ -26,7 +26,7 @@ class gridVisulizer {
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
         this.floatBox = null;
-        this.lineVisual = null;
+        this.lineVisual = [null,null];
 
     }
     setLogChanger(debugFunction)
@@ -88,7 +88,7 @@ class gridVisulizer {
 
 
 
-        positionText.elem.append(document.createTextNode("x:"+gridX+"\t y:"+(gridY+this.topPadding*2)));
+        positionText.elem.append(document.createTextNode("x:"+gridX+"\t y:"+(gridY)));
 
         const gText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
@@ -116,7 +116,7 @@ class gridVisulizer {
 
 
         gridElem.observeEvent('mouseout')
-            .subscribe(e=>{this.deleteFloatBox(); this.deleteLine()});
+            .subscribe(e=>{this.deleteFloatBox(); this.deleteLine(0)});
 
         Observable.fromEvent(this.svg,'mousemove')
             .map(({clientX,clientY}) =>(
@@ -133,8 +133,8 @@ class gridVisulizer {
         this.floatBox.elem.remove();
     }
 
-    drawLine(i,j)
-    {   this.lineVisual = new Elem(this.svg,'polyline');
+    drawLine(index,i,j)
+    {   this.lineVisual[index] = new Elem(this.svg,'polyline');
 
         const pointList = (x,y)=> {
             if( x !== -1)
@@ -149,18 +149,19 @@ class gridVisulizer {
         };
 
         //const pointList = (x,y)=> x !== -1 ? pointList(this.tileArray[y*this.mapWidth+x].attr('px'), this.tileArray[y*this.mapWidth+x].attr('py'))+" "+x+','+y : "";
-        this.lineVisual.attr('points',pointList(i,j))
-            .attr('stroke',"red")
+        this.lineVisual[index].attr('points',pointList(i,j))
+            .attr('stroke',index === 0 ? "red" : "#ffb000")
             .attr('fill','none')
             .attr('stroke-width',3)
     }
 
-    deleteLine()
+    deleteLine(index)
     {
-        if(this.lineVisual !== null)
+        console.log(this.lineVisual[index]);
+        if(this.lineVisual[index] !== null )
         {
-            this.lineVisual.removeElement();
-            this.lineVisual = null;
+            this.lineVisual[index].removeElement();
+            this.lineVisual[index] = null;
         }
 
     }
@@ -190,6 +191,9 @@ class gridVisulizer {
                     break;
                 case states.Current:
                     this.tileArray[y * this.mapWidth + x].attr("fill", "#ff0016");
+                    break;
+                case states.CurrentFrontier:
+                    this.tileArray[y*this.mapWidth+x].attr("fill","#b021ff");
                     break;
                 case states.expanded:
                     this.tileArray[y * this.mapWidth + x].attr("fill", "#00f6ff");
@@ -255,7 +259,7 @@ class gridVisulizer {
                     .filter(e => this.tileArray[i * this.mapWidth+j].attr("fill") === '#0032ff'||this.tileArray[i * this.mapWidth+j].attr("fill") === '#00f6ff')
                     .subscribe(e=> {
                         this.generateFloatBox(e.clientX,e.clientY,j,i,this.tileArray[i * this.mapWidth + j]);
-                        this.drawLine(j,i)
+                        this.drawLine(0,j,i)
                     });
 
                 this.tileArray[i * this.mapWidth + j].observeEvent('mousedown')

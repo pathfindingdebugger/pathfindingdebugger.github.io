@@ -10,6 +10,7 @@ class DebugCommand
         this.currentNode = null;
         this.closedList = [];
         this.openList = [];
+        this.currentNodes = [];
         this.showEvent = false;
         this.playing = playing;
         this.stepForward();
@@ -149,21 +150,23 @@ class DebugCommand
 
                 break;
             case "expanding":
-                this.visulizer.deleteLine();
-                this.visulizer.drawLine(event.x,event.y);
+                this.visulizer.deleteLine(1);
+                this.visulizer.drawLine(1,event.x,event.y);
                 this.visulizer.setNodeState(event.x, event.y, states.Current);
                 this.openList.push(" " + String(event.x) + " " + String(event.y));
                 break;
 
             case "generating":
                 this.breakPointCheck();
-                this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
+                this.currentNodes.push(event);
+                this.visulizer.setNodeState(event.x, event.y, states.CurrentFrontier);
                 this.visulizer.setNodeValues(event.x, event.y, event.g, event.f, event.pX, event.pY);
                 this.openList.push(" " + String(event.x) + " " + String(event.y));
                 break;
 
             case "updating":
-                this.visulizer.setNodeState(event.x, event.y, states.inFrontier);
+                this.currentNodes.push(event);
+                this.visulizer.setNodeState(event.x, event.y, states.CurrentFrontier);
                 if (event.f < this.visulizer.getNodeData(event.x, event.y).f || (event.f === this.visulizer.getNodeData(event.x, event.y).f
                     && event.g < this.visulizer.getNodeData(event.x, event.y).g)) {
                     this.visulizer.setNodeValues(event.x, event.y, event.g, event.f, event.pX, event.pY);
@@ -172,6 +175,9 @@ class DebugCommand
 
             case "closing":
                 // this.breakPointCheck();
+                this.currentNodes.forEach((e)=>{console.log("ake"); this.visulizer.setNodeState(e.x, e.y, states.inFrontier)});
+                this.currentNodes = [];
+
                 this.visulizer.setNodeState(event.x, event.y, states.expanded);
                 this.closedList.push(" " + String(event.x) + " " + String(event.y));
                 var openListItemIndex = this.openList.indexOf(" " + String(event.x) + " " + String(event.y));

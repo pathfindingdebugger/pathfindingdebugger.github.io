@@ -17,7 +17,8 @@ const states = {
     start:3,
     goal:4,
     eventCheck:5,
-    Current:6
+    Current:6,
+    CurrentFrontier:7
 };
 
 function showList(evt, listName) {
