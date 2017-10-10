@@ -21,6 +21,7 @@ function drawRectsEvents()
 class gridVisulizer {
     constructor() {
         this.svg = document.getElementById("viewport");
+        this.bgObject = null;
         this.tileArray = null;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
@@ -215,10 +216,13 @@ class gridVisulizer {
         this.svg.setAttribute("viewBox", "0 0 500 500");
         //Destroy old map
         this.tileSize = tileSize;
+        if(this.bgObject !== null)
+            this.bgObject = null;
         // console.log(this.mapWidth + " : " + this.mapHeight);
         if (this.tileArray !== null) {
             for (let i = 0; i < this.mapHeight; i++) {
                 for (let j = 0; j < this.mapWidth; j++) {
+                    if(this.tileArray[i * this.mapWidth + j] !== undefined )
                     this.tileArray[i * this.mapWidth + j].removeElement();
                 }
             }
@@ -232,6 +236,12 @@ class gridVisulizer {
         // console.log(mapWidth + " tse " + mapHeight + " " + mapString);
         this.mapWidth = parseInt(mapWidth);
         this.mapHeight = parseInt(mapHeight);
+        this.bgObject = new Elem(this.svg,'rect')
+            .attr("x",0)
+            .attr("y",0)
+            .attr("width",this.mapWidth*this.tileSize)
+            .attr("height",this.mapHeight*this.tileSize)
+            .attr("fill","black");
         this.breakPoints = new Array(0);
         const size = parseInt(mapWidth) * parseInt(mapHeight);
         this.tileArray = new Array(size);
@@ -239,7 +249,10 @@ class gridVisulizer {
         for (let i = 0; i < this.mapHeight; i++) {
             for (let j = 0; j < this.mapWidth; j++) {
 
+
                 const stringIndex = i * this.mapWidth + j;
+                if (mapString[stringIndex] === "@")
+                    continue;
                 this.tileArray[i * this.mapWidth + j] = new Elem(this.svg, 'rect')
                     .attr('x', this.tileSize * j).attr('y', this.tileSize * i)
                     .attr('width', this.tileSize).attr('height', this.tileSize)
@@ -250,7 +263,7 @@ class gridVisulizer {
                     .attr('h',0)
                     .attr('px',-1)
                     .attr('py',-1)
-                    .attr('last','');
+                    .attr('last','')
 
                 this.tileArray[i * this.mapWidth+j].observeEvent('mouseover')
                     .filter(e => this.tileArray[i * this.mapWidth+j].attr("fill") === '#0032ff'||this.tileArray[i * this.mapWidth+j].attr("fill") === '#00f6ff')
@@ -266,7 +279,11 @@ class gridVisulizer {
                     })
                     .subscribe(data => {
                         this.generateBreakPoint(j, i);
-                        this.alterEventList(j, i);
+                        if(this.tileArray[i * this.mapWidth + j].attr("fill") !== "white")
+                        {
+                            this.alterEventList(j, i);
+                        }
+
                     });
 
             }
