@@ -44,9 +44,8 @@ function showList(evt, listName) {
 
 
 function changeSpeed(num) {
-    control.stop();
-    speed = num;
-    playing = false;
+
+    control.changeSpeed(num);
 }
 
 
@@ -59,10 +58,14 @@ $(document).ready(function () {
             var mapData = currentJSON.Map;
 
             visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
-
+            console.log(control);
+            if (control !== undefined)
+            {
+                control.stop();
+                playing = false;
+            }
             control = new DebugCommand(currentJSON.eventList,visual, playing);
-            control.stop();
-            playing = false;
+
 
         });
 
@@ -115,9 +118,14 @@ $(document).ready(function () {
 
         visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
 
+
+        if (control !== undefined)
+        {
+            control.stop();
+            playing = false;
+        }
         control = new DebugCommand(currentJSON.eventList,visual, playing);
-        control.stop();
-        playing = false;
+
     });
 
 

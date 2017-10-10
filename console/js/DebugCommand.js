@@ -71,6 +71,7 @@ class DebugCommand
     {
         this.stop();
         this.play(speed);
+
     }
     //
     stepForward()
@@ -175,7 +176,7 @@ class DebugCommand
 
             case "closing":
                 // this.breakPointCheck();
-                this.currentNodes.forEach((e)=>{console.log("ake"); this.visulizer.setNodeState(e.x, e.y, states.inFrontier)});
+                this.currentNodes.forEach((e)=>this.visulizer.setNodeState(e.x, e.y, states.inFrontier));
                 this.currentNodes = [];
 
                 this.visulizer.setNodeState(event.x, event.y, states.expanded);

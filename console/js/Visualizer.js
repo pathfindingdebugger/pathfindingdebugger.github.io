@@ -21,7 +21,6 @@ function drawRectsEvents()
 class gridVisulizer {
     constructor() {
         this.svg = document.getElementById("viewport");
-        this.topPadding = 0;
         this.tileArray = null;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
@@ -34,8 +33,8 @@ class gridVisulizer {
         this.changeLog = debugFunction;
     }
     generateBreakPoint(xInput, yInput) {
-        if (this.breakPoints.indexOf(xInput + ":" + (yInput+this.topPadding)) === -1) {
-            this.breakPoints.push(xInput + ":" + (yInput+this.topPadding));
+        if (this.breakPoints.indexOf(xInput + ":" + (yInput)) === -1) {
+            this.breakPoints.push(xInput + ":" + (yInput));
             console.log("BreakPoints: ", this.breakPoints);
             const breakPoint = new Elem(this.svg, 'circle')
                 .attr("r", this.tileSize * 0.25)
@@ -48,7 +47,7 @@ class gridVisulizer {
             breakPoint.observeEvent('mousedown')
                 .filter(e => e.shiftKey)
                 .subscribe(_ => {
-                    this.breakPoints.splice(this.breakPoints.indexOf(xInput + ":" + yInput+this.topPadding), 1);
+                    this.breakPoints.splice(this.breakPoints.indexOf(xInput + ":" + yInput), 1);
                     breakPoint.elem.remove()
                 });
         }
@@ -62,19 +61,33 @@ class gridVisulizer {
             this.deleteFloatBox();
             this.floatBox = null;
         }
-        gridY = gridY - this.topPadding;
+
         const svg = document.getElementById("svg");
         //console.log(gridX,gridY,gridElem.attr("g"),gridElem.attr("f"));
         console.log(mouseX,mouseY);
+        const xDir = Math.sign(gridX - gridElem.attr("px"));
+        const yDir = Math.sign(gridY - gridElem.attr("py"));
 
-        const newX = mouseX;//These offsets correspond to the svg
-        const newY = mouseY;
+        const xOffset = 70*xDir;
+        const yOffset = xDir === 0 ? yDir*70 : 0; //Just to move it away from mouse
+        console.log("CAKE "+ xOffset);
+        const newX = mouseX + xOffset;//These offsets correspond to the svg
+        const newY = mouseY + yOffset;
+        console.log("Offset"+newX+","+newY);
         const textFont = 20;
         this.floatBox = new Elem(svg,'g')
             .attr('transform','translate('+newX+','+newY+')');
 
-        new Elem(this.floatBox.elem,'polygon')
+        /*new Elem(this.floatBox.elem,'polygon')
             .attr("points","0,0 10,-10 50,-10 50,-150 -50,-150 -50,-10 -10,-10")
+            .attr("fill","white")
+            .attr("stroke-width",3)
+            .attr("stroke",gridElem.attr("fill"));*/
+        new Elem(this.floatBox.elem,'rect')
+            .attr('x',-50)
+            .attr('y',-50)
+            .attr('width',100)
+            .attr('height',100)
             .attr("fill","white")
             .attr("stroke-width",3)
             .attr("stroke",gridElem.attr("fill"));
@@ -82,7 +95,7 @@ class gridVisulizer {
 
         const positionText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
-            .attr('y',-130)
+            .attr('y',-30)
             .attr('font-size',textFont)
             .attr('fill','black');
 
@@ -92,7 +105,7 @@ class gridVisulizer {
 
         const gText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
-            .attr('y',-110)
+            .attr('y',-10)
             .attr('font-size',textFont)
             .attr('fill','black');
         const g = Number(gridElem.attr("g")).toPrecision(3);
@@ -100,7 +113,7 @@ class gridVisulizer {
 
         const hText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
-            .attr('y',-90)
+            .attr('y',10)
             .attr('font-size',textFont)
             .attr('fill','black');
         const h = Number(gridElem.attr("h")).toPrecision(3);
@@ -108,10 +121,10 @@ class gridVisulizer {
 
         const fText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
-            .attr('y',-70)
+            .attr('y',30)
             .attr('font-size',textFont)
             .attr('fill','black');
-        const f = Number(gridElem.attr("f")).toPrecision(3);
+        const f = Number(gridElem.attr("f")).toPrecision(5);
         fText.elem.append(document.createTextNode(" f:"+f));
 
 
@@ -125,7 +138,7 @@ class gridVisulizer {
                     clientY:clientY - svg.getBoundingClientRect().top-10
                 })
             ))
-            .subscribe(e=>this.floatBox.attr('transform','translate('+(e.clientX)+','+(e.clientY)+')'));
+            .subscribe(e=>this.floatBox.attr('transform','translate('+(e.clientX+xOffset)+','+(e.clientY+yOffset)+')'));
 
     }
     deleteFloatBox()
@@ -136,17 +149,7 @@ class gridVisulizer {
     drawLine(index,i,j)
     {   this.lineVisual[index] = new Elem(this.svg,'polyline');
 
-        const pointList = (x,y)=> {
-            if( x !== -1)
-            {
-                console.log(x,y);
-                // console.log(this.tileArray[y*this.mapWidth+x].attr('px'),this.tileArray[y*this.mapWidth+x].attr('py'));
-                return (x*this.tileSize+this.tileSize/2)+','+(y*this.tileSize+this.tileSize/2)+" "+pointList(Number(this.tileArray[y*this.mapWidth+x].attr('px')), Number(this.tileArray[y*this.mapWidth+x].attr('py')))
-            }
-            else{
-                return ''
-            }
-        };
+        const pointList = (x,y)=> ( x !== -1) ? (x*this.tileSize+this.tileSize/2)+','+(y*this.tileSize+this.tileSize/2)+" "+pointList(Number(this.tileArray[y*this.mapWidth+x].attr('px')), Number(this.tileArray[y*this.mapWidth+x].attr('py'))) : '';
 
         //const pointList = (x,y)=> x !== -1 ? pointList(this.tileArray[y*this.mapWidth+x].attr('px'), this.tileArray[y*this.mapWidth+x].attr('py'))+" "+x+','+y : "";
         this.lineVisual[index].attr('points',pointList(i,j))
@@ -157,7 +160,6 @@ class gridVisulizer {
 
     deleteLine(index)
     {
-        console.log(this.lineVisual[index]);
         if(this.lineVisual[index] !== null )
         {
             this.lineVisual[index].removeElement();
@@ -168,8 +170,6 @@ class gridVisulizer {
 
     setNodeValues(x,y,g,f,px,py)
     {
-        y = y - this.topPadding;
-        console.log(px,py);
         this.tileArray[y * this.mapWidth + x]
             .attr('g',g)
             .attr('h',f-g)
@@ -179,12 +179,9 @@ class gridVisulizer {
     }
     //This function sets the node colour the states are given in the states enum
     setNodeState(x, y, state) {
-        y = y - this.topPadding;
-        // console.log("CAKE");
         if(this.tileArray[y*this.mapWidth+x].attr("fill") === "#09ff00")
             return ;
         if (0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight) {
-            // console.log(x,this.mapWidth,y,this.mapHeight);
             switch (state) {
                 case states.NotSearched:
                     this.tileArray[y * this.mapWidth + x].attr("fill", "#ffffff");
