@@ -19,7 +19,7 @@
     <!--Custom JavaScript-->
     <script src="js/script.js"></script>
 
-    <title>Console | Pathfinding Debugger Project</title>
+    <title>Pathfinding Debugger Project</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap.min.css" rel="stylesheet">
@@ -103,7 +103,7 @@
         </div>
 
         <div class="btn4 col-sm-1 col-md-1 col-lg-1">
-          <a class="btn" href="https://pathfindingdebugger.github.io/"><i class="material-icons">exit_to_app</i></a>
+          <a class="btn"><i class="material-icons" href="https://pathfindingdebugger.github.io/">exit_to_app</i></a>
           <span style="padding-left: 10px">Exit Console</span>
         </div>
 
@@ -121,8 +121,8 @@
 
             <div class="modal-footer">
                 <button id="defaultSubmit" class="modal-action modal-close btn" type='button' style="width:150px">Load Default</button>
-                <button class="modal-close btn" type='button' style="width:150px">Cancel</button>
-                <button id='submit1btn' class="modal-action modal-close btn" type='button' style="width:150px">Submit</button>
+                <button class="modal-close btn" type='button'>Cancel</button>
+                <button id='submit1btn' class="modal-action modal-close btn" type='button'>Submit</button>
             </div>
 
         </div>
@@ -138,7 +138,7 @@
             </div>
 
             <!--Event Log Console-->
-            <div class="eventPart col-lg-4">
+            <div class="eventPart col-lg-3">
                 <div class="tab">
                     <button class="btn" id="eventListTabClick" onclick="showList(event, 'eventListTab')">EventList</button>
                     <button class="btn" onclick="showList(event, 'openList')">OpenList</button>
@@ -160,6 +160,26 @@
                 </div>
 
                 <script>
+                    function showList(evt, listName) {
+                        // Declare all variables
+                        var i, tabcontent, tablinks;
+
+                        // Get all elements with class="tabcontent" and hide them
+                        tabcontent = document.getElementsByClassName("tabcontent");
+                        for (i = 0; i < tabcontent.length; i++) {
+                            tabcontent[i].style.display = "none";
+                        }
+
+                        // Get all elements with class="tablinks" and remove the class "active"
+                        tablinks = document.getElementsByClassName("tablinks");
+                        for (i = 0; i < tablinks.length; i++) {
+                            tablinks[i].className = tablinks[i].className.replace(" active", "");
+                        }
+
+                        // Show the current tab, and add an "active" class to the button that opened the tab
+                        document.getElementById(listName).style.display = "block";
+                        evt.currentTarget.className += " active";
+                    }
                     document.getElementById("eventListTabClick").click();
                 </script>
 

@@ -68,7 +68,7 @@ body {
 
 .graph{
     border: groove #889DB5;
-    margin: 10px 5px;
+    margin: 5px 0px;
     height: 650px;
     padding: 0px;
 }
@@ -77,7 +77,7 @@ body {
     border: groove #889DB5;
     width: 100%;
     margin: 10px;
-    height: 600px;
+    height: 590px;
     padding: 5px;
     overflow: scroll;
 }
@@ -88,6 +88,7 @@ body {
 
 #graphBox{
     padding-top: 95px;
+    margin: 15px;
 }
 
 .graphBox h4{
