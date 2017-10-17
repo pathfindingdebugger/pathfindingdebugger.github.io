@@ -180,7 +180,7 @@ class gridVisulizer {
     }
     //This function sets the node colour the states are given in the states enum
     setNodeState(x, y, state) {
-        if(this.tileArray[y*this.mapWidth+x].attr("fill") === "#09ff00")
+        if(this.tileArray[y*this.mapWidth+x].attr("fill") === "#09ff00" || this.tileArray[y*this.mapWidth+x].attr("fill") === "#ff7700")
             return ;
         if (0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight) {
             switch (state) {
@@ -203,7 +203,7 @@ class gridVisulizer {
                     this.tileArray[y * this.mapWidth + x].attr("fill", "#09ff00");
                     break;
                 case states.goal:
-                    this.tileArray[y * this.mapWidth + x].attr("fill", "#fff220");
+                    this.tileArray[y * this.mapWidth + x].attr("fill", "#ff7700");
                     break;
 
             }
