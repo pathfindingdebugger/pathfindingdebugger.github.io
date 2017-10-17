@@ -132,6 +132,8 @@ class DebugCommand
 
     runEvent(event) // NEED TO REFACTOR TO ALLOW FOR ALL NON EXPANSIONS TO OCCUR IN ONE ROUND
     {
+        let nodeData = null;
+
         if(event.type != "start" && event.type != "end")
         {
             var eventli = document.createElement("LI");
@@ -163,14 +165,33 @@ class DebugCommand
                 this.visulizer.setNodeState(event.x, event.y, states.CurrentFrontier);
                 this.visulizer.setNodeValues(event.x, event.y, event.g, event.f, event.pX, event.pY);
                 this.openList.push(" " + String(event.x) + " " + String(event.y));
+
+                nodeData =  this.visulizer.getNodeData(event.x, event.y);
+                if(!this.heuristicCheck(nodeData))
+                {
+                    this.stop();
+                    console.log("FAILED TEST");
+                }
                 break;
 
             case "updating":
                 this.currentNodes.push(event);
                 this.visulizer.setNodeState(event.x, event.y, states.CurrentFrontier);
-                if (event.f < this.visulizer.getNodeData(event.x, event.y).f || (event.f === this.visulizer.getNodeData(event.x, event.y).f
-                    && event.g < this.visulizer.getNodeData(event.x, event.y).g)) {
+
+                console.log("FIRST",event.x,event.y);
+                nodeData =  this.visulizer.getNodeData(event.x, event.y);
+
+                if (event.f < nodeData.f || (event.f === nodeData.f
+                    && event.g < nodeData.g)) {
                     this.visulizer.setNodeValues(event.x, event.y, event.g, event.f, event.pX, event.pY);
+
+                    console.log("Not first");
+                    nodeData =  this.visulizer.getNodeData(event.x, event.y);
+                    if(!this.heuristicCheck(nodeData))
+                    {
+                        this.stop();
+                        console.log("FAILED TEST");
+                    }
                 }
                 break;
 
@@ -181,6 +202,8 @@ class DebugCommand
 
                 this.visulizer.setNodeState(event.x, event.y, states.expanded);
                 this.closedList.push(" " + String(event.x) + " " + String(event.y));
+
+
                 var openListItemIndex = this.openList.indexOf(" " + String(event.x) + " " + String(event.y));
                 this.openList.splice(openListItemIndex, 1);
                 break;
@@ -196,6 +219,16 @@ class DebugCommand
         document.getElementById('closedList').innerHTML = String(this.closedList);
         document.getElementById('openList').innerHTML = String(this.openList);
         }
+
+    heuristicCheck(nodeData)
+    {
+        const marginError = 0.0005;
+        const parentData = this.visulizer.getNodeData(nodeData.px,nodeData.py);
+        const isMonotonic = (p,n) =>  (n.h <= ((p.g - n.g) + p.h) - marginError|| (n.h <= ((p.g - n.g) + p.h)+marginError ));
+
+        return isMonotonic(nodeData,parentData)
+
+    }
 
 
     svgItemClicked()
