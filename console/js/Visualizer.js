@@ -115,7 +115,7 @@ class gridVisulizer {
             .attr('y',10)
             .attr('font-size',textFont)
             .attr('fill','black');
-        const h = Number(gridElem.attr("h"));
+        const h = Number(gridElem.attr("h")).toPrecision(5);
         hText.elem.append(document.createTextNode("h:"+h));
 
         const fText = new Elem(this.floatBox.elem,'text')
