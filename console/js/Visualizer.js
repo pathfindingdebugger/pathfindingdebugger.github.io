@@ -57,7 +57,7 @@ class gridVisulizer {
 
     generateFloatBox(mouseX,mouseY,gridX,gridY,gridElem)
     {
-        if(this.floatBox !== null )
+        if(this.floatBox !== null)
         {
             this.deleteFloatBox();
             this.floatBox = null;
@@ -143,7 +143,11 @@ class gridVisulizer {
     }
     deleteFloatBox()
     {
-        this.floatBox.elem.remove();
+        if(this.floatBox !== null)
+        {
+           this.floatBox.elem.remove();
+           this.floatBox = null
+        }
     }
 
     drawLine(index,i,j)
