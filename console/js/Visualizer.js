@@ -21,7 +21,6 @@ function drawRectsEvents()
 class gridVisulizer {
     constructor() {
         this.svg = document.getElementById("viewport");
-        this.bgObject = null;
         this.tileArray = null;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
@@ -128,17 +127,17 @@ class gridVisulizer {
 
         this.floatBox.attr('transform','translate('+newX+','+newY+')');
 
-        gridElem.observeEvent('mouseout')
+        const mout = gridElem.observeEvent('mouseout')
             .subscribe(e=>{this.deleteFloatBox(); this.deleteLine(0)});
 
-        Observable.fromEvent(this.svg,'mousemove')
+        const move = Observable.fromEvent(this.svg,'mousemove')
             .map(({clientX,clientY}) =>(
                 ({
                     clientX:clientX - svg.getBoundingClientRect().left,
                     clientY:clientY - svg.getBoundingClientRect().top-10
                 })
             ))
-            .subscribe(e=>this.floatBox.attr('transform','translate('+(e.clientX+xOffset)+','+(e.clientY+yOffset)+')'));
+            .subscribe(e=>(this.floatBox !== null)? this.floatBox.attr('transform','translate('+(e.clientX+xOffset)+','+(e.clientY+yOffset)+')') : move.unsub);
 
     }
     deleteFloatBox()
@@ -221,8 +220,6 @@ class gridVisulizer {
         this.svg.setAttribute("viewBox", "0 0 500 500");
         //Destroy old map
         this.tileSize = tileSize;
-        if(this.bgObject !== null)
-            this.bgObject = null;
         if (this.tileArray !== null) {
             for (let i = 0; i < this.mapHeight; i++) {
                 for (let j = 0; j < this.mapWidth; j++) {
@@ -238,12 +235,6 @@ class gridVisulizer {
         // build a new one
         this.mapWidth = parseInt(mapWidth);
         this.mapHeight = parseInt(mapHeight);
-        this.bgObject = new Elem(this.svg,'rect')
-            .attr("x",0)
-            .attr("y",0)
-            .attr("width",this.mapWidth*this.tileSize)
-            .attr("height",this.mapHeight*this.tileSize)
-            .attr("fill","black");
         this.breakPoints = new Array(0);
         const size = parseInt(mapWidth) * parseInt(mapHeight);
         this.tileArray = new Array(size);
