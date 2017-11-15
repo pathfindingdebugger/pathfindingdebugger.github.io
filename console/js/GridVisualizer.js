@@ -18,8 +18,9 @@ function drawRectsEvents()
         }, 1000);
 }
 
-class gridVisulizer {
+class gridVisulizer extends Visualiser {
     constructor() {
+
         this.svg = document.getElementById("viewport");
         this.tileArray = null;
         this.breakPoints = new Array(0);
