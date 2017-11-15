@@ -26,15 +26,21 @@ class DebugCommand
         this.currentId = setInterval(
             () => {
                 if (!this.complete()) {
-                    const error = !this.runEvent(this.eventList[this.eventCounter]);
-                    if (error) {
-                        this.stop();
+                    let result = "generating";
+                    while(result !== "expanding")
+                    {
+                        result = this.runEvent(this.eventList[this.eventCounter]);
+                        this.eventCounter++;
+                        if (result === false) {
+                            this.stop();
+                        }
                     }
+
                 }
                 else {
                     clearInterval(this.currentId);
                 }
-                this.eventCounter++;
+
             }, speed);
 
     }
@@ -183,17 +189,16 @@ class DebugCommand
                 break;
 
             case "end":
-                this.visulizer.deleteFloatBox();
+
                 if(!(this.eventCounter+2 >= this.eventList.length))
                     this.emptyEventList();
-                    this.visualControl.reloadMap();
-                    this.visualControl.deleteFloatBox();
+                    this.visualControl.reset();
                     mydiv = "";
                 break;
         }
         document.getElementById('closedList').innerHTML = String(this.closedList);
         document.getElementById('openList').innerHTML = String(this.openList);
-        return true;
+        return event.type;
     }
 
     heuristicCheck(nodeData)

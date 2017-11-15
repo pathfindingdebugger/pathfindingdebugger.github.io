@@ -69,4 +69,15 @@ class visualiserControl
                 return this.visualiser.getNodeData(event.x, event.y);
         }
     }
+
+    reset()
+    {
+        switch(this.visualiserType)
+        {
+            case typesOfVisualisers.Grid:
+                this.visualiser.deleteFloatBox();
+                this.visualiser.reloadMap()
+        }
+
+    }
 }
