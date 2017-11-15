@@ -9,6 +9,7 @@ let i = 0;
 var j = 0;
 var speed = 1;
 let control;
+let vControl;
 var playing = false;
 const states = {
     NotSearched:0,
@@ -48,7 +49,6 @@ function changeSpeed(num) {
     control.changeSpeed(num);
 }
 
-
 $(document).ready(function () {
 
     $("#defaultSubmit").click(function(event){
@@ -56,17 +56,14 @@ $(document).ready(function () {
             eventItems = currentJSON.eventList;
             dataReceived = currentJSON.eventList;
             var mapData = currentJSON.Map;
+            vControl = new visualiserControl(mapData);
 
-            visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
-            console.log(control);
             if (control !== undefined)
             {
                 control.stop();
                 playing = false;
             }
-            control = new DebugCommand(currentJSON.eventList,visual, playing);
-
-
+            control = new DebugCommand(currentJSON.eventList,vControl);
         });
 
     });
@@ -115,16 +112,14 @@ $(document).ready(function () {
         var currentJSON = JSON.parse(getText);
         dataReceived = currentJSON.eventList;
         var mapData = currentJSON.Map;
-
-        visual.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
-
+        vControl = new visualiserControl(mapData);
 
         if (control !== undefined)
         {
             control.stop();
             playing = false;
         }
-        control = new DebugCommand(currentJSON.eventList,visual, playing);
+        control = new DebugCommand(currentJSON.eventList,vControl);
 
     });
 

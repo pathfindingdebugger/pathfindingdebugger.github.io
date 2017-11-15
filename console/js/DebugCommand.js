@@ -1,18 +1,20 @@
 class DebugCommand
 {
-    constructor(events,visual,playing)
+    constructor(events,visual)
     {
-        this.visulizer = visual;
-        this.visulizer.setLogChanger();
+        this.visualControl = visual;
+        this.visualControl.setLog();
         this.eventCounter = 0;
         this.eventList = events;
+
         this.currentId = null;
         this.currentNode = null;
+        this.currentNodes = [];
+
         this.closedList = [];
         this.openList = [];
-        this.currentNodes = [];
+
         this.showEvent = false;
-        this.playing = playing;
         this.stepForward();
     }
     complete()
@@ -20,13 +22,14 @@ class DebugCommand
         return this.eventCounter >= this.eventList.length
     }
 
-    play(speed)
-    {
+    play(speed) {
         this.currentId = setInterval(
             () => {
                 if (!this.complete()) {
-                    this.runEvent(this.eventList[this.eventCounter]);
-
+                    const error = !this.runEvent(this.eventList[this.eventCounter]);
+                    if (error) {
+                        this.stop();
+                    }
                 }
                 else {
                     clearInterval(this.currentId);
@@ -37,32 +40,6 @@ class DebugCommand
     }
 
 
-    // Testing
-    // play(speed)
-    // {
-    //     this.currentId = setInterval(
-    //         () => {
-    //             if(!this.complete())
-    //             {
-    //                 var breakPointIndex = this.visulizer.breakPoints.indexOf(this.eventList[this.eventCounter].x+":"+(this.eventList[this.eventCounter].y-4));
-    //                 if (breakPointIndex === -1){
-    //                     this.runEvent(this.eventList[this.eventCounter]);
-    //                 }else{
-    //                     this.stop();
-    //                     console.log("Stopped at: ",this.eventList[this.eventCounter].x+":"+(this.eventList[this.eventCounter].y-4));
-    //                     this.visulizer.breakPoints.splice(breakPointIndex);
-    //                     playing = false
-    //                 }
-    //             }
-    //             else
-    //             {
-    //                 clearInterval(this.currentId);
-    //             }
-    //             this.eventCounter++;
-    //         },speed);
-    // }
-
-
     stop()
     {
         clearInterval(this.currentId);
@@ -70,7 +47,15 @@ class DebugCommand
     changeSpeed(speed)
     {
         this.stop();
-        this.play(speed);
+        if(speed <= 0)
+        {
+            this.play(0);
+        }
+        else
+        {
+            this.play(speed);
+
+        }
 
     }
     //
@@ -80,46 +65,14 @@ class DebugCommand
         {
             this.runEvent(this.eventList[this.eventCounter]);
             this.eventCounter++;
+            console.log(this.costToGoal);
         }
     }
 
-    // Testing
-    // stepForward()
-    // {
-    //     if(!this.complete())
-    //     {
-    //         this.runEvent(this.eventList[this.eventCounter]);
-    //         this.eventCounter++;
-    //
-    //         var eventli = document.createElement("LI");
-    //         eventli.setAttribute("id", i);
-    //         i++;
-    //         var newMainItem = document.createTextNode(dataReceived[i].type + ", x= " + dataReceived[i].x + ", y= " + dataReceived[i].y + ", g= " + dataReceived[i].g + ", h= " + dataReceived[i].h);
-    //         currentEventNum += 1;
-    //         eventli.appendChild(newMainItem);
-    //         $('#eventList').append(eventli);
-    //
-    //         var mydiv = $(".eventLog");
-    //         mydiv.scrollTop(mydiv.prop("scrollHeight"));
-    //     }
-    // }
 
     stepBack()
     {
 
-    }
-
-    breakPointCheck() {
-        var breakPointIndex = this.visulizer.breakPoints.indexOf(this.eventList[this.eventCounter].x + ":" + (this.eventList[this.eventCounter].y));
-        if (breakPointIndex === -1) {
-            return true
-        }
-        else {
-            this.stop();
-            console.log("Stopped at: ", this.eventList[this.eventCounter].x + ":" + (this.eventList[this.eventCounter].y));
-            // this.visulizer.breakPoints.splice(breakPointIndex);
-            playing = false
-        }
     }
 
     emptyEventList(){
@@ -130,11 +83,31 @@ class DebugCommand
         console.log("Reached here!")
     }
 
+    getCostOfSearch(startIndex)
+    {
+        for(i = startIndex; i < this.eventList.length; i++)
+        {
+            if(this.eventList[i].type === "end")
+            {
+                console.log("End is at"+i);
+                for(j = i ; j > 0 ; j--)
+                {
+                    if(this.eventList[j].x === this.eventList[startIndex].endX && this.eventList[j].y === this.eventList[startIndex].endY)
+                    {
+                        console.log("Last generated is at" +j + "With g of" + this.eventList[j].g);
+                        return this.eventList[j].g;
+
+                    }
+                }
+            }
+        }
+    }
+
     runEvent(event) // NEED TO REFACTOR TO ALLOW FOR ALL NON EXPANSIONS TO OCCUR IN ONE ROUND
     {
         let nodeData = null;
 
-        if(event.type != "start" && event.type != "end")
+        if(event.type !== "start" && event.type !== "end")
         {
             var eventli = document.createElement("LI");
             eventli.setAttribute("id", (String(event.x) + "." + String(event.y)));
@@ -145,51 +118,50 @@ class DebugCommand
             var mydiv = $(".eventLog");
             mydiv.scrollTop(mydiv.prop("scrollHeight"));
         }
-        //console.log("current = ", event.x, event.y);
+
         switch (event.type) {
             case "start":
-                this.visulizer.setNodeState(event.startX,event.startY,states.start);
-                this.visulizer.setNodeState(event.endX,event.endY,states.goal);
-
+                this.visualControl.showStartAndGoal(event);
+                this.costToGoal = this.getCostOfSearch(this.eventCounter);
+                console.log(this.costToGoal);
                 break;
             case "expanding":
-                this.visulizer.deleteLine(1);
-                this.visulizer.drawLine(1,event.x,event.y);
-                this.visulizer.setNodeState(event.x, event.y, states.Current);
+                this.visualControl.clearPath(1);
+                this.visualControl.drawPath(1,event);
+                this.visualControl.setNodeState(event,states.Current);
+                // TODO Figure out how to abstract the output messages
                 this.openList.push(" " + String(event.x) + " " + String(event.y));
                 break;
 
             case "generating":
-                this.breakPointCheck();
-                this.currentNodes.push(event);
-                this.visulizer.setNodeState(event.x, event.y, states.CurrentFrontier);
-                this.visulizer.setNodeValues(event.x, event.y, event.g, event.f, event.pX, event.pY);
-                this.openList.push(" " + String(event.x) + " " + String(event.y));
 
-                nodeData =  this.visulizer.getNodeData(event.x, event.y);
-                if(!this.heuristicCheck(nodeData))
+                this.currentNodes.push(event);
+                this.visualControl.setNodeState(event,states.CurrentFrontier);
+                this.visualControl.setNodeValues(event);
+                this.openList.push(" (" + String(event.x) + " , " + String(event.y)+")");
+
+                nodeData =  this.visualControl.getNodeData(event);
+                console.log("Generated");
+                if(!this.heuristicCheck(nodeData) || this.visualControl.breakPointCheck(event))
                 {
-                    this.stop();
-                    console.log("FAILED TEST");
+                    return false;
                 }
                 break;
 
             case "updating":
                 this.currentNodes.push(event);
-                this.visulizer.setNodeState(event.x, event.y, states.CurrentFrontier);
+                this.visualControl.setNodeState(event, states.CurrentFrontier);
 
-                console.log("FIRST",event.x,event.y);
-                nodeData =  this.visulizer.getNodeData(event.x, event.y);
+                nodeData = this.visualControl.getNodeData(event);
 
-                if (event.f < nodeData.f || (event.f === nodeData.f
-                    && event.g < nodeData.g)) {
-                    this.visulizer.setNodeValues(event.x, event.y, event.g, event.f, event.pX, event.pY);
+                //TODO See what taking this out does...
+                if (event.f < nodeData.f || (event.f === nodeData.f && event.g < nodeData.g)) {
+                    this.visualControl.setNodeValues(event);
 
-                    console.log("Not first");
-                    nodeData =  this.visulizer.getNodeData(event.x, event.y);
+                    nodeData =  this.visualControl.getNodeData(event);
                     if(!this.heuristicCheck(nodeData))
                     {
-                        this.stop();
+                        return false;
                         console.log("FAILED TEST");
                     }
                 }
@@ -197,10 +169,12 @@ class DebugCommand
 
             case "closing":
                 // this.breakPointCheck();
-                this.currentNodes.forEach((e)=>this.visulizer.setNodeState(e.x, e.y, states.inFrontier));
+                this.currentNodes.forEach((e)=>this.visualControl.setNodeState(e, states.inFrontier));
                 this.currentNodes = [];
 
-                this.visulizer.setNodeState(event.x, event.y, states.expanded);
+                this.visualControl.setNodeState(event , states.expanded);
+
+                //TODO That list command or just... something
                 this.closedList.push(" " + String(event.x) + " " + String(event.y));
 
 
@@ -211,28 +185,48 @@ class DebugCommand
             case "end":
                 if(!(this.eventCounter+2 >= this.eventList.length))
                     this.emptyEventList();
-                    this.visulizer.reloadMap();
+                    this.visualControl.reloadMap();
+                    this.visualControl.deleteFloatBox();
                     mydiv = "";
                 break;
         }
         document.getElementById('closedList').innerHTML = String(this.closedList);
         document.getElementById('openList').innerHTML = String(this.openList);
-        }
+        return true;
+    }
 
     heuristicCheck(nodeData)
     {
         const marginError = 0.0005;
-        const parentData = this.visulizer.getNodeData(nodeData.px,nodeData.py);
-        const isMonotonic = (p,n) =>  (n.h <= ((p.g - n.g) + p.h) - marginError|| (n.h <= ((p.g - n.g) + p.h)+marginError ));
+        const parentData = this.visualControl.getNodeData({x:nodeData.px,y:nodeData.py});
+        const isMonotonic = (p,n) =>  (n.h <= ((p.g - n.g) + p.h) - marginError || (n.h <= ((p.g - n.g) + p.h)+marginError));
+        const isAdmissible = (n) => (n.h <= this.costToGoal - n.g);
+        console.log(this.costToGoal);
+        console.log("H: "+nodeData.h);
+        console.log("G: "+nodeData.g);
+        console.log(this.costToGoal - nodeData.g);
+        if(!isMonotonic(nodeData,parentData))
+        {
+            this.addErrorAt(nodeData.x,nodeData.y,"Not Monotonic");
+            return false;
+        }
 
-        return isMonotonic(nodeData,parentData)
+        if(!isAdmissible(nodeData))
+        {
+            this.addErrorAt(nodeData.x,nodeData.y,"Might not be admissible");
+            //return false;
+        }
+        return true;
 
     }
 
-
-    svgItemClicked()
+    addErrorAt(x,y,errorText)
     {
-
-        }
+        var eventli = document.createElement("LI");
+        eventli.setAttribute("id", (String(x) + "." + String(y)+"E"));
+        var newMainItem = document.createTextNode(errorText);
+        eventli.appendChild(newMainItem);
+        $('#eventList').append(eventli);
+    }
 
 }
