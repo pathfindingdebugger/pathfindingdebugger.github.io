@@ -121,7 +121,7 @@ body {
 
 #legend{
     border: groove #889DB5;
-    height: 130px;
+    height: 250px;
     width: 100%;
     padding: 2px;
 }
@@ -156,6 +156,34 @@ body {
     width: 20px;
     height: 20px;
     background-color: #3b6ade;
+    display: inline-block;
+}
+
+#id5{
+    width: 20px;
+    height: 20px;
+    background-color: #b021ff;
+    display: inline-block;
+}
+
+#id6{
+    width: 20px;
+    height: 20px;
+    background-color: #ff0016;
+    display: inline-block;
+}
+
+#id7{
+    width: 20px;
+    height: 20px;
+    background-color: #09ff00;
+    display: inline-block;
+}
+
+#id8{
+    width: 20px;
+    height: 20px;
+    background-color: #ff7700;
     display: inline-block;
 }
 

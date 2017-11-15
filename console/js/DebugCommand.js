@@ -183,6 +183,7 @@ class DebugCommand
                 break;
 
             case "end":
+                this.visulizer.deleteFloatBox();
                 if(!(this.eventCounter+2 >= this.eventList.length))
                     this.emptyEventList();
                     this.visualControl.reloadMap();
