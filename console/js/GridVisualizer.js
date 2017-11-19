@@ -2,6 +2,7 @@
 
 function drawRectsEvents()
 {
+
     const svg = document.getElementById("viewport");
     left = svg.getBoundingClientRect().left;
     top = svg.getBoundingClientRect().top;
@@ -20,19 +21,11 @@ function drawRectsEvents()
 
 class gridVisulizer extends Visualiser {
     constructor() {
-
-        this.svg = document.getElementById("viewport");
+        super();
+        //set background
         this.tileArray = null;
-        this.breakPoints = new Array(0);
-        this.breakPointVisual = new Array(0);
-        this.floatBox = null;
-        this.lineVisual = [null,null];
+    }
 
-    }
-    setLogChanger(debugFunction)
-    {
-        this.changeLog = debugFunction;
-    }
     generateBreakPoint(xInput, yInput) {
         if (this.breakPoints.indexOf(xInput + ":" + (yInput)) === -1) {
             this.breakPoints.push(xInput + ":" + (yInput));
@@ -141,14 +134,7 @@ class gridVisulizer extends Visualiser {
             .subscribe(e=>(this.floatBox !== null)? this.floatBox.attr('transform','translate('+(e.clientX+xOffset)+','+(e.clientY+yOffset)+')') : move.unsub);
 
     }
-    deleteFloatBox()
-    {
-        if(this.floatBox !== null)
-        {
-           this.floatBox.elem.remove();
-           this.floatBox = null
-        }
-    }
+
 
     drawLine(index,i,j)
     {   this.lineVisual[index] = new Elem(this.svg,'polyline');
@@ -162,15 +148,7 @@ class gridVisulizer extends Visualiser {
             .attr('stroke-width',3)
     }
 
-    deleteLine(index)
-    {
-        if(this.lineVisual[index] !== null )
-        {
-            this.lineVisual[index].removeElement();
-            this.lineVisual[index] = null;
-        }
 
-    }
 
     setNodeValues(x,y,g,f,px,py)
     {
@@ -188,36 +166,16 @@ class gridVisulizer extends Visualiser {
         if(this.tileArray[y*this.mapWidth+x].attr("fill") === "#09ff00" || this.tileArray[y*this.mapWidth+x].attr("fill") === "#ff7700")
             return ;
         if (0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight) {
-            switch (state) {
-                case states.NotSearched:
-                    this.tileArray[y * this.mapWidth + x].attr("fill", "#ffffff");
-                    break;
-                case states.Current:
-                    this.tileArray[y * this.mapWidth + x].attr("fill", "#ff0016");
-                    break;
-                case states.CurrentFrontier:
-                    this.tileArray[y*this.mapWidth+x].attr("fill","#b021ff");
-                    break;
-                case states.expanded:
-                    this.tileArray[y * this.mapWidth + x].attr("fill", "#00f6ff");
-                    break;
-                case states.inFrontier:
-                    this.tileArray[y * this.mapWidth + x].attr("fill", "#0032ff");
-                    break;
-                case states.start:
-                    this.tileArray[y * this.mapWidth + x].attr("fill", "#09ff00");
-                    break;
-                case states.goal:
-                    this.tileArray[y * this.mapWidth + x].attr("fill", "#ff7700");
-                    break;
 
-            }
+            this.setElemState(this.tileArray[y * this.mapWidth + x],state);
+
         }
 
     }
 
     loadMap(mapWidth, mapHeight, tileSize, mapString) {
         this.mapData = mapString;
+        console.log(this.svg);
         this.svg.setAttribute("viewBox", "0 0 500 500");
         //Destroy old map
         this.tileSize = tileSize;
@@ -291,10 +249,7 @@ class gridVisulizer extends Visualiser {
         }
     }
 
-    alterEventList(events){
-        this.changeLog(xInput, yInput)
 
-    }
 
     reloadMap()
     {
@@ -303,6 +258,8 @@ class gridVisulizer extends Visualiser {
     getNodeData(x,y)
     {
         return {
+            x:x,
+            y:y,
             g:Number(this.tileArray[y*this.mapWidth+x].attr('g')),
             f:Number(this.tileArray[y*this.mapWidth+x].attr('f')),
             h:Number(this.tileArray[y*this.mapWidth+x].attr('h')),

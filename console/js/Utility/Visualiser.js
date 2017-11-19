@@ -1,4 +1,0 @@
-class Visualiser {
-    constructor()
-    {}
-}

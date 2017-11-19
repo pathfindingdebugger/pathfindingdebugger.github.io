@@ -3,7 +3,7 @@ class DebugCommand
     constructor(events,visual)
     {
         this.visualControl = visual;
-        this.visualControl.setLog();
+
         this.eventCounter = 0;
         this.eventList = events;
 
@@ -16,6 +16,7 @@ class DebugCommand
 
         this.showEvent = false;
         this.stepForward();
+        this.visualControl.setLog();
     }
     complete()
     {
@@ -71,7 +72,6 @@ class DebugCommand
         {
             this.runEvent(this.eventList[this.eventCounter]);
             this.eventCounter++;
-            console.log(this.costToGoal);
         }
     }
 
@@ -142,6 +142,7 @@ class DebugCommand
             case "generating":
 
                 this.currentNodes.push(event);
+                this.visualControl.generateNode(event);
                 this.visualControl.setNodeState(event,states.CurrentFrontier);
                 this.visualControl.setNodeValues(event);
                 this.openList.push(" (" + String(event.x) + " , " + String(event.y)+")");
@@ -204,13 +205,14 @@ class DebugCommand
     heuristicCheck(nodeData)
     {
         const marginError = 0.0005;
-        const parentData = this.visualControl.getNodeData({x:nodeData.px,y:nodeData.py});
+        const parentData = this.visualControl.getParentData(nodeData);
+        if(parentData === null)
+            console.log("No parent");
+            return true;
+
         const isMonotonic = (p,n) =>  (n.h <= ((p.g - n.g) + p.h) - marginError || (n.h <= ((p.g - n.g) + p.h)+marginError));
         const isAdmissible = (n) => (n.h <= this.costToGoal - n.g);
-        console.log(this.costToGoal);
-        console.log("H: "+nodeData.h);
-        console.log("G: "+nodeData.g);
-        console.log(this.costToGoal - nodeData.g);
+
         if(!isMonotonic(nodeData,parentData))
         {
             this.addErrorAt(nodeData.x,nodeData.y,"Not Monotonic");

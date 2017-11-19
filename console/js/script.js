@@ -56,7 +56,24 @@ $(document).ready(function () {
             eventItems = currentJSON.eventList;
             dataReceived = currentJSON.eventList;
             var mapData = currentJSON.Map;
-            vControl = new visualiserControl(mapData);
+            vControl = new visualiserControl("Grid",mapData);
+
+            if (control !== undefined)
+            {
+                control.stop();
+                playing = false;
+            }
+            control = new DebugCommand(currentJSON.eventList,vControl);
+        });
+
+    });
+
+    $("#defaultSubmitTree").click(function(event){
+        $.getJSON('DebugFiles/tree.json', function(currentJSON) {
+            eventItems = currentJSON.eventList;
+            dataReceived = currentJSON.eventList;
+            var mapData = currentJSON.Map;
+            vControl = new visualiserControl("Tree",mapData);
 
             if (control !== undefined)
             {
@@ -112,7 +129,7 @@ $(document).ready(function () {
         var currentJSON = JSON.parse(getText);
         dataReceived = currentJSON.eventList;
         var mapData = currentJSON.Map;
-        vControl = new visualiserControl(mapData);
+        vControl = new visualiserControl(currentJSON.type,mapData);
 
         if (control !== undefined)
         {

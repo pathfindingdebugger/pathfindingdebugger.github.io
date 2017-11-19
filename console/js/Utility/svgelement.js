@@ -1,7 +1,7 @@
 class Elem {
-    constructor(svg, tag) {
+    constructor(svg, tag,back=true) {
         this.elem = document.createElementNS(svg.namespaceURI, tag);
-        svg.appendChild(this.elem);
+        (back) ? svg.appendChild(this.elem) : svg.insertBefore(this.elem, svg.childNodes[0]);
     }
     removeElement()
     {
