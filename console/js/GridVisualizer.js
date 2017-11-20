@@ -22,7 +22,6 @@ function drawRectsEvents()
 class gridVisulizer extends Visualiser {
     constructor() {
         super();
-        //set background
         this.tileArray = null;
     }
 
@@ -180,8 +179,7 @@ class gridVisulizer extends Visualiser {
         this.svg.setAttribute("viewBox", "0 0 500 500");
         //Destroy old map
         this.tileSize = tileSize;
-        if(this.bgObject !== null)
-            this.bgObject = null;
+
         if (this.tileArray !== null) {
             for (let i = 0; i < this.mapHeight; i++) {
                 for (let j = 0; j < this.mapWidth; j++) {
@@ -199,12 +197,7 @@ class gridVisulizer extends Visualiser {
         this.mapHeight = parseInt(mapHeight);
         this.breakPoints = new Array(0);
         const size = parseInt(mapWidth) * parseInt(mapHeight);
-        this.bgObject = new Elem(this.svg,'rect')
-            .attr("x",0)
-            .attr("y",0)
-            .attr("width",this.mapWidth*this.tileSize)
-            .attr("height",this.mapHeight*this.tileSize)
-            .attr("fill","black");
+
         this.tileArray = new Array(size);
         //mapString = mapString.replace('\n','');
         for (let i = 0; i < this.mapHeight; i++) {
@@ -255,6 +248,23 @@ class gridVisulizer extends Visualiser {
     reloadMap()
     {
         this.loadMap(this.mapWidth,this.mapHeight,10,this.mapData)
+    }
+    reset()
+    {
+
+        if(this.bgObject !== null)
+            this.bgObject = null;
+        if (this.tileArray !== null) {
+            for (let i = 0; i < this.mapHeight; i++) {
+                for (let j = 0; j < this.mapWidth; j++) {
+                    if(this.tileArray[i * this.mapWidth + j] !== undefined )
+                        this.tileArray[i * this.mapWidth + j].removeElement();
+                }
+            }
+            for (let i = 0; i < this.breakPoints.length; i++) {
+                this.breakPointVisual[i].elem.remove();
+            }
+        }
     }
     getNodeData(x,y)
     {

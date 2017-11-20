@@ -43,7 +43,7 @@ class visualiserControl
         switch(this.visualiserType)
         {
             case typesOfVisualisers.Graph:
-                this.visualiser.addNode(event.id,event.data,event.pId)
+                this.visualiser.addNode(event.id,event.data,event.pId,event.g,event.f,event.h)
         }
     }
     setNodeState(event,state)
@@ -133,7 +133,7 @@ class visualiserControl
         {
             case typesOfVisualisers.Grid:
                 this.visualiser.deleteFloatBox();
-                this.visualiser.reloadMap();
+                this.visualiser.reset();
                 break;
             case typesOfVisualisers.Graph:
                 this.visualiser.clearTree();

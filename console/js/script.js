@@ -62,6 +62,7 @@ $(document).ready(function () {
             {
                 control.stop();
                 playing = false;
+                control.visualControl.reset();
             }
             control = new DebugCommand(currentJSON.type,mapData,eventItems);
         });

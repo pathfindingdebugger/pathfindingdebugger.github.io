@@ -30,6 +30,7 @@ class DebugCommand
                     let result = "generating";
                     while(result !== "expanding")
                     {
+
                         result = this.runEvent(this.eventList[this.eventCounter]);
                         this.eventCounter++;
                         if (result === false) {
@@ -71,6 +72,7 @@ class DebugCommand
     {
         if(!this.complete())
         {
+            console.log(this.eventList.length);
             this.runEvent(this.eventList[this.eventCounter]);
             this.eventCounter++;
         }

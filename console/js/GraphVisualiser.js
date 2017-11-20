@@ -23,7 +23,7 @@ class GraphVisualizer extends Visualiser
 
         }
 
-        layout.symmetricDiffLinkLengths(7).start(0,1,3);
+        layout.symmetricDiffLinkLengths(17).start(0,0,0);
 
 
     }
@@ -73,11 +73,25 @@ class GraphVisualizer extends Visualiser
             h:h,
             depth:depth,
             children:[],
-            svgElem: new Elem(this.svg,'circle').attr('cx',nodePosition.x).attr('cy',nodePosition.y).attr('fill','white').attr('r',5),
+            svgElem: new Elem(this.svg,'circle').attr('cx',nodePosition.x).attr('cy',nodePosition.y).attr('fill','white').attr('r',10),
             svgIncomingEdges:[],
             svgOutgoingEdges:[]
         };
+
         this.graphNode[id] = node;
+        console.log(node.h + " + " + node.g);
+        if (node.g === 0)
+        {
+            this.setNodeState(id,states.start);
+        }
+        else if(node.h === 0)
+        {
+            this.setNodeState(id,states.goal);
+        }
+
+
+
+
 
         // HAVE NODE OBSERVE MOUSE OVER AND MOUSE DOWN EVENTS
 
@@ -147,8 +161,15 @@ class GraphVisualizer extends Visualiser
     }
     setNodeState(id,state)
     {
-        this.graphNode[id].state = state;
-        this.setElemState(this.graphNode[id].svgElem,state)
+        console.log(state);
+        if(this.graphNode[id].state !== states.start && this.graphNode[id].state !== states.goal)
+        {
+            this.graphNode[id].state = state;
+            this.setElemState(this.graphNode[id].svgElem,state)
+        }
+
+
+
     }
     getNodeData(id)
     {
@@ -195,7 +216,8 @@ class GraphVisualizer extends Visualiser
     {
 
         Object.keys(this.graphNode).forEach(e=>{this.graphNode[e].svgOutgoingEdges.forEach(e=>{e.fill.removeElement(); e.stroke.removeElement()});this.graphNode[e].svgElem.removeElement()});
-
+        this.deleteLine(0);
+        this.deleteLine(1);
         this.graphNode = {};
 
         this.positionIndecies = {};
@@ -216,12 +238,13 @@ class GraphVisualizer extends Visualiser
 
 
         const parent = this.graphNode[this.graphNode[id].pId];
-
-        const xDir = parent ? Math.sign(this.graphNode[id].svgElem.attr('x') - parent.svgElem.attr('x')):0;
-        const yDir = parent ? Math.sign(this.graphNode[id].svgElem.attr('y') - parent.svgElem.attr('y')):0;
-
-        const xOffset = 50*xDir;
-        const yOffset = yDir*50; //Just to move it away from mouse
+        console.log(parent);
+        console.log(this.graphNode[id]);
+        const xDir = parent!== null ? Math.sign(this.graphNode[id].svgElem.attr('cx') - parent.svgElem.attr('cx')):1;
+        const yDir = parent!== null ? Math.sign(this.graphNode[id].svgElem.attr('cy') - parent.svgElem.attr('cy')):0;
+        console.log(xDir+","+yDir);
+        const xOffset = 100*xDir;
+        const yOffset = yDir*100; //Just to move it away from mouse
 
         const newX = mouseX + xOffset;//These offsets correspond to the svg
         const newY = mouseY + yOffset;
@@ -232,7 +255,7 @@ class GraphVisualizer extends Visualiser
         const box = new Elem(this.floatBox.elem,'rect')
             .attr('x',-50)
             .attr('y',-50)
-            .attr('width',"40ex")
+            .attr('width',"30ex")
             .attr('height',120)
             .attr("fill","white")
             .attr("stroke-width",3)
