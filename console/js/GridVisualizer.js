@@ -137,7 +137,8 @@ class gridVisulizer extends Visualiser {
 
 
     drawLine(index,i,j)
-    {   this.lineVisual[index] = new Elem(this.svg,'polyline');
+    {
+        this.lineVisual[index] = new Elem(this.svg,'polyline');
 
         const pointList = (x,y)=> ( x !== -1) ? (x*this.tileSize+this.tileSize/2)+','+(y*this.tileSize+this.tileSize/2)+" "+pointList(Number(this.tileArray[y*this.mapWidth+x].attr('px')), Number(this.tileArray[y*this.mapWidth+x].attr('py'))) : '';
 
@@ -240,7 +241,7 @@ class gridVisulizer extends Visualiser {
                         this.generateBreakPoint(j, i);
                         if(this.tileArray[i * this.mapWidth + j].attr("fill") !== "white")
                         {
-                            this.alterEventList(j, i);
+                            this.alterEventList([j, i]);
                         }
 
                     });
@@ -270,15 +271,12 @@ class gridVisulizer extends Visualiser {
     isBreakPoint(x,y)
     {
         const breakPointIndex = this.breakPoints.indexOf(x + ":" + y);
-        if (breakPointIndex === -1) {
-            return false;
-        }
-        else {
-
-            //console.log("Stopped at: ", this.eventList[this.eventCounter].x + ":" + this.eventList[this.eventCounter].y);
-            // this.visulizer.breakPoints.splice(breakPointIndex);
-            return true;
-        }
+        return breakPointIndex !== -1;
+    }
+    removeBreakPoint(x,y)
+    {
+        const index = this.breakPoints.indexOf(x + ":" + y);
+        this.removeBreakPointAtIndex(index);
     }
 }
 

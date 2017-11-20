@@ -5,7 +5,7 @@ typesOfVisualisers = {
 };
 class visualiserControl
 {
-    constructor(type,mapData)
+    constructor(type,mapData,eventList)
     {
        switch(type)
        {
@@ -15,9 +15,13 @@ class visualiserControl
                this.visualiser.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
                break;
            case "Tree":
-               this.visualiserType = typesOfVisualisers.SearchTree;
-               this.visualiser = new TreeVisualizer();
+               this.visualiserType = typesOfVisualisers.Graph;
+
+               this.visualiser = new GraphVisualizer(true,eventList);
                break;
+           case "Graph":
+               this.visualiserType = typesOfVisualisers.Graph;
+               this.visualiser = new GraphVisualizer(false,eventList);
        }
 
     }
@@ -38,8 +42,8 @@ class visualiserControl
     {
         switch(this.visualiserType)
         {
-            case typesOfVisualisers.SearchTree:
-                this.visualiser.addNode(event.id,event.pId)
+            case typesOfVisualisers.Graph:
+                this.visualiser.addNode(event.id,event.data,event.pId)
         }
     }
     setNodeState(event,state)
@@ -48,7 +52,7 @@ class visualiserControl
             case typesOfVisualisers.Grid:
                 this.visualiser.setNodeState(event.x, event.y, state);
                 break;
-            case typesOfVisualisers.SearchTree:
+            case typesOfVisualisers.Graph:
                 this.visualiser.setNodeState(event.id,state)
         }
     }
@@ -59,8 +63,8 @@ class visualiserControl
             case typesOfVisualisers.Grid:
                 this.visualiser.setNodeValues(event.x, event.y, event.g, event.f, event.pX, event.pY);
                 break;
-            case typesOfVisualisers.SearchTree:
-                this.visualiser.setNodeValues(event.id,event.g,event.f);
+            case typesOfVisualisers.Graph:
+                this.visualiser.setNodeValues(event.id,event.data,event.g,event.f,event.pId);
                 break;
 
         }
@@ -70,8 +74,10 @@ class visualiserControl
     {
         switch(this.visualiserType) {
             case typesOfVisualisers.Grid:
-                console.log(event.x+" "+event.y);
                 this.visualiser.drawLine(index,event.x,event.y);
+                break;
+            case typesOfVisualisers.Graph:
+                this.visualiser.drawLine(index,event.id);
                 break;
         }
     }
@@ -85,15 +91,26 @@ class visualiserControl
         {
             case typesOfVisualisers.Grid:
                 return this.visualiser.isBreakPoint(event.x,event.y);
+            case typesOfVisualisers.Graph:
+                return this.visualiser.isBreakPoint(event.id);
         }
     }
-
+    removeBreakPoint(event)
+    {
+        switch(this.visualiserType)
+        {
+            case typesOfVisualisers.Grid:
+                return this.visualiser.removeBreakPoint(event.x,event.y);
+            case typesOfVisualisers.Graph:
+                return this.visualiser.removeBreakPoint(event.id);
+        }
+    }
     getNodeData(event)
     {
         switch(this.visualiserType) {
             case typesOfVisualisers.Grid:
                 return this.visualiser.getNodeData(event.x, event.y);
-            case typesOfVisualisers.SearchTree:
+            case typesOfVisualisers.Graph:
                 return this.visualiser.getNodeData(event.id);
         }
     }
@@ -104,7 +121,7 @@ class visualiserControl
             case typesOfVisualisers.Grid:
                 const nodeData = this.visualiser.getNodeData(event.x,event.y);
                 return nodeData.px !== -1 ? this.visualiser.getNodeData(nodeData.px,nodeData.py): null;
-            case typesOfVisualisers.SearchTree:
+            case typesOfVisualisers.Graph:
                 const current = this.visualiser.getNodeData(event.id);
                 return current.pId ? this.visualiser.getNodeData(current.pId) : null;
 
@@ -116,7 +133,11 @@ class visualiserControl
         {
             case typesOfVisualisers.Grid:
                 this.visualiser.deleteFloatBox();
-                this.visualiser.reloadMap()
+                this.visualiser.reloadMap();
+                break;
+            case typesOfVisualisers.Graph:
+                this.visualiser.clearTree();
+                break;
         }
 
     }

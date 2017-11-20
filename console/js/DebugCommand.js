@@ -1,8 +1,8 @@
 class DebugCommand
 {
-    constructor(events,visual)
+    constructor(type,mapData,events)
     {
-        this.visualControl = visual;
+        this.visualControl = new visualiserControl(type,mapData,events);
 
         this.eventCounter = 0;
         this.eventList = events;
@@ -16,7 +16,7 @@ class DebugCommand
 
         this.showEvent = false;
         this.stepForward();
-        this.visualControl.setLog();
+        //this.visualControl.setLog();
     }
     complete()
     {
@@ -34,6 +34,7 @@ class DebugCommand
                         this.eventCounter++;
                         if (result === false) {
                             this.stop();
+                            result = "expanding";
                         }
                     }
 
@@ -137,6 +138,12 @@ class DebugCommand
                 this.visualControl.setNodeState(event,states.Current);
                 // TODO Figure out how to abstract the output messages
                 this.openList.push(" " + String(event.x) + " " + String(event.y));
+                if(this.visualControl.breakPointCheck(event))
+                {
+                    this.visualControl.removeBreakPoint(event);
+                    return false;
+                }
+
                 break;
 
             case "generating":
@@ -151,6 +158,7 @@ class DebugCommand
                 console.log("Generated");
                 if(!this.heuristicCheck(nodeData) || this.visualControl.breakPointCheck(event))
                 {
+                    this.visualControl.removeBreakPoint(event);
                     return false;
                 }
                 break;
@@ -162,7 +170,7 @@ class DebugCommand
                 nodeData = this.visualControl.getNodeData(event);
 
                 //TODO See what taking this out does...
-                if (event.f < nodeData.f || (event.f === nodeData.f && event.g < nodeData.g)) {
+                //if (event.f < nodeData.f || (event.f === nodeData.f && event.g < nodeData.g)) {
                     this.visualControl.setNodeValues(event);
 
                     nodeData =  this.visualControl.getNodeData(event);
@@ -171,7 +179,7 @@ class DebugCommand
                         return false;
                         console.log("FAILED TEST");
                     }
-                }
+                //}
                 break;
 
             case "closing":

@@ -56,14 +56,14 @@ $(document).ready(function () {
             eventItems = currentJSON.eventList;
             dataReceived = currentJSON.eventList;
             var mapData = currentJSON.Map;
-            vControl = new visualiserControl("Grid",mapData);
+
 
             if (control !== undefined)
             {
                 control.stop();
                 playing = false;
             }
-            control = new DebugCommand(currentJSON.eventList,vControl);
+            control = new DebugCommand(currentJSON.type,mapData,eventItems);
         });
 
     });
@@ -73,18 +73,33 @@ $(document).ready(function () {
             eventItems = currentJSON.eventList;
             dataReceived = currentJSON.eventList;
             var mapData = currentJSON.Map;
-            vControl = new visualiserControl("Tree",mapData);
 
             if (control !== undefined)
             {
                 control.stop();
                 playing = false;
+                control.visualControl.reset();
             }
-            control = new DebugCommand(currentJSON.eventList,vControl);
+            control = new DebugCommand(currentJSON.type,mapData,eventItems);
         });
 
     });
+    $("#defaultSubmitGraph").click(function(event){
+        $.getJSON('DebugFiles/Graph.json', function(currentJSON) {
+            eventItems = currentJSON.eventList;
+            dataReceived = currentJSON.eventList;
+            var mapData = currentJSON.Map;
 
+            if (control !== undefined)
+            {
+                control.stop();
+                playing = false;
+                control.visualControl.reset();
+            }
+            control = new DebugCommand(currentJSON.type,mapData,eventItems);
+        });
+
+    });
     $('.playbtn').click(function() {
         if(control!== null) {
             if(playing == false){
@@ -129,14 +144,14 @@ $(document).ready(function () {
         var currentJSON = JSON.parse(getText);
         dataReceived = currentJSON.eventList;
         var mapData = currentJSON.Map;
-        vControl = new visualiserControl(currentJSON.type,mapData);
 
         if (control !== undefined)
         {
             control.stop();
             playing = false;
+            control.visualControl.reset();
         }
-        control = new DebugCommand(currentJSON.eventList,vControl);
+        control = new DebugCommand(currentJSON.type,mapData,dataReceived);
 
     });
 

@@ -78,7 +78,7 @@ class Visualiser {
     }
 
     alterEventList(events){
-        this.changeLog(xInput, yInput)
+        this.changeLog(events[0],events[1])
 
     }
 
@@ -90,5 +90,11 @@ class Visualiser {
     isBreakPoint()
     {
         throw new Error("This is abstract")
+    }
+    removeBreakPointAtIndex(index)
+    {
+        this.breakPoints.splice(index,1);
+        this.breakPointVisual[index].removeElement();
+        this.breakPointVisual.splice(index,1);
     }
 }
