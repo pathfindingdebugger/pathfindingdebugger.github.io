@@ -1,5 +1,5 @@
 class Visualiser {
-    //Test
+    //Testing
     constructor()
     {
         console.log("cake");
