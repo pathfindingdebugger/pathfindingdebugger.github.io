@@ -170,10 +170,10 @@ class DebugCommand
                 break;
 
             case "updating":
-                //TODO update value on open
+
                 this.currentNodes.push(event);
                 this.visualControl.setNodeState(event, states.CurrentFrontier);
-
+                this.listControl.updateList(lists.open,event);
                 nodeData = this.visualControl.getNodeData(event);
 
                     this.visualControl.setNodeValues(event);
@@ -198,10 +198,10 @@ class DebugCommand
 
             case "end":
 
-                if(!(this.eventCounter+2 >= this.eventList.length))
-                    this.emptyEventList();
+                if(!(this.eventCounter >= this.eventList.length)) {
                     this.visualControl.reload();
-                    mydiv = "";
+                    this.listControl.reset();
+                }
                 break;
         }
         return event.type;
@@ -226,7 +226,6 @@ class DebugCommand
         if(!isMonotonic(nodeData,parentData))
         {
             this.listControl.addErrorAt(nodeData,"Not Monotonic");
-            console.log("THIS IS MEANT TO STOP");
             return false;
         }
 

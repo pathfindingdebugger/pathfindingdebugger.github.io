@@ -125,7 +125,23 @@ class GraphVisualizer extends Visualiser
     {
         const fill = new Elem(this.svg,'line',false).attr('x1',parent.svgElem.attr('cx')).attr('y1',parent.svgElem.attr('cy')).attr('x2',node.svgElem.attr('cx')).attr('y2',node.svgElem.attr('cy')).attr('style','stroke:rgb(255,255,255);stroke-width:1');
         const stroke = new Elem(this.svg,'line',false).attr('x1',parent.svgElem.attr('cx')).attr('y1',parent.svgElem.attr('cy')).attr('x2',node.svgElem.attr('cx')).attr('y2',node.svgElem.attr('cy')).attr('style','stroke:rgb(0,0,0);stroke-width:2');
-        const line = {fill:fill,stroke:stroke};
+
+        const lineVector = {x:(Number(fill.attr('x1')) - Number(fill.attr('x2'))), y: (Number(fill.attr('y1')) - Number(fill.attr('y2'))), z:0};
+        const toScreenVector = {x:0,y:0,z:1};
+
+        const offset = multiply(normalise(cross(lineVector)(toScreenVector)))(10);
+
+        const textX = (Number(fill.attr('x1'))+Number(fill.attr('x2')))/2+offset.x;
+        const textY = (Number(fill.attr('y1'))+Number(fill.attr('y2')))/2+offset.y;
+        const weight = new Elem(this.svg,'text').attr('x',textX).attr('y',textY).attr('font-size',10).attr('fill','white');
+        const weightText = node.g - parent.g;
+
+
+
+
+        weight.elem.append(document.createTextNode(weightText));
+
+        const line = {weight:weight,fill:fill,stroke:stroke};
         //Add line to parent
         node.svgIncomingEdges.push(line);
         parent.svgOutgoingEdges.push(line);
@@ -275,7 +291,6 @@ class GraphVisualizer extends Visualiser
             .attr('y',-10)
             .attr('font-size',textFont)
             .attr('fill','black');
-        console.log("STATE"+ this.graphNode[id].data);
 
         dataText.elem.append(document.createTextNode("data:"+ this.graphNode[id].data));
 
