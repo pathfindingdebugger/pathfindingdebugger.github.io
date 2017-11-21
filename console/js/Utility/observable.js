@@ -97,4 +97,3 @@ class Observable {
         });
     }
 }
-//# sourceMappingURL=observable.js.map
