@@ -283,4 +283,3 @@ function handleMouseUp(evt) {
 		state = '';
 	}
 }
-

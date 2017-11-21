@@ -1,4 +1,28 @@
 //Created by surayezrahman on 23/8/17.
+/**
+ * Main Script for Web page
+ * ======================
+ *
+ * This script file loads the following when the web page loads,
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * Known issues:
+ *
+ *  - Zooming (while panning) on Chrome has some issues
+ *
+ * Releases:
+ *
+ * 1 Tue Oct 24, Surayez Rahman
+ *	- Fixed runtime issues
+ *	- Improved optimization
+ */
+
 
 var currentEventNum = 0;
 var eventItems = [];
