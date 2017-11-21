@@ -9,30 +9,25 @@ class GraphVisualizer extends Visualiser
         this.links = [];
 
         console.log("type: " + mapData);
-        if(mapData == null)
+
+        events.forEach(i=>this.addEventToPositionList(i));
+        let layout = new cola.Layout();
+
+        layout.nodes(this.nodePositions).links(this.links);
+        layout.avoidOverlaps();
+        layout.size([1000,1000]);
+
+        // Force directed edges to point downwards, with level spacing
+        // of at least 30, and then start the layout.
+
+        if(isTree)
         {
-            events.forEach(i=>this.addEventToPositionList(i));
-            let layout = new cola.Layout();
-
-            layout.nodes(this.nodePositions).links(this.links);
-            layout.avoidOverlaps();
-            layout.size([1000,1000]);
-
-            // Force directed edges to point downwards, with level spacing
-            // of at least 30, and then start the layout.
-
-            if(isTree)
-            {
-                layout.flowLayout("y", 30)
-
-            }
-
-            layout.symmetricDiffLinkLengths(17).start(0,0,0);
-        }
-        else
-        {
+            layout.flowLayout("y", 30)
 
         }
+
+        layout.symmetricDiffLinkLengths(17).start(0,0,0);
+
 
     }
     addEventToPositionList(e)

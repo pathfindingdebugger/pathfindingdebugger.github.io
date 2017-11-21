@@ -21,7 +21,7 @@ class visualiserControl
                break;
            case "Graph":
                this.visualiserType = typesOfVisualisers.Graph;
-               this.visualiser = new GraphVisualizer(false,eventList);
+               this.visualiser = new GraphVisualizer(false,mapData,eventList);
        }
 
     }
