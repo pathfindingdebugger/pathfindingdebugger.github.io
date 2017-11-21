@@ -1,7 +1,7 @@
 class Visualiser {
-    //Test
     constructor()
     {
+        console.log("cake");
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
         this.floatBox = null;
