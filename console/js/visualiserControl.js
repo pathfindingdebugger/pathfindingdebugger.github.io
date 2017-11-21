@@ -120,15 +120,18 @@ class visualiserControl
         {
             case typesOfVisualisers.Grid:
                 const nodeData = this.visualiser.getNodeData(event.x,event.y);
+                console.log("Null?"+nodeData.px !== -1 ? this.visualiser.getNodeData(nodeData.px,nodeData.py): null);
                 return nodeData.px !== -1 ? this.visualiser.getNodeData(nodeData.px,nodeData.py): null;
             case typesOfVisualisers.Graph:
                 const current = this.visualiser.getNodeData(event.id);
-                return current.pId ? this.visualiser.getNodeData(current.pId) : null;
+                return current.pId !== null ? this.visualiser.getNodeData(current.pId) : null;
 
         }
     }
     reset()
     {
+        this.visualiser.deleteLine(0);
+        this.visualiser.deleteLine(1);
         switch(this.visualiserType)
         {
             case typesOfVisualisers.Grid:
@@ -141,4 +144,18 @@ class visualiserControl
         }
 
     }
+    reload()
+    {
+        switch(this.visualiserType)
+        {
+            case typesOfVisualisers.Grid:
+                this.visualiser.deleteFloatBox();
+                this.visualiser.reloadMap();
+                break;
+            case typesOfVisualisers.Graph:
+                this.visualiser.clearTree();
+                break;
+        }
+    }
+
 }

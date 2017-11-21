@@ -1,9 +1,17 @@
+lists =
+{
+    events:0,
+    open:1,
+    closed:2
+};
+
+
 class DebugCommand
 {
     constructor(type,mapData,events)
     {
         this.visualControl = new visualiserControl(type,mapData,events);
-
+        this.listControl = new ListControl(type);
         this.eventCounter = 0;
         this.eventList = events;
 
@@ -11,8 +19,7 @@ class DebugCommand
         this.currentNode = null;
         this.currentNodes = [];
 
-        this.closedList = [];
-        this.openList = [];
+
 
         this.showEvent = false;
         this.stepForward();
@@ -78,7 +85,6 @@ class DebugCommand
         }
     }
 
-
     stepBack()
     {
 
@@ -112,20 +118,13 @@ class DebugCommand
         }
     }
 
-    runEvent(event) // NEED TO REFACTOR TO ALLOW FOR ALL NON EXPANSIONS TO OCCUR IN ONE ROUND
+    runEvent(event)
     {
         let nodeData = null;
 
         if(event.type !== "start" && event.type !== "end")
         {
-            var eventli = document.createElement("LI");
-            eventli.setAttribute("id", (String(event.x) + "." + String(event.y)));
-            var newMainItem = document.createTextNode(event.type + ", x= " + event.x + ", y= " + event.y);// + ", g= " + event.g + ", h= " + (event.f - event.g ) + ", f= " + event.f);
-            eventli.appendChild(newMainItem);
-            $('#eventList').append(eventli);
-
-            var mydiv = $(".eventLog");
-            mydiv.scrollTop(mydiv.prop("scrollHeight"));
+            this.listControl.addToList(lists.events,event)
         }
 
         switch (event.type) {
@@ -135,11 +134,11 @@ class DebugCommand
                 console.log(this.costToGoal);
                 break;
             case "expanding":
+                this.listControl.removeFromList(lists.open,event);
                 this.visualControl.clearPath(1);
                 this.visualControl.drawPath(1,event);
                 this.visualControl.setNodeState(event,states.Current);
-                // TODO Figure out how to abstract the output messages
-                this.openList.push(" " + String(event.x) + " " + String(event.y));
+
                 if(this.visualControl.breakPointCheck(event))
                 {
                     this.visualControl.removeBreakPoint(event);
@@ -154,11 +153,16 @@ class DebugCommand
                 this.visualControl.generateNode(event);
                 this.visualControl.setNodeState(event,states.CurrentFrontier);
                 this.visualControl.setNodeValues(event);
-                this.openList.push(" (" + String(event.x) + " , " + String(event.y)+")");
+
+                this.listControl.addToList(lists.open,event);
 
                 nodeData =  this.visualControl.getNodeData(event);
-                console.log("Generated");
-                if(!this.heuristicCheck(nodeData) || this.visualControl.breakPointCheck(event))
+
+                if(!this.heuristicCheck(nodeData))
+                {
+                    return false;
+                }
+                if(this.visualControl.breakPointCheck(event))
                 {
                     this.visualControl.removeBreakPoint(event);
                     return false;
@@ -166,85 +170,81 @@ class DebugCommand
                 break;
 
             case "updating":
+                //TODO update value on open
                 this.currentNodes.push(event);
                 this.visualControl.setNodeState(event, states.CurrentFrontier);
 
                 nodeData = this.visualControl.getNodeData(event);
 
-                //TODO See what taking this out does...
-                //if (event.f < nodeData.f || (event.f === nodeData.f && event.g < nodeData.g)) {
                     this.visualControl.setNodeValues(event);
 
                     nodeData =  this.visualControl.getNodeData(event);
                     if(!this.heuristicCheck(nodeData))
                     {
                         return false;
-                        console.log("FAILED TEST");
                     }
-                //}
                 break;
 
             case "closing":
-                // this.breakPointCheck();
+
+                //Set colors of all current search nodes to the frontier color and set the current node to expanded
                 this.currentNodes.forEach((e)=>this.visualControl.setNodeState(e, states.inFrontier));
                 this.currentNodes = [];
-
                 this.visualControl.setNodeState(event , states.expanded);
 
-                //TODO That list command or just... something
-                this.closedList.push(" " + String(event.x) + " " + String(event.y));
-
-
-                var openListItemIndex = this.openList.indexOf(" " + String(event.x) + " " + String(event.y));
-                this.openList.splice(openListItemIndex, 1);
+                //Update the list values
+                this.listControl.addToList(lists.closed,event);
                 break;
 
             case "end":
 
                 if(!(this.eventCounter+2 >= this.eventList.length))
                     this.emptyEventList();
-                    this.visualControl.reset();
+                    this.visualControl.reload();
                     mydiv = "";
                 break;
         }
-        document.getElementById('closedList').innerHTML = String(this.closedList);
-        document.getElementById('openList').innerHTML = String(this.openList);
         return event.type;
     }
 
     heuristicCheck(nodeData)
     {
         const marginError = 0.0005;
+        console.log("weird...");
         const parentData = this.visualControl.getParentData(nodeData);
         if(parentData === null)
+        {
             console.log("No parent");
             return true;
+        }
 
+        //Checks
         const isMonotonic = (p,n) =>  (n.h <= ((p.g - n.g) + p.h) - marginError || (n.h <= ((p.g - n.g) + p.h)+marginError));
         const isAdmissible = (n) => (n.h <= this.costToGoal - n.g);
 
+
         if(!isMonotonic(nodeData,parentData))
         {
-            this.addErrorAt(nodeData.x,nodeData.y,"Not Monotonic");
+            this.listControl.addErrorAt(nodeData,"Not Monotonic");
+            console.log("THIS IS MEANT TO STOP");
             return false;
         }
 
         if(!isAdmissible(nodeData))
         {
-            this.addErrorAt(nodeData.x,nodeData.y,"Might not be admissible");
+            this.listControl.addErrorAt(nodeData,"Might not be admissible");
             //return false;
         }
         return true;
 
     }
 
-    addErrorAt(x,y,errorText)
+    reset()
     {
-        var eventli = document.createElement("LI");
-        eventli.setAttribute("id", (String(x) + "." + String(y)+"E"));
-        var newMainItem = document.createTextNode(errorText);
-        eventli.appendChild(newMainItem);
-        $('#eventList').append(eventli);
+        this.eventCounter = 0;
+        this.stop();
+        this.visualControl.reset();
+        this.listControl.reset();
     }
 
 }

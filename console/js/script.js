@@ -60,9 +60,7 @@ $(document).ready(function () {
 
             if (control !== undefined)
             {
-                control.stop();
-                playing = false;
-                control.visualControl.reset();
+                control.reset();
             }
             control = new DebugCommand(currentJSON.type,mapData,eventItems);
         });
@@ -77,9 +75,7 @@ $(document).ready(function () {
 
             if (control !== undefined)
             {
-                control.stop();
-                playing = false;
-                control.visualControl.reset();
+                control.reset();
             }
             control = new DebugCommand(currentJSON.type,mapData,eventItems);
         });
@@ -93,9 +89,7 @@ $(document).ready(function () {
 
             if (control !== undefined)
             {
-                control.stop();
-                playing = false;
-                control.visualControl.reset();
+                control.reset();
             }
             control = new DebugCommand(currentJSON.type,mapData,eventItems);
         });
@@ -148,9 +142,7 @@ $(document).ready(function () {
 
         if (control !== undefined)
         {
-            control.stop();
-            playing = false;
-            control.visualControl.reset();
+            control.reset();
         }
         control = new DebugCommand(currentJSON.type,mapData,dataReceived);
 

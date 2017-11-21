@@ -240,8 +240,8 @@ class GraphVisualizer extends Visualiser
         const parent = this.graphNode[this.graphNode[id].pId];
         console.log(parent);
         console.log(this.graphNode[id]);
-        const xDir = parent!== null ? Math.sign(this.graphNode[id].svgElem.attr('cx') - parent.svgElem.attr('cx')):1;
-        const yDir = parent!== null ? Math.sign(this.graphNode[id].svgElem.attr('cy') - parent.svgElem.attr('cy')):0;
+        const xDir = this.graphNode[id].pId !== null ? Math.sign(this.graphNode[id].svgElem.attr('cx') - parent.svgElem.attr('cx')):0;
+        const yDir = this.graphNode[id].pId !== null ? Math.sign(this.graphNode[id].svgElem.attr('cy') - parent.svgElem.attr('cy')):-1;
         console.log(xDir+","+yDir);
         const xOffset = 100*xDir;
         const yOffset = yDir*100; //Just to move it away from mouse
