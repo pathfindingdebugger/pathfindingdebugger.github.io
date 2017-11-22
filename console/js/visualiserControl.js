@@ -3,6 +3,8 @@ typesOfVisualisers = {
     Graph:"Graph",
     SearchTree:"SearchTree"
 };
+
+// This class is responsible for interfacing the debug command, which deals with events, to the visualisers which deal in specific terms such as xy coordinates or ids
 class visualiserControl
 {
     constructor(type,mapData,eventList)
@@ -14,7 +16,7 @@ class visualiserControl
                this.visualiser = new gridVisulizer();
                this.visualiser.loadMap(mapData.mWidth,mapData.mHeight,10,mapData.mapData);
                break;
-           case "Tree":
+           case "Tree": //A tree is specified to the Gridvisualiser then is treated as just another graph by the debugger
                this.visualiserType = typesOfVisualisers.Graph;
 
                this.visualiser = new GraphVisualizer(true,mapData,eventList);

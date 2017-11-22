@@ -18,6 +18,7 @@ class GraphVisualizer extends Visualiser
             let layout = new cola.Layout();
 
             layout.nodes(this.nodePositions).links(this.links);
+            layout.defaultNodeSize(this.nodeSize);
             layout.avoidOverlaps();
             layout.size([1000,1000]);
 
@@ -30,7 +31,13 @@ class GraphVisualizer extends Visualiser
 
             }
 
-            layout.symmetricDiffLinkLengths(17).start(0,0,0);
+            layout.symmetricDiffLinkLengths(17);
+            layout.start(0,1,2,null,true);
+
+            this.nodePositions.push({id:"CAKE"});
+            console.log(this.nodePositions);
+
+
         }
         else
         {
@@ -134,8 +141,22 @@ class GraphVisualizer extends Visualiser
             //.filter(e => this.graphNode[id].svgElem.attr("fill") !== 'white'&&this.graphNode[id].attr("fill") !== '#fff220')
             .subscribe(e => {
                 this.generateFloatBox(e.clientX,e.clientY,id);
-                this.drawLine(0,id)
+                this.drawLine(0,id);
+                node.svgOutgoingEdges.forEach(e=>{
+                    e.weight.attr('fill','red');
+                    e.triangle.attr('fill','#ff009b');
+                    e.fill.attr('stroke','#ff009b');
+                });
+                node.svgElem.observeEvent('mouseout')
+                    .subscribe(e=>
+                        node.svgOutgoingEdges.forEach(e=>{
+                            e.weight.attr('fill','white');
+                            e.triangle.attr('fill','white');
+                            e.fill.attr('stroke','white')
+                        }));
             });
+
+
 
         node.svgElem.observeEvent('mousedown')
             .filter(e => e.shiftKey)
@@ -176,11 +197,11 @@ class GraphVisualizer extends Visualiser
             const base = add(nodePosition)(multiply(normLineVector)(this.nodeSize+5));
             const p2 = add(base)(multiply(perp)(2));
             const p3 = add(base)(multiply(perp)(-2));
-            triangle = new Elem(this.svg,'path',false).attr("d","M"+p1.x+" "+p1.y+" L"+p2.x+" "+p2.y+" L"+p3.x + " " + p3.y+" Z").attr('fill','white');
+            triangle = new Elem(this.svg,'path',true).attr("d","M"+p1.x+" "+p1.y+" L"+p2.x+" "+p2.y+" L"+p3.x + " " + p3.y+" Z").attr('fill','white');
 
 
-            fill = new Elem(this.svg, 'line', false).attr('x1', parent.svgElem.attr('cx')).attr('y1', parent.svgElem.attr('cy')).attr('x2', base.x).attr('y2', base.y).attr('style', 'stroke:rgb(255,255,255);stroke-width:1');
-            stroke = new Elem(this.svg, 'line', false).attr('x1', parent.svgElem.attr('cx')).attr('y1', parent.svgElem.attr('cy')).attr('x2', node.svgElem.attr('cx')).attr('y2', node.svgElem.attr('cy')).attr('style', 'stroke:rgb(0,0,0);stroke-width:2');
+            fill = new Elem(this.svg, 'line', false).attr('x1', parent.svgElem.attr('cx')).attr('y1', parent.svgElem.attr('cy')).attr('x2', base.x).attr('y2', base.y).attr('stroke','rgb(255,255,255)').attr('stroke-width',1);
+            stroke = new Elem(this.svg, 'line', false).attr('x1', parent.svgElem.attr('cx')).attr('y1', parent.svgElem.attr('cy')).attr('x2', node.svgElem.attr('cx')).attr('y2', node.svgElem.attr('cy')).attr('stroke','rgb(0,0,0)').attr('stroke-width',2);
 
 
             textX = turnPoint.x;
@@ -188,13 +209,15 @@ class GraphVisualizer extends Visualiser
         }
         else
         {
-            fill   = new Elem(this.svg,'path',false).attr("d","M"+node.svgElem.attr('cx')+','+node.svgElem.attr('cy')+" a"+this.nodeSize+" "+this.nodeSize+" 0 1 1 "+(Number(node.svgElem.attr('cx'))-1+','+node.svgElem.attr('cy'))).attr('fill',"none").attr('stroke','rgb(255,255,255)').attr('stroke-width',1);
-            stroke = new Elem(this.svg,'path',false).attr("d","M"+node.svgElem.attr('cx')+','+node.svgElem.attr('cy')+" a"+this.nodeSize+" "+this.nodeSize+" 0 1 1 "+(Number(node.svgElem.attr('cx'))-1+','+node.svgElem.attr('cy'))).attr('fill',"none").attr('stroke','rgb(0,0,0)').attr('stroke-width',2);
+            triangle = new Elem(this.svg,'circle');
+            fill   = new Elem(this.svg,'path',false).attr("d","M"+node.svgElem.attr('cx')+','+node.svgElem.attr('cy')+" A"+this.nodeSize+" "+this.nodeSize+" 0 1 1 "+(Number(node.svgElem.attr('cx'))-1+','+node.svgElem.attr('cy'))).attr('fill',"none").attr('stroke','rgb(255,255,255)').attr('stroke-width',1);
+            stroke = new Elem(this.svg,'path',false).attr("d","M"+node.svgElem.attr('cx')+','+node.svgElem.attr('cy')+" A"+this.nodeSize+" "+this.nodeSize+" 0 1 1 "+(Number(node.svgElem.attr('cx'))-1+','+node.svgElem.attr('cy'))).attr('fill',"none").attr('stroke','rgb(0,0,0)').attr('stroke-width',2);
 
             textX = node.svgElem.attr('cx')-5;
             textY = Number(node.svgElem.attr('cy'))+30;
         }
         const weight = new Elem(this.svg,'text').attr('x',textX).attr('y',textY).attr('font-size',10).attr('fill','white');
+
         const weightText = weightValue === null ? node.g - parent.g : weightValue;
 
         weight.elem.append(document.createTextNode(weightText));

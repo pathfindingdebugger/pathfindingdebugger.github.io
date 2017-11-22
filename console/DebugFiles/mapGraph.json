@@ -1,6 +1,6 @@
 {
   "type":"Graph",
-  "Map":{"size":3, "vertex":[{"id":"rock","data":"rock","x":10,"y":10},{"id":"paper","data":"paper","x":40,"y":40},{"id":"scissors","data":"Scissors","x":100,"y":50}],
+  "Map":{"size":3, "vertex":[{"id":"rock","data":"rock","x":10,"y":10},{"id":"paper","data":"paper","x":0,"y":140},{"id":"scissors","data":"Scissors","x":100,"y":50}],
     "edges":[[0,1,-1],[1,0,-1],[-1,1,0]]},
   "eventList":[
     {"type": "generating", "g": 0, "pId": null, "f": 0, "id": "rock", "h": 0, "data": "BWBWBWBE"}
