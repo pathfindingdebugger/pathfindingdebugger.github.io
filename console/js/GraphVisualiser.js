@@ -162,6 +162,19 @@ class GraphVisualizer extends Visualiser
             this.addLine(node,parent)
 
         }
+        else
+        {
+            console.log(node.svgElem.attr('x'));
+            //Center camera on node
+            const nodeVector = {x:nodePosition.x,y:nodePosition.y,z:0};
+            const bounds = {x:document.getElementById("svg").getBoundingClientRect().width,y:document.getElementById("svg").getBoundingClientRect().height};
+            console.log(bounds);
+            const view = add(multiply(nodeVector)(-1))(multiply(bounds)(0.5));
+
+
+            this.svg.setAttribute('transform','translate('+view.x +','+ view.y+')');
+
+        }
 
 
 

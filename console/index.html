@@ -128,9 +128,9 @@
         </div>
 
         <div class="modal-footer">
-            <button id="defaultSubmit" class="modal-action modal-close btn" type='button' style="width:150px">Load Grid</button>
+            <!--<button id="defaultSubmit" class="modal-action modal-close btn" type='button' style="width:150px">Load Grid</button>
             <button id="defaultSubmitTree" class="modal-action modal-close btn" type='button' style="width:150px">Load Tree</button>
-            <button id="defaultSubmitGraph" class="modal-action modal-close btn" type='button' style="width:150px">Load Graph</button>
+            <button id="defaultSubmitGraph" class="modal-action modal-close btn" type='button' style="width:150px">Load Graph</button>-->
             <button class="modal-close btn" type='button'>Cancel</button>
             <button id='submit1btn' class="modal-action modal-close btn" type='button'>Submit</button>
         </div>
@@ -155,6 +155,7 @@
                 <button class="btn" id="eventListTabClick" onclick="showList(event, 'eventListTab')">EventList</button>
                 <button class="btn" onclick="showList(event, 'openList')">OpenList</button>
                 <button class="btn" onclick="showList(event, 'closedList')">ClosedList</button>
+                <button class="btn" onclick="showList(event, 'samples')">Samples</button>
             </div>
 
             <div id="eventListTab" class="tabcontent">
@@ -170,7 +171,11 @@
 
             <div id="closedList" class="tabcontent">
             </div>
-            <div id="closedList" class="tabcontent">
+            <div id="samples" class="tabcontent">
+                <button id="defaultSubmit" class="modal-action modal-close btn" type='button' style="width:150px">Load Grid</button>
+                <button id="defaultSubmitTree" class="modal-action modal-close btn" type='button' style="width:150px">Load Tree</button>
+                <button id="defaultSubmitGraph" class="modal-action modal-close btn" type='button' style="width:150px">Load Graph</button>
+                <button id="defaultSubmitMapGraph" class="modal-action modal-close btn" type='button' style="width:150px">Load Mapped Graph</button>
             </div>
             <script>
                 function showList(evt, listName) {
@@ -196,29 +201,9 @@
                 document.getElementById("eventListTabClick").click();
             </script>
 
-            <!--<h4>Event Log:</h4>-->
-            <!--<div id="eventLog" class="eventLog">-->
-            <!--<ol>-->
-            <!--<div id="eventList"></div>-->
-            <!--</ol>-->
-            <!--</div>-->
         </div>
     </div>
 
-    <!--<div class="lists row" style="padding: 0px">-->
-    <!--<div class="firstCol col-lg-6">-->
-    <!--<h4>Open List:</h4>-->
-
-    <!--&lt;!&ndash;OpenList console&ndash;&gt;-->
-    <!--<div id="openList" ></div>-->
-    <!--</div>-->
-
-    <!--<div class="secondCol col-lg-6">-->
-    <!--<h4>Closed List:</h4>-->
-    <!--<div id="closedList"></div>-->
-    <!--</div>-->
-
-    <!--</div>-->
 
     <div class="legend row" style="padding: 15px">
         <h4>Legend:</h4>

@@ -77,48 +77,19 @@ function changeSpeed(num) {
 $(document).ready(function () {
 
     $("#defaultSubmit").click(function(event){
-        $.getJSON('temp2.json', function(currentJSON) {
-            eventItems = currentJSON.eventList;
-            dataReceived = currentJSON.eventList;
-            var mapData = currentJSON.Map;
-
-
-            if (control !== undefined)
-            {
-                control.reset();
-            }
-            control = new DebugCommand(currentJSON.type,mapData,eventItems);
-        });
+        $.getJSON('temp2.json', upload);
 
     });
 
     $("#defaultSubmitTree").click(function(event){
-        $.getJSON('DebugFiles/tree.json', function(currentJSON) {
-            eventItems = currentJSON.eventList;
-            dataReceived = currentJSON.eventList;
-            var mapData = currentJSON.Map;
-
-            if (control !== undefined)
-            {
-                control.reset();
-            }
-            control = new DebugCommand(currentJSON.type,mapData,eventItems);
-        });
+        $.getJSON('DebugFiles/tree.json', upload);
 
     });
     $("#defaultSubmitGraph").click(function(event){
-        $.getJSON('DebugFiles/Graph.json', function(currentJSON) {
-            eventItems = currentJSON.eventList;
-            dataReceived = currentJSON.eventList;
-            var mapData = currentJSON.Map;
-
-            if (control !== undefined)
-            {
-                control.reset();
-            }
-            control = new DebugCommand(currentJSON.type,mapData,eventItems);
-        });
-
+        $.getJSON('DebugFiles/Graph.json', upload);
+    });
+    $("#defaultSubmitMapGraph").click(function(event){
+        $.getJSON('DebugFiles/mapGraph.json', upload);
     });
     $('.playbtn').click(function() {
         if(control!== null) {
@@ -157,20 +128,20 @@ $(document).ready(function () {
 
 
     $("#submit1btn").click(function () {
-
         var getText = document.getElementById('JSONinput').value;
         var currentJSON = JSON.parse(getText);
-        dataReceived = currentJSON.eventList;
-        var mapData = currentJSON.Map;
+        upload(currentJSON)
+    });
+
+    function upload(data) {
+        dataReceived = data.eventList;
+        var mapData = data.Map;
 
         if (control !== undefined)
         {
             control.reset();
         }
-        control = new DebugCommand(currentJSON.type,mapData,dataReceived);
-
-    });
-
-
+        control = new DebugCommand(data.type,mapData,dataReceived);
+    }
 
 });

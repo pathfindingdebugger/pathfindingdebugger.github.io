@@ -138,6 +138,8 @@ class gridVisulizer extends Visualiser {
             ))
             .subscribe(e=>(this.floatBox !== null)? this.floatBox.attr('transform','translate('+(e.clientX+xOffset)+','+(e.clientY+yOffset)+')') : move.unsub);
 
+
+
     }
 
 
@@ -168,8 +170,22 @@ class gridVisulizer extends Visualiser {
     }
     //This function sets the node colour the states are given in the states enum
     setNodeState(x, y, state) {
+
         if(this.tileArray[y*this.mapWidth+x].attr("fill") === "#09ff00" || this.tileArray[y*this.mapWidth+x].attr("fill") === "#ff7700")
-            return ;
+        {
+            return;
+        }
+        if(state == states.start)
+        {
+            //Move Camera to grid
+            const nodeVector = {x:0,y:0,z:0};
+            const bounds = {x:document.getElementById("svg").getBoundingClientRect().width,y:document.getElementById("svg").getBoundingClientRect().height};
+            console.log(bounds);
+            const view = add(multiply(nodeVector)(-1))(multiply(bounds)(0.5));
+            this.svg.setAttribute('transform','translate('+nodeVector.x +','+ nodeVector.y+')');
+
+        }
+
         if (0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight) {
 
             this.setElemState(this.tileArray[y * this.mapWidth + x],state);
@@ -180,7 +196,6 @@ class gridVisulizer extends Visualiser {
 
     loadMap(mapWidth, mapHeight, tileSize, mapString) {
         this.mapData = mapString;
-        console.log(this.svg);
         this.svg.setAttribute("viewBox", "0 0 500 500");
         //Destroy old map
         this.tileSize = tileSize;
@@ -246,6 +261,7 @@ class gridVisulizer extends Visualiser {
 
             }
         }
+
     }
 
 
