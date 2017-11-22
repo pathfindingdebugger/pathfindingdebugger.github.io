@@ -84,15 +84,15 @@ class gridVisulizer extends Visualiser {
             .attr("stroke",gridElem.attr("fill"));
 
 
+        const elements = []
+
         const positionText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
             .attr('y',-30)
             .attr('font-size',textFont)
             .attr('fill','black');
-
-
-
         positionText.elem.append(document.createTextNode("x:"+gridX+"\t y:"+(gridY)));
+        elements.push(positionText);
 
         const gText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
@@ -101,6 +101,7 @@ class gridVisulizer extends Visualiser {
             .attr('fill','black');
         const g = Number(gridElem.attr("g"));
         gText.elem.append(document.createTextNode("g:"+g));
+        elements.push(gText);
 
         const hText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
@@ -109,6 +110,7 @@ class gridVisulizer extends Visualiser {
             .attr('fill','black');
         const h = Number(gridElem.attr("h")).toPrecision(5);
         hText.elem.append(document.createTextNode("h:"+h));
+        elements.push(hText);
 
         const fText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
@@ -117,6 +119,10 @@ class gridVisulizer extends Visualiser {
             .attr('fill','black');
         const f = Number(gridElem.attr("f"));
         fText.elem.append(document.createTextNode(" f:"+f));
+        elements.push(fText);
+
+        const maxSize = elements.map(e=>e.elem.getBoundingClientRect().right - e.elem.getBoundingClientRect().left).reduce((i,j)=> i > j ? i : j);
+        box.attr('width',maxSize);
 
         this.floatBox.attr('transform','translate('+newX+','+newY+')');
 
@@ -152,14 +158,13 @@ class gridVisulizer extends Visualiser {
 
     setNodeValues(x,y,g,f,px,py)
     {
+        console.log(x,y);
         this.tileArray[y * this.mapWidth + x]
             .attr('g',g)
             .attr('h',f-g)
             .attr('f',f)
             .attr('px',px)
             .attr('py',py);
-
-        
     }
     //This function sets the node colour the states are given in the states enum
     setNodeState(x, y, state) {

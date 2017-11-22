@@ -29,6 +29,7 @@ class ListControl
                     case typesOfVisualisers.Grid:
                         eventli.setAttribute("id", (String(event.x) + "." + String(event.y)));
                         newMainItem = document.createTextNode(event.type + ", x= " + event.x + ", y= " + event.y);// + ", g= " + event.g + ", h= " + (event.f - event.g ) + ", f= " + event.f);
+
                         break;
                     case typesOfVisualisers.Graph:
                         eventli.setAttribute("id", event.type+event.id);
@@ -92,7 +93,6 @@ class ListControl
         switch(this.type){
             case typesOfVisualisers.Grid:
                 listIndex = list.map((e)=>e.x === event.x && e.y === event.y);
-                console.log(listIndex);
                 listIndex = listIndex.indexOf(true);
                 break;
             case typesOfVisualisers.Graph:
@@ -102,7 +102,6 @@ class ListControl
         }
         if(listIndex != -1)
         {
-            console.log(list,listIndex);
             list[listIndex].data = newData;
         }
 

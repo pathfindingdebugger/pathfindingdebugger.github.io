@@ -35,6 +35,7 @@ var speed = 1;
 let control;
 let vControl;
 var playing = false;
+
 const states = {
     NotSearched:0,
     inFrontier:1,
@@ -121,14 +122,12 @@ $(document).ready(function () {
     });
     $('.playbtn').click(function() {
         if(control!== null) {
-            if(playing == false){
+            if(control.playing === false){
                 control.play(speed);
-                playing = true;
                 console.log("play")
             }
             else{
                 control.stop();
-                playing = false;
                 console.log("stop")
             }
         }else{

@@ -32,13 +32,25 @@ class visualiserControl
     {
         this.visualiser.setLogChanger(outputFunction);
     }
-    showStartAndGoal(event)
+    showStart(event)
     {
         switch(this.visualiserType) {
             case typesOfVisualisers.Grid:
                 this.visualiser.setNodeState(event.startX, event.startY, states.start);
+                break;
+            case typesOfVisualisers.Graph:
+                this.visualiser.setNodeState(event.id,states.start);
+        }
+    }
+    showGoal(event)
+    {
+        switch(this.visualiserType) {
+            case typesOfVisualisers.Grid:
+                if(e.x !== undefined)
                 this.visualiser.setNodeState(event.endX, event.endY, states.goal);
                 break;
+            case typesOfVisualisers.Graph:
+                this.visualiser.setNodeState(event.id,states.goal);
         }
     }
     generateNode(event)

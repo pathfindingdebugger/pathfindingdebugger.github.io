@@ -8,18 +8,21 @@ lists =
 
 class DebugCommand
 {
+    // The debug control has domain over the control flow of the debug
+    //It is initiated when the user uploads a file
     constructor(type,mapData,events)
     {
-        this.visualControl = new visualiserControl(type,mapData,events);
-        this.listControl = new ListControl(type);
-        this.eventCounter = 0;
-        this.eventList = events;
+        this.playing = false; // Used to tell other scripts if it is currently running
+        this.visualControl = new visualiserControl(type,mapData,events); // The visualControl allows for the debug
+        //command to be separated from weather the incoming json is for a grid, graph or any other visualisation
+        this.listControl = new ListControl(type); // In a similar vein to visualControl (which controls, how did you guess it
+        //the visualiser :O ) The list control abstracts away the detail for the lists.
+        this.eventCounter = 0; //Is the current event number we are on
+        this.eventList = events; // This is the event list from the Json file
 
-        this.currentId = null;
-        this.currentNode = null;
-        this.currentNodes = [];
-
-
+        this.currentId = null;  // This is the interval Id, it is needed to stop it
+        this.currentNode = null; //Current searched node
+        this.currentNodes = []; //
 
         this.showEvent = false;
         this.stepForward();
@@ -31,6 +34,7 @@ class DebugCommand
     }
 
     play(speed) {
+        this.playing = true;
         this.currentId = setInterval(
             () => {
                 if (!this.complete()) {
@@ -58,6 +62,7 @@ class DebugCommand
 
     stop()
     {
+        this.playing = false;
         clearInterval(this.currentId);
     }
     changeSpeed(speed)
@@ -129,7 +134,8 @@ class DebugCommand
 
         switch (event.type) {
             case "start":
-                this.visualControl.showStartAndGoal(event);
+                this.visualControl.showStart(event);
+                this.visualControl.showGoal(event);
                 this.costToGoal = this.getCostOfSearch(this.eventCounter);
                 console.log(this.costToGoal);
                 break;
@@ -197,10 +203,13 @@ class DebugCommand
                 break;
 
             case "end":
-
-                if(!(this.eventCounter >= this.eventList.length)) {
+                this.visualControl.showGoal(event);
+                if(this.eventCounter+1 < this.eventList.length) {
                     this.visualControl.reload();
                     this.listControl.reset();
+                }else{
+                    this.stop();
+                    return false;
                 }
                 break;
         }
@@ -210,11 +219,9 @@ class DebugCommand
     heuristicCheck(nodeData)
     {
         const marginError = 0.0005;
-        console.log("weird...");
         const parentData = this.visualControl.getParentData(nodeData);
         if(parentData === null)
         {
-            console.log("No parent");
             return true;
         }
 
