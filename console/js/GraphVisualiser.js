@@ -7,28 +7,60 @@ class GraphVisualizer extends Visualiser
         this.positionIndecies = {};
         this.nodePositions = [];
         this.links = [];
-
+        this.nodeSize = 10;
         console.log("type: " + mapData);
 
-        events.forEach(i=>this.addEventToPositionList(i));
-        let layout = new cola.Layout();
-
-        layout.nodes(this.nodePositions).links(this.links);
-        layout.avoidOverlaps();
-        layout.size([1000,1000]);
-
-        // Force directed edges to point downwards, with level spacing
-        // of at least 30, and then start the layout.
-
-        if(isTree)
+        if(mapData === undefined)
         {
-            layout.flowLayout("y", 30)
+            this.selfDrawn = true;
+            events.forEach(i=>this.addEventToPositionList(i));
 
+            let layout = new cola.Layout();
+
+            layout.nodes(this.nodePositions).links(this.links);
+            layout.avoidOverlaps();
+            layout.size([1000,1000]);
+
+            // Force directed edges to point downwards, with level spacing
+            // of at least 30, and then start the layout.
+
+            if(isTree)
+            {
+                layout.flowLayout("y", 30)
+
+            }
+
+            layout.symmetricDiffLinkLengths(17).start(0,0,0);
+        }
+        else
+        {
+            console.log("I AM GONNA DRAW");
+            this.selfDrawn = false;
+            this.drawMap(mapData)
         }
 
-        layout.symmetricDiffLinkLengths(17).start(0,0,0);
 
+    }
+    drawMap(mapData) {
+        console.log("HERE I GO");
+        console.log(mapData.vertex);
+        mapData.vertex.forEach(e => {
+            this.positionIndecies[e.id] = this.nodePositions.length;
+            this.nodePositions.push(e);
+            this.addNode(e.id,e.data,null,0,0,0)
+        });
 
+        for (let j = 0; j < mapData.size;j++){
+
+            for (let i = 0; i < mapData.size; i++) {
+                if(mapData.edges[j][i] !== null)
+                {
+                    this.addLine( this.graphNode[mapData.vertex[j].id],this.graphNode[mapData.vertex[i].id],mapData.edges[j][i]);
+                }
+
+            }
+        }
+        console.log("FINISHED");
     }
     addEventToPositionList(e)
     {
@@ -123,28 +155,51 @@ class GraphVisualizer extends Visualiser
 
         }
 
+
+
     }
-    addLine(node,parent)
+    addLine(node,parent,weightValue = null)
     {
-        const fill = new Elem(this.svg,'line',false).attr('x1',parent.svgElem.attr('cx')).attr('y1',parent.svgElem.attr('cy')).attr('x2',node.svgElem.attr('cx')).attr('y2',node.svgElem.attr('cy')).attr('style','stroke:rgb(255,255,255);stroke-width:1');
-        const stroke = new Elem(this.svg,'line',false).attr('x1',parent.svgElem.attr('cx')).attr('y1',parent.svgElem.attr('cy')).attr('x2',node.svgElem.attr('cx')).attr('y2',node.svgElem.attr('cy')).attr('style','stroke:rgb(0,0,0);stroke-width:2');
+        const nodePosition = {x:Number(node.svgElem.attr('cx')), y:Number(node.svgElem.attr('cy')), z:0};
+        const parentPosition = {x:Number(parent.svgElem.attr('cx')), y:Number(parent.svgElem.attr('cy')), z:0};
+        let fill, stroke, triangle, textX, textY;
+        if(node !== parent) {
 
-        const lineVector = {x:(Number(fill.attr('x1')) - Number(fill.attr('x2'))), y: (Number(fill.attr('y1')) - Number(fill.attr('y2'))), z:0};
-        const toScreenVector = {x:0,y:0,z:1};
+            const lineVector = sub(nodePosition)(parentPosition);
+            const toScreenVector = {x:0,y:0,z:1};
+            const perp = normalise(cross(lineVector)(toScreenVector));
+            const normLineVector = normalise(lineVector);
+            const offset = multiply(perp)(10);
+            const turnPoint = add(multiply(add(nodePosition)(parentPosition))(0.5))(offset);
 
-        const offset = multiply(normalise(cross(lineVector)(toScreenVector)))(10);
+            const p1 = add(nodePosition)(multiply(normLineVector)(this.nodeSize));
+            const base = add(nodePosition)(multiply(normLineVector)(this.nodeSize+5));
+            const p2 = add(base)(multiply(perp)(2));
+            const p3 = add(base)(multiply(perp)(-2));
+            triangle = new Elem(this.svg,'path',false).attr("d","M"+p1.x+" "+p1.y+" L"+p2.x+" "+p2.y+" L"+p3.x + " " + p3.y+" Z").attr('fill','white');
 
-        const textX = (Number(fill.attr('x1'))+Number(fill.attr('x2')))/2+offset.x;
-        const textY = (Number(fill.attr('y1'))+Number(fill.attr('y2')))/2+offset.y;
+
+            fill = new Elem(this.svg, 'line', false).attr('x1', parent.svgElem.attr('cx')).attr('y1', parent.svgElem.attr('cy')).attr('x2', base.x).attr('y2', base.y).attr('style', 'stroke:rgb(255,255,255);stroke-width:1');
+            stroke = new Elem(this.svg, 'line', false).attr('x1', parent.svgElem.attr('cx')).attr('y1', parent.svgElem.attr('cy')).attr('x2', node.svgElem.attr('cx')).attr('y2', node.svgElem.attr('cy')).attr('style', 'stroke:rgb(0,0,0);stroke-width:2');
+
+
+            textX = turnPoint.x;
+            textY = turnPoint.y;
+        }
+        else
+        {
+            fill   = new Elem(this.svg,'path',false).attr("d","M"+node.svgElem.attr('cx')+','+node.svgElem.attr('cy')+" a"+this.nodeSize+" "+this.nodeSize+" 0 1 1 "+(Number(node.svgElem.attr('cx'))-1+','+node.svgElem.attr('cy'))).attr('fill',"none").attr('stroke','rgb(255,255,255)').attr('stroke-width',1);
+            stroke = new Elem(this.svg,'path',false).attr("d","M"+node.svgElem.attr('cx')+','+node.svgElem.attr('cy')+" a"+this.nodeSize+" "+this.nodeSize+" 0 1 1 "+(Number(node.svgElem.attr('cx'))-1+','+node.svgElem.attr('cy'))).attr('fill',"none").attr('stroke','rgb(0,0,0)').attr('stroke-width',2);
+
+            textX = node.svgElem.attr('cx')-5;
+            textY = Number(node.svgElem.attr('cy'))+30;
+        }
         const weight = new Elem(this.svg,'text').attr('x',textX).attr('y',textY).attr('font-size',10).attr('fill','white');
-        const weightText = node.g - parent.g;
-
-
-
+        const weightText = weightValue === null ? node.g - parent.g : weightValue;
 
         weight.elem.append(document.createTextNode(weightText));
 
-        const line = {weight:weight,fill:fill,stroke:stroke};
+        const line = {triangle:triangle,weight:weight,fill:fill,stroke:stroke};
         //Add line to parent
         node.svgIncomingEdges.push(line);
         parent.svgOutgoingEdges.push(line);
@@ -234,7 +289,17 @@ class GraphVisualizer extends Visualiser
     clearTree()
     {
 
-        Object.keys(this.graphNode).forEach(e=>{this.graphNode[e].svgOutgoingEdges.forEach(e=>{e.fill.removeElement(); e.stroke.removeElement()});this.graphNode[e].svgElem.removeElement()});
+        Object.keys(this.graphNode).forEach(e=>
+        {
+            this.graphNode[e].svgOutgoingEdges.forEach(e=>{
+                e.fill.removeElement();
+                e.triangle.removeElement();
+                e.weight.removeElement();
+                e.stroke.removeElement()
+            });
+            this.graphNode[e].svgElem.removeElement()
+        });
+
         this.deleteLine(0);
         this.deleteLine(1);
         this.graphNode = {};

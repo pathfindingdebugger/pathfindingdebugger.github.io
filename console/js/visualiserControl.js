@@ -17,10 +17,11 @@ class visualiserControl
            case "Tree":
                this.visualiserType = typesOfVisualisers.Graph;
 
-               this.visualiser = new GraphVisualizer(true,eventList);
+               this.visualiser = new GraphVisualizer(true,mapData,eventList);
                break;
            case "Graph":
                this.visualiserType = typesOfVisualisers.Graph;
+               console.log(mapData);
                this.visualiser = new GraphVisualizer(false,mapData,eventList);
        }
 
@@ -43,7 +44,16 @@ class visualiserControl
         switch(this.visualiserType)
         {
             case typesOfVisualisers.Graph:
-                this.visualiser.addNode(event.id,event.data,event.pId,event.g,event.f,event.h)
+                if(this.visualiser.selfDrawn === true)
+                {
+                    this.visualiser.addNode(event.id,event.data,event.pId,event.g,event.f,event.h);
+                }
+                else
+                {
+                    this.setNodeState(event);
+                    this.setNodeValues(event);
+                }
+
         }
     }
     setNodeState(event,state)
