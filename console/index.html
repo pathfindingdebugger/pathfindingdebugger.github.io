@@ -13,6 +13,7 @@
 
     <!-- Compiled and minifid CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+    <link rel="stylesheet" ref="../../css/toggle.cs">
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
 
@@ -156,6 +157,7 @@
                 <button class="btn" onclick="showList(event, 'openList')">OpenList</button>
                 <button class="btn" onclick="showList(event, 'closedList')">ClosedList</button>
                 <button class="btn" onclick="showList(event, 'samples')">Samples</button>
+                <button class="btn" onclick="showList(event, 'settings')">Settings</button>
             </div>
 
             <div id="eventListTab" class="tabcontent">
@@ -176,6 +178,19 @@
                 <button id="defaultSubmitTree" class="modal-action modal-close btn" type='button' style="width:150px">Load Tree</button>
                 <button id="defaultSubmitGraph" class="modal-action modal-close btn" type='button' style="width:150px">Load Graph</button>
                 <button id="defaultSubmitMapGraph" class="modal-action modal-close btn" type='button' style="width:150px">Load Mapped Graph</button>
+                <button id="defaultSubmitAnya" class="modal-action modal-close btn" type='button' style="width:150px">Anya</button>
+            </div>
+            <div id="settings" class="tabcontent">
+                <H1>Tests</H1>
+                <button id="Monotonicity" class="modal-action modal-close btn" type='button' style="width:150px">Monotonicity</button>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+                <button id="Example1" class="modal-action modal-close btn" type='button' style="width:150px">Example</button>
+                <button id="Example2" class="modal-action modal-close btn" type='button' style="width:150px">Example</button>
+
+                <button id="Example3" class="modal-action modal-close btn" type='button' style="width:150px">Example</button>
             </div>
             <script>
                 function showList(evt, listName) {

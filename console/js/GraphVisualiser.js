@@ -259,6 +259,10 @@ class GraphVisualizer extends Visualiser
     {
         if(this.graphNode[id].state !== states.start && this.graphNode[id].state !== states.goal)
         {
+            if(state == states.goal)
+            {
+                console.log("Cake");
+            }
             this.graphNode[id].state = state;
             this.setElemState(this.graphNode[id].svgElem,state)
         }

@@ -33,7 +33,6 @@ let i = 0;
 var j = 0;
 var speed = 1;
 let control;
-let vControl;
 var playing = false;
 
 const states = {
@@ -91,6 +90,9 @@ $(document).ready(function () {
     $("#defaultSubmitMapGraph").click(function(event){
         $.getJSON('DebugFiles/mapGraph.json', upload);
     });
+    $("#defaultSubmitAnya").click(function(event){
+        $.getJSON('DebugFiles/custom.json', upload);
+    });
     $('.playbtn').click(function() {
         if(control!== null) {
             if(control.playing === false){
@@ -118,7 +120,11 @@ $(document).ready(function () {
     $(document).ready(function(){
         $('.modal').modal();
     });
-
+    //Test buttons
+    $('#Monotonicity').click(e=>{
+        //$('#Monotonicity').style = "fill:green";
+        control.toggleTest(tests.monotonicity)
+    });
 
     // Full Screen Mode
 

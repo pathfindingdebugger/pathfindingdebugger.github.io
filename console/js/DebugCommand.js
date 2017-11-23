@@ -4,7 +4,10 @@ lists =
     open:1,
     closed:2
 };
-
+tests =
+    {
+        monotonicity:0
+    };
 
 class DebugCommand
 {
@@ -27,6 +30,8 @@ class DebugCommand
         this.showEvent = false;
         this.stepForward();
         //this.visualControl.setLog();
+
+        this.testStaus = [true];
     }
     complete()
     {
@@ -215,7 +220,12 @@ class DebugCommand
         }
         return event.type;
     }
-
+    toggleTest(test)
+    {
+        console.log("TOGGLE ",test);
+        this.testStaus[test] = !this.testStaus[test];
+        console.log(this.testStaus[test]);
+    }
     heuristicCheck(nodeData)
     {
         const marginError = 0.0005;
@@ -230,7 +240,7 @@ class DebugCommand
         const isAdmissible = (n) => (n.h <= this.costToGoal - n.g);
 
 
-        if(!isMonotonic(nodeData,parentData))
+        if(this.testStaus[tests.monotonicity] && !isMonotonic(nodeData,parentData))
         {
             this.listControl.addErrorAt(nodeData,"Not Monotonic");
             return false;
