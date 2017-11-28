@@ -10,6 +10,8 @@ class CustomVisualiser extends Visualiser
         this.breakPoints = [];
         this.positioning = data.positioning;
         this.nodeSize = 10;
+        this.scale = 25;
+        this.lineToggle = true;
         if(data.positioning !== "fixed")
         {
             this.positionIndecies = {};
@@ -45,7 +47,7 @@ class CustomVisualiser extends Visualiser
         const svgElements = data.svgObjects !== undefined ? data.svgObjects : [];
         // PRE SETS
         svgElements.push({ "key":"Square", "object":{ "type":"rect", "attributes": [{"key":"cx","value":" 5 "},{"key":"cy","value":" 5 "},{"key":"x","value":" 0 "},{"key":"y","value":" 0 "},{"key":"width","value":" 10 "},{"key":"height","value":" 10 "},{"key":"stroke","value":"black"}], "variableNames": []}});
-        svgElements.push({ "key":"GridSpace", "object":{ "type":"rect", "attributes": [{"key":"x","value":" px "},{"key":"y","value":" py "},{"key":"width","value":" 50 "},{"key":"height","value":" 50 "},{"key":"stroke","value":"black"}], "variableNames": ["px","py"]}});
+        svgElements.push({ "key":"GridSpace", "object":{ "type":"rect", "attributes": [{"key":"fill","value":"white"},{"key":"cx","value":" px "},{"key":"cy","value":" py "},{"key":"x","value":" px "},{"key":"y","value":" py "},{"key":"width","value":"25"},{"key":"height","value":"25"},{"key":"stroke-width","value":"1"}], "variableNames": ["px","py"]}});
         svgElements.push({ "key":"Node", "object":{ "type":"circle", "attributes":[{"key":"cx","value":"0"},{"key":"cy","value":"0"},{"key":"r","value":"10"},{"key":"stroke","value":"black"}],"variableNames": []}});
 
         //Fill the svgObj to be functions that take
@@ -59,6 +61,7 @@ class CustomVisualiser extends Visualiser
                 return obj;
             }
         );
+
     }
 
     addEventToPositionList(e)
@@ -98,8 +101,12 @@ class CustomVisualiser extends Visualiser
         }
         else if(e.svgType !== null && e.variables  !== null)
         {
+            //Attempt to upsize any grid
+            if(e.svgType === "GridSpace")
+            {
+                e.variables = e.variables.map(e=>e*this.scale);
+            }
             //Draw an svg of that type with those perameters
-
             newElement = this.svgObj[e.svgType](e.variables);
             //If drawing is not fixed we want to translate the new svg by the x and y given by webcola
             if(this.positioning !== "fixed")
@@ -107,6 +114,7 @@ class CustomVisualiser extends Visualiser
                 const point = this.nodePositions[this.positionIndecies[e.id]];
                 newElement.translate(point.x,point.y);
             }
+
         }
         else
         {
@@ -159,7 +167,7 @@ class CustomVisualiser extends Visualiser
     }
     addLine(node,parent,weightValue = null)
     {
-        if(!node.svg.hasCentre() || !parent.svg.hasCentre())
+        if(!node.svg.hasCentre() || !parent.svg.hasCentre() || !this.lineToggle)
             return;
         const nodePosition = {x:node.svg.getCenterPosition().x, y: node.svg.getCenterPosition().y, z:0};
         const parentPosition = {x:parent.svg.getCenterPosition().x, y:parent.svg.getCenterPosition().y, z:0};
@@ -244,13 +252,13 @@ class CustomVisualiser extends Visualiser
 
         if(this.lineVisual[index] !== null && this.lineVisual[index] !== undefined)
             this.lineVisual[index].forEach((id,i)=>{
-                this.nodes[id].svg.attr('stroke','black');
+                this.nodes[id].svg.attr('stroke','white');
                 this.nodes[id].svg.attr('stroke-width',1);
 
                 if(this.nodes[id].pId !== null && this.nodes[id].pId !== "null")
                 {
                     const parent = this.nodes[id].pId;
-                    this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],'white')
+                    this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],'black')
                 }
             });
 
@@ -295,9 +303,20 @@ class CustomVisualiser extends Visualiser
 
     setLineColor(e,colour)
     {
-        e.weight.attr('fill',colour);
-        e.triangle.attr('fill',colour);
-        e.fill.attr('stroke',colour);
+        if(e !== undefined)
+        {
+            e.weight.attr('fill',colour);
+            e.triangle.attr('fill',colour);
+            e.fill.attr('stroke',colour);
+        }
+
+    }
+    deleteEdge(edge)
+    {
+        edge.triangle.removeElement();
+        edge.weight.removeElement();
+        edge.fill.removeElement();
+        edge.stroke.removeElement();
     }
 
     generateFloatBox(mouseX,mouseY,id) {
@@ -389,5 +408,20 @@ class CustomVisualiser extends Visualiser
             ))
             .subscribe(e=>(this.floatBox !== null)? this.floatBox.attr('transform','translate('+(e.clientX+xOffset)+','+(e.clientY+yOffset)+')') : move.unsub);
 
+    }
+
+    toggleLines()
+    {
+        if(this.lineToggle)
+        {
+            //toggle off
+            Object.keys(this.nodes).forEach(k=>{this.nodes[k].outgoingEdges.forEach(edge=>{this.deleteEdge(edge);edge = null});this.nodes[k].outgoingEdges = [];this.nodes[k].incomingEdges = [] })
+        }
+        else
+        {
+            //toggle on
+            Object.keys(this.nodes).forEach(p=>this.nodes[p].children.forEach(c=>this.addLine(this.nodes[c],this.nodes[p])));
+        }
+        this.lineToggle = !this.lineToggle
     }
 }

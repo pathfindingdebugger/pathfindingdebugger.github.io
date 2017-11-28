@@ -208,5 +208,11 @@ class visualiserControl
                 break;
         }
     }
-
+    toggleLines()
+    {
+        if(this.visualiserType === typesOfVisualisers.Custom)
+        {
+            this.visualiser.toggleLines();
+        }
+    }
 }

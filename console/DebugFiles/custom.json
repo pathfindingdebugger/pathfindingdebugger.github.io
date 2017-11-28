@@ -1,5 +1,5 @@
-{ "type":"Custom","positioning":"fixed","svgObjects": [{ "key":"AnyaNode", "object":{ "type":"path", "attributes": [{"key":"d","value":"M p1x p1y L p2x p2y L p3x p3y Z"},{"key":"fill","value":"none"},{"key":"stroke-width","value":"0.1"},{"key":"stroke","value":"white"}], "variableNames": ["p1x","p1y","p2x","p2y","p3x","p3y"]}}],
-  "eventList":[{ "id":"0", "pId":"null","type":"generating", "svgType":"AnyaNode", "variables": ["8.0","15.0","8.0","15.0","8.0","15.0"], "g":0.0,"f":0.0},
+{ "type":"Custom","positioning":"fixed","svgObjects": [{ "key":"AnyaNode", "object":{ "type":"path", "attributes": [{"key":"cx","value":"p2x"},{"key":"cy","value":"p2y"},{"key":"d","value":"M p1x p1y L p2x p2y L p3x p3y Z"},{"key":"fill","value":"none"},{"key":"stroke-width","value":"0.1"},{"key":"stroke","value":"white"}], "variableNames": ["p1x","p1y","p2x","p2y","p3x","p3y"]}}],
+  "eventList":[{ "id":"0", "pId":null,"type":"generating", "svgType":"AnyaNode", "variables": ["8.0","15.0","8.0","15.0","8.0","15.0"], "g":0.0,"f":0.0},
   { "id":"0","type":"expanding"},
   { "id":"4", "pId":"0","type":"generating", "svgType":"AnyaNode", "variables": ["8.0","15.0","48.0","16.0","87.0","16.0"], "g":0.0,"f":0.0},
   { "id":"4", "pId":"0","type":"updating","g":0.0,"f":92.49106510109281},

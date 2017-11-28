@@ -76,7 +76,7 @@ function changeSpeed(num) {
 $(document).ready(function () {
 
     $("#defaultSubmit").click(function(event){
-        $.getJSON('newGrid.json', upload);
+        $.getJSON('DebugFiles/newGrid.json', upload);
 
     });
 
@@ -125,7 +125,9 @@ $(document).ready(function () {
         //$('#Monotonicity').style = "fill:green";
         control.toggleTest(tests.monotonicity)
     });
-
+    $('#Lines').click(e=>{
+       control.visualControl.toggleLines();
+    });
     // Full Screen Mode
 
     $('.fullScreenbtn').click(function(e){
