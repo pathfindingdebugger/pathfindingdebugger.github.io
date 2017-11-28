@@ -267,8 +267,6 @@ class GraphVisualizer extends Visualiser
             this.setElemState(this.graphNode[id].svgElem,state)
         }
 
-
-
     }
     getNodeData(id)
     {

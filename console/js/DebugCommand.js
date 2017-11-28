@@ -13,25 +13,31 @@ class DebugCommand
 {
     // The debug control has domain over the control flow of the debug
     //It is initiated when the user uploads a file
-    constructor(type,mapData,events)
+    constructor(data)
     {
+        const type = data.type;
+        const mapData = data.Map;
+        const events = data.eventList;
         this.playing = false; // Used to tell other scripts if it is currently running
-        this.visualControl = new visualiserControl(type,mapData,events); // The visualControl allows for the debug
+        this.visualControl = new visualiserControl(data); // The visualControl allows for the debug
+
         //command to be separated from weather the incoming json is for a grid, graph or any other visualisation
         this.listControl = new ListControl(type); // In a similar vein to visualControl (which controls, how did you guess it
+        console.log("0");
         //the visualiser :O ) The list control abstracts away the detail for the lists.
         this.eventCounter = 0; //Is the current event number we are on
         this.eventList = events; // This is the event list from the Json file
-
+        console.log("1");
         this.currentId = null;  // This is the interval Id, it is needed to stop it
         this.currentNode = null; //Current searched node
         this.currentNodes = []; //
-
+        console.log("2");
         this.showEvent = false;
+        this.testStatus = [true];
+
         this.stepForward();
         //this.visualControl.setLog();
-
-        this.testStaus = [true];
+        console.log("3");
     }
     complete()
     {
@@ -89,7 +95,6 @@ class DebugCommand
     {
         if(!this.complete())
         {
-            console.log(this.eventList.length);
             this.runEvent(this.eventList[this.eventCounter]);
             this.eventCounter++;
         }
@@ -223,14 +228,14 @@ class DebugCommand
     toggleTest(test)
     {
         console.log("TOGGLE ",test);
-        this.testStaus[test] = !this.testStaus[test];
-        console.log(this.testStaus[test]);
+        this.testStatus[test] = !this.testStatus[test];
+        console.log(this.testStatus[test]);
     }
     heuristicCheck(nodeData)
     {
         const marginError = 0.0005;
         const parentData = this.visualControl.getParentData(nodeData);
-        if(parentData === null)
+        if(parentData === null || parentData === "null")
         {
             return true;
         }
@@ -240,7 +245,7 @@ class DebugCommand
         const isAdmissible = (n) => (n.h <= this.costToGoal - n.g);
 
 
-        if(this.testStaus[tests.monotonicity] && !isMonotonic(nodeData,parentData))
+        if(this.testStatus[tests.monotonicity] &&!(isMonotonic(nodeData,parentData)))
         {
             this.listControl.addErrorAt(nodeData,"Not Monotonic");
             return false;

@@ -1,16 +1,20 @@
 typesOfVisualisers = {
     Grid:"Grid",
     Graph:"Graph",
-    SearchTree:"SearchTree"
+    SearchTree:"SearchTree",
+    Custom:"Custom"
 };
 
 // This class is responsible for interfacing the debug command, which deals with events, to the visualisers which deal in specific terms such as xy coordinates or ids
 class visualiserControl
 {
-    constructor(type,mapData,eventList)
+    constructor(data)
     {
-       switch(type)
-       {
+        const type = data.type;
+        const mapData = data.Map;
+        const eventList = data.eventList;
+        switch(type)
+        {
            case "Grid":
                this.visualiserType = typesOfVisualisers.Grid;
                this.visualiser = new gridVisulizer();
@@ -23,9 +27,15 @@ class visualiserControl
                break;
            case "Graph":
                this.visualiserType = typesOfVisualisers.Graph;
-               console.log(mapData);
                this.visualiser = new GraphVisualizer(false,mapData,eventList);
-       }
+               break;
+           case "Custom":
+               console.log("Deds");
+               this.visualiserType = typesOfVisualisers.Custom;
+               this.visualiser = new CustomVisualiser(data);
+               console.log("Reached");
+               break;
+        }
 
     }
     setLog(outputFunction)
@@ -67,6 +77,10 @@ class visualiserControl
                     this.setNodeState(event);
                     this.setNodeValues(event);
                 }
+                break;
+            case typesOfVisualisers.Custom:
+                this.visualiser.addNodeFromEvent(event);
+                break;
 
         }
     }
@@ -77,7 +91,10 @@ class visualiserControl
                 this.visualiser.setNodeState(event.x, event.y, state);
                 break;
             case typesOfVisualisers.Graph:
-                this.visualiser.setNodeState(event.id,state)
+                this.visualiser.setNodeState(event.id,state);
+                break;
+            case typesOfVisualisers.Custom:
+                this.visualiser.setNodeState(event,state)
         }
     }
 
@@ -90,6 +107,8 @@ class visualiserControl
             case typesOfVisualisers.Graph:
                 this.visualiser.setNodeValues(event.id,event.data,event.g,event.f,event.pId);
                 break;
+            case typesOfVisualisers.Custom:
+                this.visualiser.setNodeValues(event)
 
         }
     }
@@ -103,6 +122,8 @@ class visualiserControl
             case typesOfVisualisers.Graph:
                 this.visualiser.drawLine(index,event.id);
                 break;
+            case typesOfVisualisers.Custom:
+                this.visualiser.drawLine(index,event);
         }
     }
     clearPath(index)
@@ -136,6 +157,8 @@ class visualiserControl
                 return this.visualiser.getNodeData(event.x, event.y);
             case typesOfVisualisers.Graph:
                 return this.visualiser.getNodeData(event.id);
+            case typesOfVisualisers.Custom:
+                return this.visualiser.getNodeData(event);
         }
     }
     getParentData(event)
@@ -149,6 +172,10 @@ class visualiserControl
             case typesOfVisualisers.Graph:
                 const current = this.visualiser.getNodeData(event.id);
                 return current.pId !== null ? this.visualiser.getNodeData(current.pId) : null;
+
+            case typesOfVisualisers.Custom:
+                const currentNode = this.visualiser.getNodeData(event);
+                return currentNode.pId !== null && currentNode.pId !== "null" ? this.visualiser.getNodeData({id:currentNode.pId}) : null;
 
         }
     }

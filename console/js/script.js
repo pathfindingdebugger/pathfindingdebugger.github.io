@@ -76,7 +76,7 @@ function changeSpeed(num) {
 $(document).ready(function () {
 
     $("#defaultSubmit").click(function(event){
-        $.getJSON('temp2.json', upload);
+        $.getJSON('newGrid.json', upload);
 
     });
 
@@ -85,7 +85,7 @@ $(document).ready(function () {
 
     });
     $("#defaultSubmitGraph").click(function(event){
-        $.getJSON('DebugFiles/Graph.json', upload);
+        $.getJSON('DebugFiles/newGraph.json', upload);
     });
     $("#defaultSubmitMapGraph").click(function(event){
         $.getJSON('DebugFiles/mapGraph.json', upload);
@@ -141,13 +141,12 @@ $(document).ready(function () {
 
     function upload(data) {
         dataReceived = data.eventList;
-        var mapData = data.Map;
-
         if (control !== undefined)
         {
             control.reset();
         }
-        control = new DebugCommand(data.type,mapData,dataReceived);
+        control = new DebugCommand(data);
+        console.log(control);
     }
 
 });

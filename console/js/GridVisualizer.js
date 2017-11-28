@@ -74,7 +74,7 @@ class gridVisulizer extends Visualiser {
             .attr("fill","white")
             .attr("stroke-width",3)
             .attr("stroke",gridElem.attr("fill"));*/
-        new Elem(this.floatBox.elem,'rect')
+        const box = new Elem(this.floatBox.elem,'rect')
             .attr('x',-50)
             .attr('y',-50)
             .attr('width',100)
@@ -84,7 +84,7 @@ class gridVisulizer extends Visualiser {
             .attr("stroke",gridElem.attr("fill"));
 
 
-        const elements = []
+        const elements = [];
 
         const positionText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
@@ -122,7 +122,7 @@ class gridVisulizer extends Visualiser {
         elements.push(fText);
 
         const maxSize = elements.map(e=>e.elem.getBoundingClientRect().right - e.elem.getBoundingClientRect().left).reduce((i,j)=> i > j ? i : j);
-        box.attr('width',maxSize);
+        box.attr('width',maxSize+5);
 
         this.floatBox.attr('transform','translate('+newX+','+newY+')');
 
