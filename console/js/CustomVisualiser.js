@@ -5,12 +5,15 @@ class CustomVisualiser extends Visualiser
 
 
         super();
-
+        console.log("cake");
         this.nodes = {};
         this.breakPoints = [];
         this.positioning = data.positioning;
-        this.nodeSize = 10;
-        this.scale = 25;
+
+        this.nodeSize = data.size !== undefined ? data.size/2 : 1;
+        console.log("Wut",this.nodeSize);
+        this.scale = 1;
+        this.strokeScale = 0.1;
         this.lineToggle = true;
         if(data.positioning !== "fixed")
         {
@@ -38,7 +41,7 @@ class CustomVisualiser extends Visualiser
             }
             console.log(this.nodePositions);
             console.log(this.links);
-            layout.symmetricDiffLinkLengths(17);
+            layout.symmetricDiffLinkLengths(this.nodeSize);
             layout.start(0,0,0);
         }
 
@@ -46,22 +49,40 @@ class CustomVisualiser extends Visualiser
         this.svgObj = {};
         const svgElements = data.svgObjects !== undefined ? data.svgObjects : [];
         // PRE SETS
-        svgElements.push({ "key":"Square", "object":{ "type":"rect", "attributes": [{"key":"cx","value":" 5 "},{"key":"cy","value":" 5 "},{"key":"x","value":" 0 "},{"key":"y","value":" 0 "},{"key":"width","value":" 10 "},{"key":"height","value":" 10 "},{"key":"stroke","value":"black"}], "variableNames": []}});
-        svgElements.push({ "key":"GridSpace", "object":{ "type":"rect", "attributes": [{"key":"fill","value":"white"},{"key":"cx","value":" px "},{"key":"cy","value":" py "},{"key":"x","value":" px "},{"key":"y","value":" py "},{"key":"width","value":"25"},{"key":"height","value":"25"},{"key":"stroke-width","value":"1"}], "variableNames": ["px","py"]}});
-        svgElements.push({ "key":"Node", "object":{ "type":"circle", "attributes":[{"key":"cx","value":"0"},{"key":"cy","value":"0"},{"key":"r","value":"10"},{"key":"stroke","value":"black"}],"variableNames": []}});
+        svgElements.push({ "key":"Square", "object":{ "type":"rect", "attributes": [[{"key":"tag","value":"rect"},{"key":"cx","value":" 5 "},{"key":"cy","value":" 5 "},{"key":"x","value":" 0 "},{"key":"y","value":" 0 "},{"key":"width","value":" 1 "},{"key":"height","value":" 10 "},{"key":"stroke","value":"black"}]], "variableNames": []}});
+        svgElements.push({ "key":"GridSpace", "object":{ "type":"rect", "attributes": [[{"key":"tag","value":"rect"},{"key":"stroke-alignment","value":"inner"},{"key":"cx","value":" px "},{"key":"cy","value":" py "},{"key":"x","value":" px "},{"key":"y","value":" py "},{"key":"width","value":"0.8"},{"key":"height","value":"0.8"},{"key":"stroke-width","value":"0.1"}]], "variableNames": ["px","py"]}});
+        svgElements.push({ "key":"Node", "object":{ "type":"circle", "attributes":[[{"key":"tag","value":"circle"},{"key":"cx","value":"0"},{"key":"cy","value":"0"},{"key":"r","value":"1"}]],"variableNames": []}});
 
         //Fill the svgObj to be functions that take
         svgElements.forEach(e=>
             this.svgObj[e.key] = (varArray) => {
-                const obj = new Elem(this.svg,e.object.type);
-                e.object.attributes.forEach( a=>
+                const group = e.object.attributes.length> 1 ? new Elem(this.svg,'g') : this.svg;
+                const container = group !== this.svg ? group.elem : group;
+                const elem = e.object.attributes.map(subObj => {
+                    const obj = new Elem(container,subObj.reduce((o,i)=> o.key === "tag"? o : i).value);
+                    console.log(e.object.variableNames);
+                    subObj.filter(i=>i.key!=="tag").forEach( a=>
                         obj.attr(a.key,e.object.variableNames.map(v => ({str:v, pos:a.value.indexOf(v)}))//Change Attributes
                             .reduce((out,v,i) => v === -1? out : out.replace(v.str,varArray[i]),a.value))//Do replacements
-                );
-                return obj;
+                    );
+                    console.log(obj);
+                    return obj;
+                });
+                console.log(group,elem);
+                return  e.object.attributes.length > 1 ? group : elem[0];
             }
         );
-
+        console.log("cake");
+        /*svgElements.forEach(e=>
+        this.svgObj[e.key] = (varArray) => {
+            const obj = new Elem(this.svg,e.object.type);
+            e.object.attributes.forEach( a=>
+                obj.attr(a.key,e.object.variableNames.map(v => ({str:v, pos:a.value.indexOf(v)}))//Change Attributes
+                    .reduce((out,v,i) => v === -1? out : out.replace(v.str,varArray[i]),a.value))//Do replacements
+            );
+            return obj;
+        }
+    );*/
     }
 
     addEventToPositionList(e)
@@ -97,17 +118,18 @@ class CustomVisualiser extends Visualiser
         let newElement;
         if(e.svg !== null && e.svg !== undefined)
         {
-            //Draw svg as given in string
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(e.svg, "image/svg+xml");
+            newElement = new Elem(this.svg,doc.documentElement);
+
+
         }
         else if(e.svgType !== null && e.variables  !== null)
         {
-            //Attempt to upsize any grid
-            if(e.svgType === "GridSpace")
-            {
-                e.variables = e.variables.map(e=>e*this.scale);
-            }
+
             //Draw an svg of that type with those perameters
-            newElement = this.svgObj[e.svgType](e.variables);
+            newElement = this.svgObj[e.svgType](e.variables);//.attr('stroke-width',this.scale*this.strokeScale);
+
             //If drawing is not fixed we want to translate the new svg by the x and y given by webcola
             if(this.positioning !== "fixed")
             {
@@ -155,22 +177,24 @@ class CustomVisualiser extends Visualiser
         }
         else
         {
+            const scaleFactor = this.scale + 12;
+            this.svg.setAttribute('transform','scale('+scaleFactor+')'); //Zoom so the graph isn't super small, is based off of scale
             //Center camera on node
-            const nodeVector = {x:this.nodes[e.id].svg.elem.getBoundingClientRect().x,y:this.nodes[e.id].svg.elem.getBoundingClientRect().y ,z:0};
+            const nodeVector = vector3(this.nodes[e.id].svg.getCenterPosition());
             const bounds = {x:document.getElementById("svg").getBoundingClientRect().width,y:document.getElementById("svg").getBoundingClientRect().height};
 
-            const view = add(multiply(nodeVector)(-1))(multiply(bounds)(0.5));
-
-
-            this.svg.setAttribute('transform','translate('+view.x +','+ view.y+')');
+            //const view = add(multiply(nodeVector)(-1))(multiply(bounds)(0.5));
+            const view = sub(nodeVector)(multiply(multiply(bounds)(1/scaleFactor))(0.5)); //Need to take into account scale
+            this.svg.setAttribute('transform',this.svg.getAttribute('transform')+'translate('+view.x +','+ view.y+') ');
         }
     }
     addLine(node,parent,weightValue = null)
     {
+        console.log("CENTER",node.svg.hasCentre());
         if(!node.svg.hasCentre() || !parent.svg.hasCentre() || !this.lineToggle)
             return;
-        const nodePosition = {x:node.svg.getCenterPosition().x, y: node.svg.getCenterPosition().y, z:0};
-        const parentPosition = {x:parent.svg.getCenterPosition().x, y:parent.svg.getCenterPosition().y, z:0};
+        const nodePosition = vector3(node.svg.getCenterPosition());
+        const parentPosition = vector3(parent.svg.getCenterPosition());
 
 
         let fill, stroke, triangle, textX, textY;
@@ -180,19 +204,19 @@ class CustomVisualiser extends Visualiser
             const toScreenVector = {x:0,y:0,z:1};
             const perp = normalise(cross(lineVector)(toScreenVector));
             const normLineVector = normalise(lineVector);
-            const offset = multiply(perp)(10);
+            const offset = multiply(perp)(this.scale);
             const turnPoint = add(multiply(add(nodePosition)(parentPosition))(0.5))(offset);
 
             const p1 = add(nodePosition)(multiply(normLineVector)(this.nodeSize));
-            const base = add(nodePosition)(multiply(normLineVector)(this.nodeSize+5));
-            const p2 = add(base)(multiply(perp)(2));
-            const p3 = add(base)(multiply(perp)(-2));
+            const base = add(nodePosition)(multiply(normLineVector)(this.nodeSize+1));
+            const p2 = add(base)(multiply(perp)(this.scale*0.4));
+            const p3 = add(base)(multiply(perp)(-this.scale*0.4));
 
             triangle = new Elem(this.svg,'path',true).attr("d","M"+p1.x+" "+p1.y+" L"+p2.x+" "+p2.y+" L"+p3.x + " " + p3.y+" Z").attr('fill','white');
 
 
-            fill = new Elem(this.svg, 'line', false).attr('x1', parentPosition.x).attr('y1', parentPosition.y).attr('x2', base.x).attr('y2', base.y).attr('stroke','rgb(255,255,255)').attr('stroke-width',1);
-            stroke = new Elem(this.svg, 'line', false).attr('x1', parentPosition.x).attr('y1', parentPosition.y).attr('x2', nodePosition.x).attr('y2', nodePosition.y).attr('stroke','rgb(0,0,0)').attr('stroke-width',2);
+            fill = new Elem(this.svg, 'line', false).attr('x1', parentPosition.x).attr('y1', parentPosition.y).attr('x2', base.x).attr('y2', base.y).attr('stroke','rgb(255,255,255)').attr('stroke-width',this.scale*this.strokeScale*2);
+            stroke = new Elem(this.svg, 'line', false).attr('x1', parentPosition.x).attr('y1', parentPosition.y).attr('x2', nodePosition.x).attr('y2', nodePosition.y).attr('stroke','rgb(0,0,0)').attr('stroke-width',this.scale*this.strokeScale*4);
 
 
             textX = turnPoint.x;
@@ -207,7 +231,7 @@ class CustomVisualiser extends Visualiser
             textX = node.svg.attr('cx')-5;
             textY = Number(node.svg.attr('cy'))+30;
         }
-        const weight = new Elem(this.svg,'text').attr('x',textX).attr('y',textY).attr('font-size',10).attr('fill','white');
+        const weight = new Elem(this.svg,'text').attr('x',textX).attr('y',textY).attr('font-size',this.scale).attr('fill','white');
 
         const weightText = weightValue === null ? node.g - parent.g : weightValue;
 
@@ -236,29 +260,28 @@ class CustomVisualiser extends Visualiser
         if(this.lineVisual[index] !== null)
             this.lineVisual[index].forEach((id,i)=>{
                 this.nodes[id].svg.attr('stroke',index !== 0? 'yellow':'red');
-                this.nodes[id].svg.attr('stroke-width',2);
+
+                this.nodes[id].svg.attr('stroke-width',this.scale*this.strokeScale*2);
 
                 if(this.nodes[id].pId !== null && this.nodes[id].pId !== undefined)
                 {
                     const parent = this.nodes[id].pId;
                     this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],index !== 0? 'yellow':'red')
                 }
-
             });
-
     }
     deleteLine(index)
     {
 
         if(this.lineVisual[index] !== null && this.lineVisual[index] !== undefined)
             this.lineVisual[index].forEach((id,i)=>{
-                this.nodes[id].svg.attr('stroke','white');
-                this.nodes[id].svg.attr('stroke-width',1);
+                this.nodes[id].svg.attr('stroke','black');
+                this.nodes[id].svg.attr('stroke-width',this.scale*this.strokeScale);
 
                 if(this.nodes[id].pId !== null && this.nodes[id].pId !== "null")
                 {
                     const parent = this.nodes[id].pId;
-                    this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],'black')
+                    this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],'white')
                 }
             });
 
@@ -332,14 +355,12 @@ class CustomVisualiser extends Visualiser
 
         const parent = this.nodes[this.nodes[id].pId];
 
-        console.log("p",parent);
         const xDir = this.nodes[id].pId !== null ? Math.sign(Number(this.nodes[id].svg.attr('cx')) -Number(parent.svg.attr('cx'))):0;
         const yDir = xDir === 0? 1 : this.nodes[id].pId !== null ? Math.sign(Number(this.nodes[id].svg.attr('cy')) -Number(parent.svg.attr('cy'))):-1;
-        console.log(xDir,yDir,"one O these?");
+
         const xOffset = 100*xDir;
         const yOffset = yDir*100; //Just to move it away from mouse
 
-        console.log(mouseX,mouseY);
         const newX = mouseX + xOffset;//These offsets correspond to the svg
         const newY = mouseY + yOffset;
         const textFont = 20;
@@ -354,14 +375,14 @@ class CustomVisualiser extends Visualiser
             .attr("fill","white")
             .attr("stroke-width",3)
             .attr("stroke",this.nodes[id].svg.attr("fill"))
-            .attr('fill-opacity',0.5);
+            .attr('fill-opacity',0.8);
 
         const idText = new Elem(this.floatBox.elem,'text')
             .attr('x',-45)
             .attr('y',-30)
 
             .attr('font-size',textFont)
-            .attr('fill','white');
+            .attr('fill','black');
 
         idText.elem.append(document.createTextNode("Id: "+ String(id)));
         elements.push(idText);
@@ -392,8 +413,7 @@ class CustomVisualiser extends Visualiser
         elements.push(fText);
 
         const maxSize = elements.map(e=>e.elem.getBoundingClientRect().right - e.elem.getBoundingClientRect().left).reduce((i,j)=> i > j ? i : j);
-        box.attr('width',maxSize);
-        console.log("new",newX,newY);
+        box.attr('width',maxSize+5);
         this.floatBox.attr('transform','translate('+newX+','+newY+')');
 
         const mout = this.nodes[id].svg.observeEvent('mouseout')
@@ -412,6 +432,7 @@ class CustomVisualiser extends Visualiser
 
     toggleLines()
     {
+        this.lineToggle = !this.lineToggle
         if(this.lineToggle)
         {
             //toggle off
@@ -422,6 +443,27 @@ class CustomVisualiser extends Visualiser
             //toggle on
             Object.keys(this.nodes).forEach(p=>this.nodes[p].children.forEach(c=>this.addLine(this.nodes[c],this.nodes[p])));
         }
-        this.lineToggle = !this.lineToggle
+
+    }
+
+    clearVisual()
+    {
+        Object.keys(this.nodes).forEach(e=>
+        {
+            this.nodes[e].outgoingEdges.forEach(e=>{
+                e.fill.removeElement();
+                e.triangle.removeElement();
+                e.weight.removeElement();
+                e.stroke.removeElement()
+            });
+            this.nodes[e].svg.removeElement();
+
+        });
+
+        this.nodes = {};
+        this.svg.setAttribute('transform','');
+        this.positionIndecies = {};
+        this.nodePositions = [];
+        this.links = [];
     }
 }

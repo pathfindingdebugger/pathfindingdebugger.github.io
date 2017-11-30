@@ -1,0 +1,10 @@
+{
+  "type":"Custom", "positioning":"relative",
+  "Map":{"size":3, "vertex":[{"id":"rock","data":"rock","x":10,"y":10},{"id":"paper","data":"paper","x":0,"y":140},{"id":"scissors","data":"Scissors","x":100,"y":50}],
+    "edges":[[0,1,-1],[1,0,-1],[-1,1,0]]},
+  "eventList":[
+    {"type": "generating", "g": 0, "pId": null, "f": 0, "id": "rock", "h": 0, "svg": "<g><circle cx=\"0\" cy=\"0\" fill=\"#b021ff\" r=\"10\"></circle></g>"},
+    {"type": "generating", "g": 0, "pId": "rock", "f": 0, "id": "paper", "h": 0, "svg": "<g cx = \"60\" cy = \"60\"><circle cx=\"50\" cy=\"50\"  r=\"5\"></circle><circle cx=\"70\" cy=\"70\" r=\"5\"></circle></g>"},
+    {"type":"expanding","id":"paper"}
+  ]
+}

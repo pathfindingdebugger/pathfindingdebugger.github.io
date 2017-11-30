@@ -85,10 +85,10 @@ $(document).ready(function () {
 
     });
     $("#defaultSubmitGraph").click(function(event){
-        $.getJSON('DebugFiles/newGraph.json', upload);
+        $.getJSON('DebugFiles/nice.json', upload);
     });
     $("#defaultSubmitMapGraph").click(function(event){
-        $.getJSON('DebugFiles/mapGraph.json', upload);
+        $.getJSON('DebugFiles/newMapGraph.json', upload);
     });
     $("#defaultSubmitAnya").click(function(event){
         $.getJSON('DebugFiles/custom.json', upload);

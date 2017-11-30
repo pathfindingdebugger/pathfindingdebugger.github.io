@@ -27,17 +27,14 @@ class DebugCommand
         //the visualiser :O ) The list control abstracts away the detail for the lists.
         this.eventCounter = 0; //Is the current event number we are on
         this.eventList = events; // This is the event list from the Json file
-        console.log("1");
         this.currentId = null;  // This is the interval Id, it is needed to stop it
         this.currentNode = null; //Current searched node
         this.currentNodes = []; //
-        console.log("2");
         this.showEvent = false;
         this.testStatus = [true];
 
         this.stepForward();
         //this.visualControl.setLog();
-        console.log("3");
     }
     complete()
     {
@@ -65,6 +62,7 @@ class DebugCommand
                 else {
                     clearInterval(this.currentId);
                 }
+
 
             }, speed);
 

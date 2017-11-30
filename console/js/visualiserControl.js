@@ -50,6 +50,10 @@ class visualiserControl
                 break;
             case typesOfVisualisers.Graph:
                 this.visualiser.setNodeState(event.id,states.start);
+                break;
+            case typesOfVisualisers.Custom:
+                console.log(event);
+                this.visualiser.setNodeState(event,states.start);
         }
     }
     showGoal(event)
@@ -60,7 +64,7 @@ class visualiserControl
                 this.visualiser.setNodeState(event.endX, event.endY, states.goal);
                 break;
             case typesOfVisualisers.Graph:
-                this.visualiser.setNodeState(event.id,states.goal);
+                this.visualiser.setNodeState({id:event.end},states.goal);
         }
     }
     generateNode(event)
@@ -192,6 +196,9 @@ class visualiserControl
             case typesOfVisualisers.Graph:
                 this.visualiser.clearTree();
                 break;
+            case typesOfVisualisers.Custom:
+                this.visualiser.clearVisual();
+                break;
         }
 
     }
@@ -205,6 +212,9 @@ class visualiserControl
                 break;
             case typesOfVisualisers.Graph:
                 this.visualiser.clearTree();
+                break;
+            case typesOfVisualisers.Custom:
+                this.visualiser.clearVisual();
                 break;
         }
     }
