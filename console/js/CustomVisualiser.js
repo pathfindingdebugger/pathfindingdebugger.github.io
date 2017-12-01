@@ -10,10 +10,11 @@ class CustomVisualiser extends Visualiser
         this.breakPoints = [];
         this.positioning = data.positioning;
 
-        this.nodeSize = data.size !== undefined ? data.size/2 : 1;
-        console.log("Wut",this.nodeSize);
-        this.scale = 1;
-        this.strokeScale = 0.1;
+        this.nodeSize = data.size !== undefined ? data.size : 1;
+        this.scale = data.scale !== undefined ? data.scale : 1;
+        console.log("Wut",this.scale);
+
+        this.strokeScale = this.scale/10;
         this.lineToggle = true;
         if(data.positioning !== "fixed")
         {
