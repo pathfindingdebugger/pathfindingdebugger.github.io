@@ -189,8 +189,7 @@ class DebugCommand
                 this.visualControl.setNodeState(event, states.CurrentFrontier);
                 this.listControl.updateList(lists.open,event);
                 nodeData = this.visualControl.getNodeData(event);
-
-                    this.visualControl.setNodeValues(event);
+                this.visualControl.setNodeValues(event);
 
                     nodeData =  this.visualControl.getNodeData(event);
                     if(!this.heuristicCheck(nodeData))

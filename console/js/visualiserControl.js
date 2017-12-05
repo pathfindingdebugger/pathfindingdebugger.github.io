@@ -52,8 +52,8 @@ class visualiserControl
                 this.visualiser.setNodeState(event.id,states.start);
                 break;
             case typesOfVisualisers.Custom:
-                console.log(event);
-                this.visualiser.setNodeState(event,states.start);
+                //console.log(event);
+                //this.visualiser.setNodeState({id:event.startId},states.start);
         }
     }
     showGoal(event)
@@ -65,6 +65,9 @@ class visualiserControl
                 break;
             case typesOfVisualisers.Graph:
                 this.visualiser.setNodeState({id:event.end},states.goal);
+                break;
+            //case typesOfVisualisers.Custom:
+                //this.visualiser.map.setGoal(event.endId);
         }
     }
     generateNode(event)
@@ -98,7 +101,8 @@ class visualiserControl
                 this.visualiser.setNodeState(event.id,state);
                 break;
             case typesOfVisualisers.Custom:
-                this.visualiser.setNodeState(event,state)
+                console.log(event);
+                this.visualiser.setNodeState(event.id,state)
         }
     }
 
@@ -127,7 +131,7 @@ class visualiserControl
                 this.visualiser.drawLine(index,event.id);
                 break;
             case typesOfVisualisers.Custom:
-                this.visualiser.drawLine(index,event);
+                this.visualiser.drawLine(index,event.id);
         }
     }
     clearPath(index)

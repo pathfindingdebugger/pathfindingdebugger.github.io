@@ -85,6 +85,9 @@ $(document).ready(function () {
 
     });
     $("#defaultSubmitGraph").click(function(event){
+        $.getJSON('DebugFiles/newGraph.json', upload);
+    });
+    $("#defaultSubmitCustomGraph").click(function(event){
         $.getJSON('DebugFiles/nice.json', upload);
     });
     $("#defaultSubmitMapGraph").click(function(event){

@@ -45,6 +45,7 @@ class ListControl
                 break;
 
             case lists.open:
+                console.log("this.type")
                 switch(this.type)
                 {
                     case typesOfVisualisers.Grid:
@@ -83,7 +84,7 @@ class ListControl
         {
             case lists.open:
                 list = this.openList;
-                newData = "id: (x:"+event.x+" , y:"+event.y+") h:" + (event.f-event.g).toPrecision(5) +" g:"+event.g+" f:"+event.f;
+                newData = "id:"+event.id+" h:" + (event.f-event.g).toPrecision(5) +" g:"+event.g+" f:"+event.f;
                 break;
             case lists.closed:
                 list = this.closedList;
