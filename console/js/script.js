@@ -79,7 +79,10 @@ $(document).ready(function () {
         $.getJSON('DebugFiles/newGrid.json', upload);
 
     });
+    $("#jpsSubmit").click(function(event){
+        $.getJSON('DebugFiles/newJPS.json', upload);
 
+    });
     $("#defaultSubmitTree").click(function(event){
         $.getJSON('DebugFiles/tree.json', upload);
 
@@ -148,9 +151,12 @@ $(document).ready(function () {
         dataReceived = data.eventList;
         if (control !== undefined)
         {
-            control.reset();
+            control.reset(data);
         }
-        control = new DebugCommand(data);
+        else
+        {
+            control = new DebugCommand(data);
+        }
         console.log(control);
     }
 

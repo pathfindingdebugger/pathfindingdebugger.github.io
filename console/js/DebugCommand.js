@@ -15,26 +15,22 @@ class DebugCommand
     //It is initiated when the user uploads a file
     constructor(data)
     {
-        const type = data.type;
-        const mapData = data.Map;
-        const events = data.eventList;
-        this.playing = false; // Used to tell other scripts if it is currently running
+        this.testStatus = [true];
         this.visualControl = new CustomVisualiser(data); // The visualControl allows for the debug
 
         //command to be separated from weather the incoming json is for a grid, graph or any other visualisation
-        this.listControl = new ListControl(type); // In a similar vein to visualControl (which controls, how did you guess it
+        this.listControl = new ListControl(); // In a similar vein to visualControl (which controls, how did you guess it
+
+        const events = data.eventList;
+        this.playing = false; // Used to tell other scripts if it is currently running
 
         //the visualiser :O ) The list control abstracts away the detail for the lists.
         this.eventCounter = 0; //Is the current event number we are on
         this.eventList = events; // This is the event list from the Json file
         this.currentId = null;  // This is the interval Id, it is needed to stop it
-        this.currentNode = null; //Current searched node
         this.currentNodes = []; //
-        this.showEvent = false;
-        this.testStatus = [true];
-
         this.stepForward();
-        //this.visualControl.setLog();
+        this.completedLists = [];
     }
     complete()
     {
@@ -170,6 +166,9 @@ class DebugCommand
 
                 this.listControl.addToList(lists.open,event);
 
+
+                this.visualControl.drawLine(1,event.id);
+
                 nodeData =  this.visualControl.getNodeData(event);
 
                 if(!this.heuristicCheck(nodeData))
@@ -188,6 +187,10 @@ class DebugCommand
                 this.visualControl.setNodeState(event.id, states.CurrentFrontier);
                 this.listControl.updateList(lists.open,event);
                 nodeData = this.visualControl.getNodeData(event);
+
+                this.visualControl.deleteLine(1);
+                this.visualControl.drawLine(1,event.id);
+
                 this.visualControl.setNodeValues(event);
 
                     nodeData =  this.visualControl.getNodeData(event);
@@ -209,7 +212,9 @@ class DebugCommand
                 break;
 
             case "end":
-                this.visualControl.showGoal(event);
+                this.visualControl.showGoal(event.id);
+                this.visualControl.drawLine(1,event.id);
+                this.completedLists.push(this.visualControl.lineVisual[1]);
                 if(this.eventCounter+1 < this.eventList.length) {
                     this.visualControl.clearVisual();
                     this.listControl.reset();
@@ -217,6 +222,7 @@ class DebugCommand
                     this.stop();
                     return false;
                 }
+
                 break;
         }
         return event.type;
@@ -256,12 +262,22 @@ class DebugCommand
 
     }
 
-    reset()
+    reset(data)
     {
         this.eventCounter = 0;
         this.stop();
         this.visualControl.clearVisual();
         this.listControl.reset();
+        this.visualControl = new CustomVisualiser(data); // The visualControl allows for the debug
+
+        const events = data.eventList;
+        this.playing = false; // Used to tell other scripts if it is currently running
+
+        //the visualiser :O ) The list control abstracts away the detail for the lists.
+        this.eventList = events; // This is the event list from the Json file
+        this.currentId = null;  // This is the interval Id, it is needed to stop it
+        this.currentNodes = []; //
+        this.stepForward();
     }
 
 }

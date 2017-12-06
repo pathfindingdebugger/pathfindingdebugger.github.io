@@ -36,7 +36,7 @@ class Map
                 if (mapString[stringIndex] === "@")
                     continue;
                 this.nodes[i*this.mapWidth+j] = new Elem(this.svg, 'rect')
-                    .attr('x', this.tileSize * j).attr('y', this.tileSize * i)
+                    .attr('x', this.tileSize * j+(this.tileSize/2)).attr('y', this.tileSize * i+(this.tileSize/2))
                     .attr('width', this.tileSize).attr('height', this.tileSize)
                     .attr('fill', 'white')
                     .attr('stroke', 'black')

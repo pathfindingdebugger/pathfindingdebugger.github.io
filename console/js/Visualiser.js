@@ -65,7 +65,7 @@ class CustomVisualiser
         const svgElements = data.svgObjects !== undefined ? data.svgObjects : [];
         // PRE SETS
         svgElements.push({ "key":"Square", "object":{ "type":"rect", "attributes": [[{"key":"tag","value":"rect"},{"key":"cx","value":" 5 "},{"key":"cy","value":" 5 "},{"key":"x","value":" 0 "},{"key":"y","value":" 0 "},{"key":"width","value":" 1 "},{"key":"height","value":" 10 "},{"key":"stroke","value":"black"}]], "variableNames": []}});
-        svgElements.push({ "key":"GridSpace", "object":{ "type":"rect", "attributes": [[{"key":"tag","value":"rect"},{"key":"stroke-alignment","value":"inner"},{"key":"cx","value":" 0"},{"key":"cy","value":" 0"},{"key":"x","value":" 0 "},{"key":"y","value":" 0 "},{"key":"width","value":"0.8"},{"key":"height","value":"0.8"},{"key":"stroke-width","value":"0.1"}]], "variableNames": []}});
+        svgElements.push({ "key":"GridSpace", "object":{ "type":"rect", "attributes": [[{"key":"tag","value":"rect"},{"key":"stroke-alignment","value":"inner"},{"key":"cx","value":" 0.6"},{"key":"cy","value":" 0.6"},{"key":"x","value":" 0.6 "},{"key":"y","value":" 0.6 "},{"key":"width","value":"0.8"},{"key":"height","value":"0.8"},{"key":"stroke-width","value":"0.1"}]], "variableNames": []}});
         svgElements.push({ "key":"Node", "object":{ "type":"circle", "attributes":[[{"key":"tag","value":"circle"},{"key":"cx","value":"0"},{"key":"cy","value":"0"},{"key":"r","value":"1"}]],"variableNames": []}});
 
         //Fill the svgObj to be functions that take
@@ -100,7 +100,7 @@ class CustomVisualiser
         if(e.type === "start")
         {
             this.showStart(e);
-            this.showGoal(e);
+            this.showGoal(e.end);
         }
         if(e.type === "generating")
         {
@@ -233,7 +233,7 @@ class CustomVisualiser
         const nodePosition = vector3(node.svg.getCenterPosition());
         const parentPosition = vector3(parent.svg.getCenterPosition());
 
-
+        console.log(nodePosition,node.svg);
         let fill, triangle, textX, textY;
         if(node !== parent) {
 
@@ -248,7 +248,7 @@ class CustomVisualiser
             const base = add(nodePosition)(multiply(normLineVector)(this.nodeSize+1));
             const p2 = add(base)(multiply(perp)(this.scale*0.4));
             const p3 = add(base)(multiply(perp)(-this.scale*0.4));
-
+            console.log(base);
             triangle = new Elem(this.svg,'path',true).attr("d","M"+p1.x+" "+p1.y+" L"+p2.x+" "+p2.y+" L"+p3.x + " " + p3.y+" Z").attr('fill','#011627');
 
 
@@ -275,7 +275,7 @@ class CustomVisualiser
         //Add line to parent
         node.incomingEdges.push(line);
         parent.outgoingEdges.push(line);
-
+        console.log(line);
         if(!this.lineToggle)
             this.hideEdge(line)
     }
@@ -424,10 +424,6 @@ class CustomVisualiser
         edge.fill.attr('visibility',"hidden");
         edge.weight.attr('visibility',"hidden");
         edge.triangle.attr('visibility',"hidden");
-        /*
-        edge.triangle.removeElement();
-        edge.weight.removeElement();
-        edge.fill.removeElement();*/
     }
 
     generateFloatBox(mouseX,mouseY,id) {
@@ -571,9 +567,9 @@ class CustomVisualiser
     {
         this.startNode = event.start;
     }
-    showGoal(event)
+    showGoal(id)
     {
-       this.endNode = event.end;
+       this.endNode = id;
     }
 
 

@@ -40,7 +40,7 @@ class Elem {
     }
     getTransform() { return  this.translates.reduce((i,a)=>({x:a.x+i.x,y:a.y+i.y}),{x:0,y:0})};
     hasCentre() {return this.attr('cx') !== undefined && this.attr('cy') !== undefined}
-    getCenterPosition(){const trans = this.getTransform(); return {x:trans.x, y:trans.y}}
+    getCenterPosition(){const trans = this.getTransform(); return {x:trans.x+Number(this.attr('cx')), y:trans.y+Number(this.attr('cy'))}}
     attr(name, value) {
         if (typeof value === 'undefined') {
             return this.elem.getAttribute(name);
