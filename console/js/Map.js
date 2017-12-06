@@ -15,13 +15,17 @@ class Map
         {
             this.map = this.drawGraph();
         }
+        else if(mapData.type === "Polygon")
+        {
+            this.map = this.drawMesh(mapData.data)
+        }
     }
 
     drawGrid(mapString,mapWidth,mapHeight)
     {
         this.mapWidth = parseInt(mapWidth);
         this.mapHeight = parseInt(mapHeight);
-        this.breakPoints = new Array(0);
+        this.background = new Elem(this.svg,'rect').attr('x',0).attr('y',0).attr('width',this.tileSize*this.mapWidth).attr('height',this.tileSize*this.mapHeight).attr('fill','black');
         const size = parseInt(mapWidth) * parseInt(mapHeight);
 
         this.nodes = {};
@@ -40,6 +44,10 @@ class Map
             }
         }
     }
+    drawMesh(data)
+    {
+        const vert = []
+    }
     setGoal(id)
     {
         console.log("SHOULD FIRE");
@@ -50,6 +58,7 @@ class Map
     {
         if(this.type === "Grid")
         {
+            this.background.removeElement();
             if(this.bgObject !== null)
                 this.bgObject = null;
             if (this.nodes !== null) {

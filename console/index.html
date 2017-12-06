@@ -38,16 +38,12 @@
     <script src="js/Utility/webCola.js"></script>
     <script src="js/Utility/Vectors.js"></script>
     <script src="js/Utility/svgelement.js"></script>
-    <script src="js/VisualiserClass.js"></script>
-    <script src="js/visualiserControl.js"></script>
-    <script src="js/GridVisualizer.js"></script>
     <script src="js/Map.js"></script>
-    <script src="js/CustomVisualiser.js"></script>
+    <script src="js/Visualiser.js"></script>
     <script src="js/ListControl.js"></script>
     <script src="js/Utility/observable.js"></script>
     <script src="js/DebugCommand.js"></script>
     <script src="js/jquery.fullscreen-min.js"></script>
-    <script src="js/GraphVisualiser.js"></script>
 
 
 
@@ -95,14 +91,12 @@
 
         <!--DropdownItems-->
         <ul id='speedOptions' class='dropdown-content'>
+            <li><a onclick="changeSpeed(1000)" style="color: #7592B5">Super Slow</a></li>
             <li><a onclick="changeSpeed(500)" style="color: #7592B5">Slow</a></li>
             <li><a onclick="changeSpeed(100)" style="color: #7592B5">Moderate</a></li>
             <li><a onclick="changeSpeed(1)" style="color: #7592B5">Fast</a></li>
         </ul>
 
-        <div class="btn3 col-lg-3 col-md-3 col-ls-3" style="margin: 10px">
-            <p>Map Name and Algorithm</p>
-        </div>
         <div class="btn4 col-sm-1 col-md-1 col-lg-1">
             <a class="fullScreenbtn btn"><i class="material-icons">personal_video</i></a>
             <span style="padding-left: 10px">Full Screen</span>
@@ -116,7 +110,7 @@
 
         <div class="btn4 col-sm-1 col-md-1 col-lg-1">
             <a class="btn"><i class="material-icons" href="https://pathfindingdebugger.github.io/">exit_to_app</i></a>
-            <span style="padding-left: 10px">Exit Console</span>
+            <span style="padding-left: 10px">Exit</span>
         </div>
 
     </div>
@@ -132,9 +126,6 @@
         </div>
 
         <div class="modal-footer">
-            <!--<button id="defaultSubmit" class="modal-action modal-close btn" type='button' style="width:150px">Load Grid</button>
-            <button id="defaultSubmitTree" class="modal-action modal-close btn" type='button' style="width:150px">Load Tree</button>
-            <button id="defaultSubmitGraph" class="modal-action modal-close btn" type='button' style="width:150px">Load Graph</button>-->
             <button class="modal-close btn" type='button'>Cancel</button>
             <button id='submit1btn' class="modal-action modal-close btn" type='button'>Submit</button>
         </div>
@@ -151,92 +142,202 @@
                 <g id="viewport" width="100%" height="100%" ></g>
 
             </svg>
+            <div style="padding-top: 1%">
+            <b>Legend:</b>
+                <div id="id1" class="legendItems"></div><span> - Explorable area </span> <div id="id2" class="legendItems"></div><span> - Boundaries/Walls </span><div id="id3" class="legendItems"></div><span> - Expanded Nodes </span>
+                <div id="id4" class="legendItems"></div><span> - Frontier Nodes </span><div id="id5" class="legendItems"></div><span> - Current Frontier </span><div id="id6" class="legendItems"></div><span> - Current Node </span>
+                <div id="id7" class="legendItems"></div><span> - Start </span> <div id="id8" class="legendItems"></div><span> - Goal</span>
+            </div>
         </div>
+
+
 
         <!--Event Log Console-->
-        <div class="eventPart col-lg-3">
-            <div class="tab">
-                <button class="btn" id="eventListTabClick" onclick="showList(event, 'eventListTab')">EventList</button>
-                <button class="btn" onclick="showList(event, 'openList')">OpenList</button>
-                <button class="btn" onclick="showList(event, 'closedList')">ClosedList</button>
-                <button class="btn" onclick="showList(event, 'samples')">Samples</button>
-                <button class="btn" onclick="showList(event, 'settings')">Settings</button>
-            </div>
 
-            <div id="eventListTab" class="tabcontent">
-                <div id="eventLog" class="eventLog">
-                    <ol>
-                        <div id="eventList"></div>
-                    </ol>
+        <div class="tab">
+            <button class="ovrBtn" onclick="showTab(event, 'lists')"style="width:150px">Logs</button>
+            <button class="ovrBtn" onclick="showTab(event, 'sample')"style="width:150px">Samples</button>
+            <button class="ovrBtn" onclick="showTab(event, 'settings')"style="width:150px">Settings</button>
+        </div>
+
+        <div id="lists"  class="overTab">
+            <div class="eventPart col-lg-3">
+                <div class="tab">
+                    <button class="btn" id="eventListTabClick" onclick="showList(event, 'eventListTab')">EventList</button>
+                    <button class="btn" onclick="showList(event, 'openList')">OpenList</button>
+                    <button class="btn" onclick="showList(event, 'closedList')">ClosedList</button>
                 </div>
-            </div>
 
-            <div id="openList" class="tabcontent">
-            </div>
+                <div id="eventListTab" class="tabcontent">
+                    <div id="eventLog" class="eventLog">
+                        <ol>
+                            <div id="eventList"></div>
+                        </ol>
+                    </div>
+                </div>
 
-            <div id="closedList" class="tabcontent">
-            </div>
-            <div id="samples" class="tabcontent">
-                <button id="defaultSubmit" class="modal-action modal-close btn" type='button' style="width:150px">Load Grid</button>
-                <button id="defaultSubmitTree" class="modal-action modal-close btn" type='button' style="width:150px">Load Tree</button>
-                <button id="defaultSubmitGraph" class="modal-action modal-close btn" type='button' style="width:150px">Load Graph</button>
-                <button id="defaultSubmitCustomGraph" class="modal-action modal-close btn" type='button' style="width:150px">Load Custom Graph</button>
-                <button id="defaultSubmitMapGraph" class="modal-action modal-close btn" type='button' style="width:150px">Load Inline Test</button>
-                <button id="defaultSubmitAnya" class="modal-action modal-close btn" type='button' style="width:150px">Anya</button>
-            </div>
-            <div id="settings" class="tabcontent">
-                <H1>Tests</H1>
-                <button id="Monotonicity" class="modal-action modal-close btn" type='button' style="width:150px">Monotonicity</button>
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                </label>
-                <button id="Lines" class="modal-action modal-close btn" type='button' style="width:150px">Line Toggle</button>
-                <button id="Example2" class="modal-action modal-close btn" type='button' style="width:150px">Example</button>
+                <div id="openList" class="tabcontent">
+                </div>
 
-                <button id="Example3" class="modal-action modal-close btn" type='button' style="width:150px">Example</button>
-            </div>
-            <script>
-                function showList(evt, listName) {
-                    // Declare all variables
-                    var i, tabcontent, tablinks;
+                <div id="closedList" class="tabcontent">
+                </div>
 
-                    // Get all elements with class="tabcontent" and hide them
-                    tabcontent = document.getElementsByClassName("tabcontent");
-                    for (i = 0; i < tabcontent.length; i++) {
-                        tabcontent[i].style.display = "none";
+                <script>
+                    function showList(evt, listName) {
+                        // Declare all variables
+                        var i, tabcontent, tablinks;
+
+                        // Get all elements with class="tabcontent" and hide them
+                        tabcontent = document.getElementsByClassName("tabcontent");
+                        for (i = 0; i < tabcontent.length; i++) {
+                            tabcontent[i].style.display = "none";
+                        }
+
+                        // Get all elements with class="tablinks" and remove the class "active"
+                        tablinks = document.getElementsByClassName("tablinks");
+                        for (i = 0; i < tablinks.length; i++) {
+                            tablinks[i].className = tablinks[i].className.replace(" active", "");
+                        }
+
+                        // Show the current tab, and add an "active" class to the button that opened the tab
+                        document.getElementById(listName).style.display = "block";
+                        evt.currentTarget.className += " active";
                     }
+                    document.getElementById("eventListTabClick").click();
+                </script>
 
-                    // Get all elements with class="tablinks" and remove the class "active"
-                    tablinks = document.getElementsByClassName("tablinks");
-                    for (i = 0; i < tablinks.length; i++) {
-                        tablinks[i].className = tablinks[i].className.replace(" active", "");
+            </div>
+
+
+        </div>
+        <div id="sample" class="overTab">
+            <div class="eventPart col-lg-3">
+                <div class="tab">
+                    <button class="btn" onclick="showList(event, 'gridSamples')">Grid</button>
+                    <button class="btn" onclick="showList(event, 'graphSamples')">Graph</button>
+                    <button class="btn" onclick="showList(event, 'otherSamples')">Other</button>
+                </div>
+
+                <div id="gridSamples" class="tabcontent">
+                    <button id="defaultSubmit" class="modal-action modal-close btn" type='button' style="width:150px">Test Grid</button>
+                    <button id="bfs" class="modal-action modal-close btn" type='button' style="width:150px">BFS</button>
+                    <button id="dfs" class="modal-action modal-close btn" type='button' style="width:150px">DFS</button>
+                    <button id="A" class="modal-action modal-close btn" type='button' style="width:150px">A*</button>
+                    <button id="JPS" class="modal-action modal-close btn" type='button' style="width:150px">JPS</button>
+                </div>
+
+                <div id="graphSamples" class="tabcontent">
+                    <button id="defaultSubmitGraph" class="modal-action modal-close btn" type='button' style="width:150px">Test Graph</button>
+                    <button id="defaultSubmitCustomGraph" class="modal-action modal-close btn" type='button' style="width:150px">Test Custom Graph</button>
+                </div>
+
+                <div id="otherSamples" class="tabcontent">
+                    <button id="defaultSubmitMapGraph" class="modal-action modal-close btn" type='button' style="width:150px">Inline Test</button>
+                    <button id="defaultSubmitAnya" class="modal-action modal-close btn" type='button' style="width:150px">Test Anya</button>
+                </div>
+
+                <script>
+                    function showList(evt, listName) {
+                        // Declare all variables
+                        var i, tabcontent, tablinks;
+
+                        // Get all elements with class="tabcontent" and hide them
+                        tabcontent = document.getElementsByClassName("tabcontent");
+                        for (i = 0; i < tabcontent.length; i++) {
+                            tabcontent[i].style.display = "none";
+                        }
+
+                        // Get all elements with class="tablinks" and remove the class "active"
+                        tablinks = document.getElementsByClassName("tablinks");
+                        for (i = 0; i < tablinks.length; i++) {
+                            tablinks[i].className = tablinks[i].className.replace(" active", "");
+                        }
+
+                        // Show the current tab, and add an "active" class to the button that opened the tab
+                        document.getElementById(listName).style.display = "block";
+                        evt.currentTarget.className += " active";
                     }
+                    document.getElementById("eventListTabClick").click();
+                </script>
+            </div>
+        </div>
+        <div id="settings" class="overTab">
+            <div class="eventPart col-lg-3">
+                <div class="tab">
+                    <button class="btn" onclick="showList(event, 'checks')">Checks</button>
+                    <button class="btn" onclick="showList(event, 'floatbox')">Floatbox</button>
+                    <button class="btn" onclick="showList(event, 'otherSettings')">Other</button>
+                </div>
 
-                    // Show the current tab, and add an "active" class to the button that opened the tab
-                    document.getElementById(listName).style.display = "block";
-                    evt.currentTarget.className += " active";
+                <div id="checks" class="tabcontent">
+                    <div><h3>Monotonic</h3>   <label class="switch"> <input type="checkbox" id = "Monotonicity" checked> <span class="slider1"></span> </label></div>
+                    <h3>Test</h3>   <label class="switch"> <input type="checkbox" id = "pie"> <span class="slider1"></span> </label> <br>
+                    <h3>AnotherTest</h3>   <label class="switch"> <input type="checkbox" id = "cake"> <span class="slider1"></span> </label> <br>
+
+                </div>
+
+                <div id="floatbox" class="tabcontent">
+                    floatbox
+                </div>
+
+                <div id="otherSettings" class="tabcontent">
+                    <h3>Show Lines:</h3>
+                    <label class="switch"> <input type="checkbox" id = "Lines"> <span class="slider1"></span> </label>
+
+                </div>
+
+                <script>
+                    function showList(evt, listName) {
+                        // Declare all variables
+                        var i, tabcontent, tablinks;
+
+                        // Get all elements with class="tabcontent" and hide them
+                        tabcontent = document.getElementsByClassName("tabcontent");
+                        for (i = 0; i < tabcontent.length; i++) {
+                            tabcontent[i].style.display = "none";
+                        }
+
+                        // Get all elements with class="tablinks" and remove the class "active"
+                        tablinks = document.getElementsByClassName("tablinks");
+                        for (i = 0; i < tablinks.length; i++) {
+                            tablinks[i].className = tablinks[i].className.replace(" active", "");
+                        }
+
+                        // Show the current tab, and add an "active" class to the button that opened the tab
+                        document.getElementById(listName).style.display = "block";
+                        evt.currentTarget.className += " active";
+                    }
+                    document.getElementById("eventListTabClick").click();
+                </script>
+            </div>
+        </div>
+        <script>
+            function showTab(evt, listName) {
+                // Declare all variables
+                var i, tabcontent, tablinks;
+
+                // Get all elements with class="tabcontent" and hide them
+                tabcontent = document.getElementsByClassName("overTab");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
                 }
-                document.getElementById("eventListTabClick").click();
-            </script>
 
-        </div>
-    </div>
+                // Get all elements with class="tablinks" and remove the class "active"
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
 
-
-    <div class="legend row" style="padding: 15px">
-        <h4>Legend:</h4>
-        <div id="legend" class="col-lg-12">
-            <ul><li><div id="id1" class="legendItems"></div><span> - Explorable area</span></li>
-                <li><div id="id2" class="legendItems"></div><span> - Boundaries/Walls</span></li>
-                <li><div id="id3" class="legendItems"></div><span> - Expanded Nodes</span></li>
-                <li><div id="id4" class="legendItems"></div><span> - Frontier Nodes</span></li>
-            </ul>
-        </div>
+                // Show the current tab, and add an "active" class to the button that opened the tab
+                document.getElementById(listName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+            document.getElementById("eventListTabClick").click();
+        </script>
 
     </div>
-
 </div>
+
 
 <!--Footer-->
 <div class="footer">

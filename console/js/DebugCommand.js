@@ -19,11 +19,11 @@ class DebugCommand
         const mapData = data.Map;
         const events = data.eventList;
         this.playing = false; // Used to tell other scripts if it is currently running
-        this.visualControl = new visualiserControl(data); // The visualControl allows for the debug
+        this.visualControl = new CustomVisualiser(data); // The visualControl allows for the debug
 
         //command to be separated from weather the incoming json is for a grid, graph or any other visualisation
         this.listControl = new ListControl(type); // In a similar vein to visualControl (which controls, how did you guess it
-        console.log("0");
+
         //the visualiser :O ) The list control abstracts away the detail for the lists.
         this.eventCounter = 0; //Is the current event number we are on
         this.eventList = events; // This is the event list from the Json file
@@ -149,13 +149,13 @@ class DebugCommand
                 break;
             case "expanding":
                 this.listControl.removeFromList(lists.open,event);
-                this.visualControl.clearPath(1);
-                this.visualControl.drawPath(1,event);
-                this.visualControl.setNodeState(event,states.Current);
+                this.visualControl.deleteLine(1);
+                this.visualControl.drawLine(1,event.id);
+                this.visualControl.setNodeState(event.id,states.Current);
 
-                if(this.visualControl.breakPointCheck(event))
+                if(this.visualControl.isBreakPoint(event.id))
                 {
-                    this.visualControl.removeBreakPoint(event);
+                    this.visualControl.removeBreakPoint(event.id);
                     return false;
                 }
 
@@ -164,8 +164,8 @@ class DebugCommand
             case "generating":
 
                 this.currentNodes.push(event);
-                this.visualControl.generateNode(event);
-                this.visualControl.setNodeState(event,states.CurrentFrontier);
+                this.visualControl.addNodeFromEvent(event);
+                this.visualControl.setNodeState(event.id,states.CurrentFrontier);
                 this.visualControl.setNodeValues(event);
 
                 this.listControl.addToList(lists.open,event);
@@ -175,8 +175,7 @@ class DebugCommand
                 if(!this.heuristicCheck(nodeData))
                 {
                     return false;
-                }
-                if(this.visualControl.breakPointCheck(event))
+                }if(this.visualControl.isBreakPoint(event))
                 {
                     this.visualControl.removeBreakPoint(event);
                     return false;
@@ -186,7 +185,7 @@ class DebugCommand
             case "updating":
 
                 this.currentNodes.push(event);
-                this.visualControl.setNodeState(event, states.CurrentFrontier);
+                this.visualControl.setNodeState(event.id, states.CurrentFrontier);
                 this.listControl.updateList(lists.open,event);
                 nodeData = this.visualControl.getNodeData(event);
                 this.visualControl.setNodeValues(event);
@@ -201,9 +200,9 @@ class DebugCommand
             case "closing":
 
                 //Set colors of all current search nodes to the frontier color and set the current node to expanded
-                this.currentNodes.forEach((e)=>this.visualControl.setNodeState(e, states.inFrontier));
+                this.currentNodes.forEach((e)=>this.visualControl.setNodeState(e.id, states.inFrontier));
                 this.currentNodes = [];
-                this.visualControl.setNodeState(event , states.expanded);
+                this.visualControl.setNodeState(event.id , states.expanded);
 
                 //Update the list values
                 this.listControl.addToList(lists.closed,event);
@@ -212,7 +211,7 @@ class DebugCommand
             case "end":
                 this.visualControl.showGoal(event);
                 if(this.eventCounter+1 < this.eventList.length) {
-                    this.visualControl.reload();
+                    this.visualControl.clearVisual();
                     this.listControl.reset();
                 }else{
                     this.stop();
@@ -261,7 +260,7 @@ class DebugCommand
     {
         this.eventCounter = 0;
         this.stop();
-        this.visualControl.reset();
+        this.visualControl.clearVisual();
         this.listControl.reset();
     }
 
