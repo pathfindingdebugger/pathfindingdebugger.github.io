@@ -101,6 +101,16 @@ class ListControl
         eventli.appendChild(newMainItem);
         $('#eventList').append(eventli);
     }
+    addCompletedPath(debug,index)
+    {
+        const newButton = document.createElement("input");
+        newButton.type = "button";
+        newButton.id = "path"+index;
+        newButton.value = "path"+index;
+        newButton.onclick = e => debug.showSavedPath(index);
+        console.log($("#savedPaths"));
+        $('#savedPaths').append(newButton);
+    }
 
     reset()
     {

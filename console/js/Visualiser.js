@@ -283,14 +283,14 @@ class CustomVisualiser
     {
         this.nodes[id].incomingEdges.forEach((e,i)=>{
             this.setLineColor(e,'green');
-            this.drawLine(i+2,e.pId);
+            this.drawLine(i+3,e.pId);
         })
     }
     clearParentLines(id)
     {
         this.nodes[id].incomingEdges.forEach((e,i)=>{
             this.setLineColor(e,'black');
-            this.deleteLine(i+2);
+            this.deleteLine(i+3);
         })
     }
     drawLine(index,childId)
@@ -310,13 +310,17 @@ class CustomVisualiser
     {
         if(this.lineVisual[index] !== null)
             this.lineVisual[index].forEach((id,i)=>{
-                this.nodes[id].svg.attr('stroke',index === 0? 'red': index === 1 ?'#FF9F1C': 'green');
-                this.nodes[id].svg.attr('stroke-width',this.scale*this.strokeScale*2);
-
-                if(this.nodes[id].pId !== null && this.nodes[id].pId !== undefined)
+                if(this.nodes[id] != undefined)
                 {
-                    const parent = this.nodes[id].pId;
-                    this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],index === 0? 'red': index === 1 ?'#FF9F1C': 'green')
+                    this.nodes[id].svg.attr('stroke',index === 0? 'red': index === 1 ?'#FF9F1C': index === 2 ? 'blue' :'green');
+                    this.nodes[id].svg.attr('stroke-width',this.scale*this.strokeScale*2);
+
+                    if(this.nodes[id].pId !== null && this.nodes[id].pId !== undefined)
+                    {
+                        const parent = this.nodes[id].pId;
+                        if(parent !== undefined)
+                           this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],index === 0? 'red': index === 1 ?'#FF9F1C': index === 2 ? 'blue' :'green')
+                    }
                 }
             });
     }

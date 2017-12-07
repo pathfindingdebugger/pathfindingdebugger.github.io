@@ -32,7 +32,7 @@ var dataReceived;
 let i = 0;
 var j = 0;
 var speed = 1;
-let control;
+let control = new DebugCommand();
 var playing = false;
 
 const states = {
@@ -149,14 +149,9 @@ $(document).ready(function () {
 
     function upload(data) {
         dataReceived = data.eventList;
-        if (control !== undefined)
-        {
-            control.reset(data);
-        }
-        else
-        {
-            control = new DebugCommand(data);
-        }
+
+        control.reset(data);
+
         console.log(control);
     }
 
