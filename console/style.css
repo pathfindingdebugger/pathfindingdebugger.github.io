@@ -330,3 +330,9 @@ input:checked + .slider1:before {
 .slider1.round:before {
     border-radius: 50%;
 }
+label {
+    color: #B4886B;
+    font-weight: bold;
+    display: block;
+    width: 150px;
+}

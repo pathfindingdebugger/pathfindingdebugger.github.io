@@ -1,8 +1,8 @@
 class CustomVisualiser
 {
-    constructor(data)
+    constructor(data,floatBoxController)
     {
-
+        this.floatBoxControl = floatBoxController;
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
         this.floatBox = null;
@@ -431,16 +431,8 @@ class CustomVisualiser
     }
 
     generateFloatBox(mouseX,mouseY,id) {
-        //Done in a similar way to the grid variant, just using the Nodes parent instead of the parent XYs
-        if(this.floatBox !== null)
-        {
-            this.deleteFloatBox();
-            this.floatBox = null;
-        }
 
-        const svg = document.getElementById("svg");
-
-
+        //Calculate position based on parent position
         const parent = this.nodes[this.nodes[id].pId];
 
         const xDir = this.nodes[id].pId !== null ? Math.sign(Number(this.nodes[id].svg.attr('cx')) -Number(parent.svg.attr('cx'))):0;
@@ -451,61 +443,12 @@ class CustomVisualiser
 
         const newX = mouseX + xOffset;//These offsets correspond to the svg
         const newY = mouseY + yOffset;
-        const textFont = 20;
-        this.floatBox = new Elem(svg,'g');
 
-        const elements = [];
-        const box = new Elem(this.floatBox.elem,'rect')
-            .attr('x',-50)
-            .attr('y',-50)
-            .attr('width',"30ex")
-            .attr('height',120)
-            .attr("fill","white")
-            .attr("stroke-width",3)
-            .attr("stroke",this.nodes[id].svg.attr("fill"))
-            .attr('fill-opacity',0.8);
-
-        const idText = new Elem(this.floatBox.elem,'text')
-            .attr('x',-45)
-            .attr('y',-30)
-
-            .attr('font-size',textFont)
-            .attr('fill','black');
-
-        idText.elem.append(document.createTextNode("Id: "+ String(id)));
-        elements.push(idText);
-
-        const gText = new Elem(this.floatBox.elem,'text')
-            .attr('x',-45)
-            .attr('y',-10)
-            .attr('font-size',textFont)
-            .attr('fill','black');
-        const g = Number(this.nodes[id].g);
-        gText.elem.append(document.createTextNode("g:"+g));
-        elements.push(gText);
-        const hText = new Elem(this.floatBox.elem,'text')
-            .attr('x',-45)
-            .attr('y',10)
-            .attr('font-size',textFont)
-            .attr('fill','black');
-        const h = Number(this.nodes[id].h.toPrecision(5));
-        hText.elem.append(document.createTextNode("h:"+h));
-        elements.push(hText);
-        const fText = new Elem(this.floatBox.elem,'text')
-            .attr('x',-45)
-            .attr('y',30)
-            .attr('font-size',textFont)
-            .attr('fill','black');
-        const f = Number(this.nodes[id].f);
-        fText.elem.append(document.createTextNode(" f:"+f));
-        elements.push(fText);
-
-        const maxSize = elements.map(e=>e.elem.getBoundingClientRect().right - e.elem.getBoundingClientRect().left).reduce((i,j)=> i > j ? i : j);
-        box.attr('width',maxSize+5);
-        this.floatBox.attr('transform','translate('+newX+','+newY+')');
+        //Hand position and node data to fbController to generate the box, get the returned box
+        const fb = this.floatBoxControl.generateFloatBox(newX,newY,this.nodes[id]);
 
         const mout = this.nodes[id].svg.observeEvent('mouseout')
-            .subscribe(e=>{this.deleteFloatBox(); this.deleteLine(0)});
+            .subscribe(e=>{this.floatBoxControl.deleteFloatBox()});
 
         const move = Observable.fromEvent(this.svg,'mousemove')
             .map(({clientX,clientY}) =>(
@@ -514,16 +457,8 @@ class CustomVisualiser
                     clientY:clientY - svg.getBoundingClientRect().top-10
                 })
             ))
-            .subscribe(e=>(this.floatBox !== null)? this.floatBox.attr('transform','translate('+(e.clientX+xOffset)+','+(e.clientY+yOffset)+')') : move.unsub);
+            .subscribe(e=>(fb !== null)? fb.attr('transform','translate('+(e.clientX+xOffset)+','+(e.clientY+yOffset)+')') : move.unsub);
 
-    }
-    deleteFloatBox()
-    {
-        if(this.floatBox !== null)
-        {
-            this.floatBox.elem.remove();
-            this.floatBox = null
-        }
     }
     toggleLines()
     {

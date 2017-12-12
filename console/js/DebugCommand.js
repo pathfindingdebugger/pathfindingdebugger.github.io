@@ -267,10 +267,12 @@ class DebugCommand
         if(this.visualControl !== undefined)
         {
             this.visualControl.clearVisual();
+            this.fbControl.deleteSideBar();
         }
-
+        this.fbControl = new FloatBoxControl(data);
         this.listControl.reset();
-        this.visualControl = new CustomVisualiser(data);
+
+        this.visualControl = new CustomVisualiser(data,this.fbControl);
 
         const events = data.eventList;
         this.playing = false;
