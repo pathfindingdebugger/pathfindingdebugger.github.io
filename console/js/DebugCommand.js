@@ -9,6 +9,16 @@ tests =
         monotonicity:0
     };
 
+const states = {
+    NotSearched:"NotSearched",
+    inFrontier:"inFrontier",
+    expanded:"expanded",
+    start:"start",
+    goal:"goal",
+    Current:"Current",
+    CurrentFrontier:"CurrentFrontier"
+};
+
 class DebugCommand
 {
     // The debug control has domain over the control flow of the debug
@@ -20,6 +30,8 @@ class DebugCommand
         this.listControl = new ListControl(); // In a similar vein to visualControl (which controls, how did you guess it
 
         this.completedLists = [];
+
+        this.legend = new Legend(states);
     }
     complete()
     {
@@ -267,12 +279,12 @@ class DebugCommand
         if(this.visualControl !== undefined)
         {
             this.visualControl.clearVisual();
-            this.fbControl.deleteSideBar();
+
         }
-        this.fbControl = new FloatBoxControl(data);
+
         this.listControl.reset();
 
-        this.visualControl = new CustomVisualiser(data,this.fbControl);
+        this.visualControl = new CustomVisualiser(data);
 
         const events = data.eventList;
         this.playing = false;

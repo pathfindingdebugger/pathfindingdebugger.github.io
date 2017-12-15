@@ -1,0 +1,6 @@
+{
+  "Map":{"type":"Polygon","data":"ply\relement vertex 4\rproperty float x\rproperty float y\relement face 1\rproperty list uchar int vertex_indices\rproperty int traversable\rend_header\r0 0\r200 0\r400 300\r0 200\r4 0 1 2 3 1"},
+  "eventList":[
+    {"type": "generating", "g": 0,"x":0,"y":0,"svgType":"Node", "pId": null, "f": 0, "id": "rock", "h": 0, "data": "BWBWBWBE"}
+  ]
+}

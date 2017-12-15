@@ -1,24 +1,38 @@
 class FloatBoxControl
 {
-    constructor(data)
+    constructor(data,svgElem)
     {
         this.svg = document.getElementById("svg");
-        const svgObj = data.svgObj;
+        console.log(data.svgObjects);
+        if(data.svgObjects !== undefined)
+        {
+            this.variableNames = data.svgObjects.reduce((m,k)=>{m[k.key] = k.object.variableNames;return m},{});
+
+        }
         this.hiddenArray = [];
         //For x y g h and f
-        const constants = ['id','x','y','g','h','f'];
+        const constants = Object.keys(data.eventList.find(e=>e.type === "generating"));//['id','x','y','g','h','f'];
         this.elements = [];
         constants.forEach(e=>{
+            if(e === "type")
+                return ;
+
             var checkbox = document.createElement('input');
             checkbox.type = "checkbox";
             checkbox.name = e;
             checkbox.value = "value";
-            checkbox.id = e;
+            checkbox.id = e+"_Fb";
 
-            if(e === "id")
+            if(data.valueShown === undefined)
+                data.valueShown = ["id","g","h","f"];
+
+            if (data.valueShown.includes(e))
                 checkbox.checked = true;
+
+
+
             var label = document.createElement('label');
-            label.htmlFor = e ;
+            label.htmlFor = e+"_Fb" ;
             label.appendChild(document.createTextNode(e));
 
             const nl = document.createElement("br");
@@ -46,6 +60,7 @@ class FloatBoxControl
         this.elements.forEach(e=>e.remove())
     }
     getShown(){return this.hiddenArray.filter(e=>e.getValue())}
+
     getFloatBoxHieght()
     {
         return this.getShown().length;
@@ -57,8 +72,19 @@ class FloatBoxControl
         this.deleteFloatBox();
 
         //get the non hidden keys
-        const shownValues = this.getShown();
+        const showList = this.getShown();
+        const indexOfVariable = showList.map(o=>o.key).indexOf("variables");
 
+        //get list of non variable data
+        const nonVariableList = indexOfVariable === -1? showList : showList.filter((e,i)=>i!==indexOfVariable);
+
+        //If variables are to be shown we get a list which consists of name value pairs
+        const variableList = indexOfVariable !== -1? this.variableNames[node.eventData.svgType].map((name,i)=>({key:name,value:node.eventData["variables"][i]})):[];
+
+        //we take the non variable list and map it to also have name value pairs
+        const shownValues = nonVariableList.map(e=>({key:e.key,value:node.eventData[e.key]})).concat(variableList);
+
+        //We then can draw the floatbox and use the shownValues list which includes all data
         const textFont = 20;
         // Make the floatbox group
         this.floatBox = new Elem(this.svg,'g');
@@ -79,9 +105,8 @@ class FloatBoxControl
             .attr('height',height)
             .attr("fill","white")
             .attr("stroke-width",3)
-            .attr("stroke",node.svg.attr("fill"))
+            .attr("stroke",getComputedStyle(node.svg.elem).fill)
             .attr('fill-opacity',0.8);
-
 
         //For each shown value
         shownValues.forEach((v,i)=>{
@@ -93,9 +118,10 @@ class FloatBoxControl
                 .attr('font-size',textFont)
                 .attr('fill','black');
 
-            text.elem.append(document.createTextNode(v.key+" : "+node[v.key]));
+            text.elem.append(document.createTextNode(v.key+" : "+v.value));
             elements.push(text);
         });
+
         //move box to given x and y
         const maxSize = elements.map(e=>e.elem.getBoundingClientRect().right - e.elem.getBoundingClientRect().left).reduce((i,j)=> i > j ? i : j);
         box.attr('width',maxSize+8);

@@ -1,8 +1,8 @@
 class CustomVisualiser
 {
-    constructor(data,floatBoxController)
+    constructor(data)
     {
-        this.floatBoxControl = floatBoxController;
+
         this.breakPoints = new Array(0);
         this.breakPointVisual = new Array(0);
         this.floatBox = null;
@@ -33,9 +33,7 @@ class CustomVisualiser
         this.nodePositions = [];
         this.links = [];
 
-        this.selfDrawn = true;
         const allConstrained = data.eventList.reduce((a,i)=> this.addEventToPositionList(i) && a,true);
-
 
         if(!allConstrained)
         {
@@ -67,7 +65,7 @@ class CustomVisualiser
         svgElements.push({ "key":"Square", "object":{ "type":"rect", "attributes": [[{"key":"tag","value":"rect"},{"key":"cx","value":" 5 "},{"key":"cy","value":" 5 "},{"key":"x","value":" 0 "},{"key":"y","value":" 0 "},{"key":"width","value":" 1 "},{"key":"height","value":" 10 "},{"key":"stroke","value":"black"}]], "variableNames": []}});
         svgElements.push({ "key":"GridSpace", "object":{ "type":"rect", "attributes": [[{"key":"tag","value":"rect"},{"key":"stroke-alignment","value":"inner"},{"key":"cx","value":" 0.6"},{"key":"cy","value":" 0.6"},{"key":"x","value":" 0.6 "},{"key":"y","value":" 0.6 "},{"key":"width","value":"0.8"},{"key":"height","value":"0.8"},{"key":"stroke-width","value":"0.1"}]], "variableNames": []}});
         svgElements.push({ "key":"Node", "object":{ "type":"circle", "attributes":[[{"key":"tag","value":"circle"},{"key":"cx","value":"0"},{"key":"cy","value":"0"},{"key":"r","value":"1"}]],"variableNames": []}});
-
+        svgElements.push({ "key":"AnyaNode", "object":{ "attributes": [[{"key":"r","value":"0.3"},{"key":"cx","value":"0"},{"key":"cy","value":"0"},{"key":"tag","value":"circle"}],[{"key":"x","value":"lx"},{"key":"width","value":"ll"},{"key":"y","value":"lh"},{"key":"tag","value":"rect"},{"key":"stroke-width","value":"0.1"},{"key":"height","value":"0.3"}],[{"key":"d","value":"M 0 0 L lex "},{"key":"tag","value":"path"},{"key":"stroke-width","value":"0.3"}],[{"key":"d","value":"M 0 0 L lx "},{"key":"tag","value":"path"},{"key":"stroke-width","value":"0.5"},{"key":"stroke","value":"none"}]], "variableNames": ["lx","ll","lh","lex"]}});
         //Fill the svgObj to be functions that take
         svgElements.forEach(e=>
             this.svgObj[e.key] = (varArray) => {
@@ -89,7 +87,8 @@ class CustomVisualiser
             this.addNodeFromEvent(this.endEvent);
             this.setNodeState(this.endEvent.id,states.goal);
         }
-
+        //Generate floatboxController
+        this.floatBoxControl = new FloatBoxControl(data);
     }
     //Takes an event and adds it to positionList returns false if unconstrained
     addEventToPositionList(e)
@@ -162,7 +161,8 @@ class CustomVisualiser
             if(e.variables == null)
                 e.variables = [];
             //Draw an svg of that type with those perameters
-            newElement = this.svgObj[e.svgType](e.variables);//.attr('stroke-width',this.scale*this.strokeScale);
+            newElement = this.svgObj[e.svgType](e.variables);
+
         }
         else
         {
@@ -187,18 +187,31 @@ class CustomVisualiser
             svg:newElement,
             children:[],
             incomingEdges:[],
-            outgoingEdges:[]
+            outgoingEdges:[],
+
+            eventData:e
         };
 
         this.nodes[e.id].svg.observeEvent('mouseover')
         //.filter(e => this.graphNode[id].svgElem.attr("fill") !== 'white'&&this.graphNode[id].attr("fill") !== '#fff220')
         .subscribe(a => {
+
+            this.svg.setAttribute('stroke-opacity',0.3);
+            this.svg.setAttribute('fill-opacity',0.3);
             this.generateFloatBox(a.clientX,a.clientY,e.id);
             this.drawParentLines(e.id);
             this.drawLine(0,e.id);
-            this.nodes[e.id].outgoingEdges.forEach(e=>this.setLineColor(e,'blue'));
+            this.nodes[e.id].outgoingEdges.forEach(e=>this.activateEdge(e,2));
             this.nodes[e.id].svg.observeEvent('mouseout')
-                .subscribe(ev =>{this.nodes[e.id].outgoingEdges.forEach(l=>this.setLineColor(l,'black'));this.clearParentLines(e.id);this.deleteLine(e.id); this.renderLine(1)});
+                .subscribe(ev =>{
+                    this.svg.setAttribute('stroke-opacity',1);
+                    this.svg.setAttribute('fill-opacity',1);
+                    this.nodes[e.id].outgoingEdges.forEach(l=>this.activateEdge(l,-1));
+                    this.clearParentLines(e.id);
+                    this.deleteLine(e.id);
+                    this.unhighlightNode(e.id);
+                    this.renderLine(1)
+                });
         });
 
         this.nodes[e.id].svg.observeEvent('mousedown')
@@ -241,7 +254,7 @@ class CustomVisualiser
             const toScreenVector = {x:0,y:0,z:1};
             const perp = normalise(cross(lineVector)(toScreenVector));
             const normLineVector = normalise(lineVector);
-            const offset = multiply(perp)(this.nodeSize/4);
+            const offset = multiply(perp)(this.nodeSize/2);
             const turnPoint = add(multiply(add(nodePosition)(parentPosition))(0.5))(offset);
 
             const p1 = add(nodePosition)(multiply(normLineVector)(this.nodeSize));
@@ -249,10 +262,8 @@ class CustomVisualiser
             const p2 = add(base)(multiply(perp)(this.scale*0.4));
             const p3 = add(base)(multiply(perp)(-this.scale*0.4));
             console.log(base);
-            triangle = new Elem(this.svg,'path',true).attr("d","M"+p1.x+" "+p1.y+" L"+p2.x+" "+p2.y+" L"+p3.x + " " + p3.y+" Z").attr('fill','#011627');
-
-
-            fill = new Elem(this.svg, 'line', false).attr('x1', parentPosition.x).attr('y1', parentPosition.y).attr('x2', base.x).attr('y2', base.y).attr('stroke','#011627').attr('stroke-width',this.scale*this.strokeScale*2);
+            triangle = new Elem(this.svg,'path',false).attr("d","M"+p1.x+" "+p1.y+" L"+p2.x+" "+p2.y+" L"+p3.x + " " + p3.y+" Z").attr('fill','#011627').attr('stroke-width',this.scale*this.strokeScale*2);
+            fill = new Elem(this.svg, 'line', false).attr('x1', parentPosition.x).attr('y1', parentPosition.y).attr('x2', base.x).attr('y2', base.y).attr('stroke-width',this.scale*this.strokeScale*2).addClass('line');
 
             textX = turnPoint.x;
             textY = turnPoint.y;
@@ -265,7 +276,7 @@ class CustomVisualiser
             textX = node.svg.attr('cx')-5;
             textY = Number(node.svg.attr('cy'))+30;
         }
-        const weight = new Elem(this.svg,'text').attr('x',textX).attr('y',textY).attr('font-size',this.nodeSize/4).attr('fill','black');
+        const weight = new Elem(this.svg,'text').attr('x',textX).attr('y',textY).attr('font-size',this.nodeSize/2).attr('fill','black').attr('stroke-width',0);
 
         const weightText = weightValue === null ? node.g - parent.g : weightValue;
 
@@ -282,14 +293,14 @@ class CustomVisualiser
     drawParentLines(id)
     {
         this.nodes[id].incomingEdges.forEach((e,i)=>{
-            this.setLineColor(e,'green');
+            this.activateEdge(e,3);
             this.drawLine(i+3,e.pId);
         })
     }
     clearParentLines(id)
     {
         this.nodes[id].incomingEdges.forEach((e,i)=>{
-            this.setLineColor(e,'black');
+            this.activateEdge(e,-1);
             this.deleteLine(i+3);
         })
     }
@@ -312,35 +323,36 @@ class CustomVisualiser
             this.lineVisual[index].forEach((id,i)=>{
                 if(this.nodes[id] != undefined)
                 {
-                    this.nodes[id].svg.attr('stroke',index === 0? 'red': index === 1 ?'#FF9F1C': index === 2 ? 'blue' :'green');
+                    this.nodes[id].svg.addClass("path"+Math.min(index,3));
                     this.nodes[id].svg.attr('stroke-width',this.scale*this.strokeScale*2);
-
                     if(this.nodes[id].pId !== null && this.nodes[id].pId !== undefined)
                     {
                         const parent = this.nodes[id].pId;
-                        if(parent !== undefined)
-                           this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],index === 0? 'red': index === 1 ?'#FF9F1C': index === 2 ? 'blue' :'green')
+                        if(parent !== undefined && this.nodes[parent] !== undefined)
+                           //this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],index === 0? 'red': index === 1 ?'#FF9F1C': index === 2 ? 'blue' :'green')
+                            this.activateEdge(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],Math.min(index,3))
                     }
                 }
             });
     }
     deleteLine(index)
     {
-
         if(this.lineVisual[index] !== null && this.lineVisual[index] !== undefined)
-            this.lineVisual[index].forEach((id,i)=>{
-                this.nodes[id].svg.attr('stroke',this.nodes[id].svg.attr('initialStroke'));
-                this.nodes[id].svg.attr('stroke-width',this.scale*this.strokeScale);
+        {
+            this.lineVisual[index].forEach(id =>this.unhighlightNode(id));
+        }
 
-                if(this.nodes[id].pId !== null && this.nodes[id].pId !== "null")
-                {
-                    const parent = this.nodes[id].pId;
-                    this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],'black')
-                }
-            });
+    }
+    unhighlightNode(id){
+            [0,1,2,3].map(i=>"path"+i).forEach(i=> this.nodes[id].svg.removeClass(i));
 
+            this.nodes[id].svg.attr('stroke-width',this.scale*this.strokeScale);
 
-
+            if(this.nodes[id].pId !== null && this.nodes[id].pId !== "null")
+            {
+                const parent = this.nodes[id].pId;
+                this.activateEdge(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],-1)
+            }
     }
     setNodeState(id,state)
     {
@@ -351,37 +363,17 @@ class CustomVisualiser
         else if (this.endNode === id) {
             state = states.goal
         }
+        this.nodes[id].svg.elem.classList.remove(this.nodes[id].state);
         this.nodes[id].state = state;
-        switch (state) {
-            case states.NotSearched:
-                this.nodes[id].svg.attr("fill", "#ffffff");
-                break;
-            case states.Current:
-                this.nodes[id].svg.attr("fill", "#ff0016");
-                break;
-            case states.CurrentFrontier:
-                this.nodes[id].svg.attr("fill","#b021ff");
-                break;
-            case states.expanded:
-                this.nodes[id].svg.attr("fill", "#00f6ff");
-                break;
-            case states.inFrontier:
-                this.nodes[id].svg.attr("fill", "#0032ff");
-                break;
-            case states.start:
-                this.nodes[id].svg.attr("fill", "#09ff00");
-                break;
-            case states.goal:
-                this.nodes[id].svg.attr("fill", "#ff7700");
-                break;
-        }
-
+        this.nodes[id].svg.elem.classList.add(this.nodes[id].state);
     }
     setNodeValues(event)
     {
         this.nodes[event.id].f = event.f;
         this.nodes[event.id].g = event.g;
         this.nodes[event.id].h = event.f - event.g;
+
+        Object.keys(event).forEach(k=>this.nodes[event.id].eventData[k] = event[k]);
 
         //set parent if different
         if(event.pId !== this.nodes[event.id].pId)
@@ -407,13 +399,20 @@ class CustomVisualiser
         const currentNode = this.getNodeData(e);
         return currentNode.pId !== null && currentNode.pId !== "null" ? this.getNodeData({id:currentNode.pId}) : null;
     }
-    setLineColor(e,colour)
+    activateEdge(e,index)
     {
         if(e !== undefined)
         {
-            e.fill.attr('stroke',colour);
-            e.weight.attr('fill',colour);
-            e.triangle.attr('fill',colour);
+            if(index === -1) //If negative one remove all active classes
+            {
+                [0,1,2,3].map(i=>"line"+i).forEach( i =>Object.values(e).filter(s=>s instanceof Elem).forEach(s=>s.removeClass(i)));
+                Object.values(e).filter(s=>s instanceof Elem).forEach(s=>s.removeClass("lineActive"));
+            }
+            else
+            {
+                Object.values(e).filter(s=>s instanceof Elem).forEach(s=>s.addClass("line"+index).addClass("lineActive"));
+            }
+
         }
 
     }
@@ -432,6 +431,7 @@ class CustomVisualiser
 
     generateFloatBox(mouseX,mouseY,id) {
 
+        const svg =document.getElementById("svg");
         //Calculate position based on parent position
         const parent = this.nodes[this.nodes[id].pId];
 
@@ -497,6 +497,8 @@ class CustomVisualiser
         this.nodePositions = [];
         this.links = [];
 
+        this.floatBoxControl.deleteSideBar();
+
         if(this.map !== undefined)
         {
             this.map.reset();
@@ -551,4 +553,7 @@ class CustomVisualiser
         this.breakPointVisual[index].removeElement();
         this.breakPointVisual.splice(index,1);
     }
+
 }
+
+

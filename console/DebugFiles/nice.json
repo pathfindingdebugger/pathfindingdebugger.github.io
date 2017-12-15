@@ -6,152 +6,50 @@
       "object": {
         "attributes": [
           [
-            {
-              "key": "r",
-              "value": "25.0"
-            },
-            {
-              "key": "cy",
-              "value": "0"
-            },
-            {
-              "key": "cx",
-              "value": "0"
-            },
-            {
-              "key": "tag",
-              "value": "circle"
-            }
+            {"key": "r", "value": "25.0"},
+            {"key": "cy","value": "0"},
+            {"key": "cx","value": "0"},
+            {"key": "tag","value": "circle"}
           ],
           [
-            {
-              "key": "height",
-              "value": "10"
-            },
-            {
-              "key": "width",
-              "value": "10"
-            },
-            {
-              "key": "x",
-              "value": "-25.0"
-            },
-            {
-              "key": "tag",
-              "value": "rect"
-            },
-            {
-              "key": "y",
-              "value": "-5"
-            },
-            {
-              "key": "fill",
-              "value": "c0"
-            }
+            {"key": "height","value": "10"},
+            {"key": "width","value": "10"},
+            {"key": "x","value": "-25.0"},
+            {"key": "tag","value": "rect"},
+            {"key": "y","value": "-5"},
+            {"key": "fill","value": "c0"}
           ],
           [
-            {
-              "key": "height",
-              "value": "10"
-            },
-            {
-              "key": "width",
-              "value": "10"
-            },
-            {
-              "key": "x",
-              "value": "-15.0"
-            },
-            {
-              "key": "tag",
-              "value": "rect"
-            },
-            {
-              "key": "y",
-              "value": "-5"
-            },
-            {
-              "key": "fill",
-              "value": "c1"
-            }
+            {"key": "height","value": "10"},
+            {"key": "width", "value": "10"},
+            {"key": "x", "value": "-15.0"},
+            {"key": "tag", "value": "rect"},
+            {"key": "y","value": "-5"},
+            {"key": "fill","value": "c1"}
           ],
           [
-            {
-              "key": "height",
-              "value": "10"
-            },
-            {
-              "key": "width",
-              "value": "10"
-            },
-            {
-              "key": "x",
-              "value": "-5.0"
-            },
-            {
-              "key": "tag",
-              "value": "rect"
-            },
-            {
-              "key": "y",
-              "value": "-5"
-            },
-            {
-              "key": "fill",
-              "value": "c2"
-            }
+            {"key": "height", "value": "10"},
+            {"key": "width", "value": "10"},
+            {"key": "x", "value": "-5.0"},
+            {"key": "tag", "value": "rect"},
+            {"key": "y", "value": "-5"},
+            {"key": "fill", "value": "c2"}
           ],
           [
-            {
-              "key": "height",
-              "value": "10"
-            },
-            {
-              "key": "width",
-              "value": "10"
-            },
-            {
-              "key": "x",
-              "value": "5.0"
-            },
-            {
-              "key": "tag",
-              "value": "rect"
-            },
-            {
-              "key": "y",
-              "value": "-5"
-            },
-            {
-              "key": "fill",
-              "value": "c3"
-            }
+            {"key": "height", "value": "10"},
+            {"key": "width", "value": "10"},
+            {"key": "x", "value": "5.0"},
+            {"key": "tag", "value": "rect"},
+            {"key": "y", "value": "-5"},
+            {"key": "fill", "value": "c3"}
           ],
           [
-            {
-              "key": "height",
-              "value": "10"
-            },
-            {
-              "key": "width",
-              "value": "10"
-            },
-            {
-              "key": "x",
-              "value": "15.0"
-            },
-            {
-              "key": "tag",
-              "value": "rect"
-            },
-            {
-              "key": "y",
-              "value": "-5"
-            },
-            {
-              "key": "fill",
-              "value": "c4"
-            }
+            {"key": "height", "value": "10"},
+            {"key": "width", "value": "10"},
+            {"key": "x", "value": "15.0"},
+            {"key": "tag", "value": "rect"},
+            {"key": "y", "value": "-5"},
+            {"key": "fill", "value": "c4"}
           ]
         ],
         "variableNames": [

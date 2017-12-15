@@ -336,3 +336,73 @@ label {
     display: block;
     width: 150px;
 }
+.NotSearched{
+    fill: #ffffff
+}
+.Current{
+    fill:#ff0016
+}
+.CurrentFrontier{
+    fill:#b021ff
+}
+.expanded{
+    fill:#00f6ff
+}
+.inFrontier{
+    fill:#0032ff
+}
+.start{
+    fill:#09ff00
+}
+.goal{
+    fill:#ff7700
+}
+
+.line{
+    stroke: #000000;
+}
+.lineActive{
+    stroke-opacity: 1.0;
+}
+.line2{
+    stroke: #000aff;
+    fill:#000aff;
+}
+.line3{
+    stroke: #ff0cbf;
+}
+
+.line1{
+    stroke: #ffa700;
+}
+
+.line0{
+    stroke:red;
+    fill:red;
+
+}
+.path2{
+    stroke: #000aff;
+    stroke-opacity: 1;
+    fill-opacity: 1;
+}
+.path3{
+    stroke: #ff0cbf;
+    stroke-opacity: 1;
+    fill-opacity: 1;
+}
+.path1{
+    stroke: #ffa700;
+    stroke-opacity: 1;
+    fill-opacity: 1;
+}
+
+.path0{
+    stroke:red;
+    stroke-opacity: 1;
+    fill-opacity: 1;
+}
+.main{
+    stroke-opacity:0.4;
+    fill-opacity:0.4;
+}

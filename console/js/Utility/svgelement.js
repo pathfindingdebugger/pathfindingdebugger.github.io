@@ -1,5 +1,5 @@
 class Elem {
-    constructor(svg, tag,back=true) {
+    constructor(svg, tag,front=true) {
         if(typeof(tag) === "string")
         {
             this.elem = document.createElementNS(svg.namespaceURI, tag);
@@ -7,10 +7,6 @@ class Elem {
         }
         else
         {
-            //if(tag.firstChild.name === "parseError")
-              //  consoleLog("not cool");
-
-            //Create new node
             this.elem = document.createElementNS(svg.namespaceURI, tag.tagName);
             for(let i = 0; i < tag.attributes.length; i++) {
                 const e = tag.attributes[i].name;
@@ -24,7 +20,7 @@ class Elem {
 
         }
         this.translates = [];
-        (back) ? svg.appendChild(this.elem) : svg.insertBefore(this.elem, svg.childNodes[0]);
+        (front) ? svg.appendChild(this.elem) : svg.insertBefore(this.elem, svg.childNodes[0]);
 
     }
     removeElement()
@@ -37,6 +33,16 @@ class Elem {
 
         const transformString = this.attr("transform") !== null? this.attr("transform") :  "";
         this.attr("transform",transformString+" translate("+x+","+y+")");
+    }
+    addClass(c)
+    {
+        this.elem.classList.add(c);
+        return this;
+    }
+    removeClass(c)
+    {
+        this.elem.classList.remove(c);
+        return this;
     }
     getTransform() { return  this.translates.reduce((i,a)=>({x:a.x+i.x,y:a.y+i.y}),{x:0,y:0})};
     hasCentre() {return this.attr('cx') !== undefined && this.attr('cy') !== undefined}

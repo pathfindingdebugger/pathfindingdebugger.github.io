@@ -35,16 +35,7 @@ var speed = 1;
 let control = new DebugCommand();
 var playing = false;
 
-const states = {
-    NotSearched:0,
-    inFrontier:1,
-    expanded:2,
-    start:3,
-    goal:4,
-    eventCheck:5,
-    Current:6,
-    CurrentFrontier:7
-};
+
 
 function showList(evt, listName) {
     // Declare all variables
@@ -72,6 +63,7 @@ function changeSpeed(num) {
 
     control.changeSpeed(num);
 }
+
 
 $(document).ready(function () {
 

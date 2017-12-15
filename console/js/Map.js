@@ -46,7 +46,10 @@ class Map
     }
     drawMesh(data)
     {
-        const vert = []
+        this.nodes = [];
+        const mapData = parsePLY(data);
+        mapData.faces.map(face=>face.vertex_indices.reduce((pathString,v,i)=> pathString+(i === 0? "M":"L") + mapData.vertex[v].x + " " + mapData.vertex[v].y+" ","")+"Z")
+            .forEach((path,i)=>this.nodes.push(new Elem(this.svg,'path').attr('d',path).attr('fill',mapData.faces[i].traversable !== undefined && mapData.faces[i].traversable === 0? "black":"white").attr("stroke","black").attr('stroke-width',this.tileSize*0.1)));
     }
     setGoal(id)
     {
@@ -69,6 +72,10 @@ class Map
                     }
                 }
             }
+        }
+        if(this.type === "Polygon")
+        {
+            this.nodes.forEach(e=>e.removeElement())
         }
 
     }
