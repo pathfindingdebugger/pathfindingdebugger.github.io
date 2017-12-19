@@ -1,7 +1,7 @@
 //NOTE PLY SHOULD HAVE A X AND Y FOR VERTEX AND A VERTICES_LIST AND TRAVERSABLE FOR FACES
 function parsePLY(plyString)
 {
-    const data = plyString.split('\r').length > 0 ? plyString.split('\r\n'):plyString.split('\n') ;
+    const data = plyString.split('\r').length > 0 ? plyString.split('\r'):plyString.split('\r\n') ;
     console.log("TEST",data);
     if (data[0] !== "ply")
         throw Error;

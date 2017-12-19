@@ -55,7 +55,7 @@ class Map
         mapData.faces.map(face=>face.vertex_indices.reduce((pathString,v,i)=> pathString+(i === 0? "M":"L") + mapData.vertex[v].x + " " + mapData.vertex[v].y+" ","")+"Z")
             .forEach((path,i)=>this.nodes.push(new Elem(this.map.elem,'path').attr('d',path).attr('fill',mapData.faces[i].traversable !== undefined && mapData.faces[i].traversable === 0? "black":"white").attr("stroke","black").attr('stroke-width',this.tileSize*0.1)));
 
-        this.map.translate(this.tileSize/2,this.tileSize/2);
+        //this.map.translate(this.tileSize/2,this.tileSize/2);
     }
     setGoal(id)
     {

@@ -68,7 +68,7 @@ function changeSpeed(num) {
 $(document).ready(function () {
 
     $("#defaultSubmit").click(function(event){
-        $.getAsFile('DebugFiles/')
+        //$.getAsFile('DebugFiles/')
         $.getJSON('DebugFiles/newGrid.json', upload);
 
     });
@@ -91,6 +91,9 @@ $(document).ready(function () {
     });
     $("#defaultSubmitAnya").click(function(event){
         $.getJSON('DebugFiles/custom.json', upload);
+    });
+    $("#defaultSubmitPolyAnya").click(function(event){
+        $.getJSON('DebugFiles/PolyAnya.json', upload);
     });
     $('.playbtn').click(function() {
         if(control!== null) {
