@@ -88,8 +88,6 @@ class Legend
 
         if(this.hidden)
         {
-            console.log(this.downArrow);
-
             //Show
             const showInterval = setInterval(() =>
             {

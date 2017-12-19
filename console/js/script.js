@@ -68,6 +68,7 @@ function changeSpeed(num) {
 $(document).ready(function () {
 
     $("#defaultSubmit").click(function(event){
+        $.getAsFile('DebugFiles/')
         $.getJSON('DebugFiles/newGrid.json', upload);
 
     });
@@ -126,6 +127,9 @@ $(document).ready(function () {
     $('#Lines').click(e=>{
        control.visualControl.toggleLines();
     });
+    $('#Opacity').click(e=>{
+       control.visualControl.toggleOpacity();
+    });
     // Full Screen Mode
 
     $('.fullScreenbtn').click(function(e){
@@ -146,5 +150,38 @@ $(document).ready(function () {
 
         console.log(control);
     }
+    $("#dataForm").change(f=>{
+        const file = f.target.files[0];
+        $("#dataText").text(file.name);
+
+        var picReader = new FileReader();
+
+        picReader.addEventListener("load", function(event) {
+
+            var currentJSON = JSON.parse(event.target.result);
+            upload(currentJSON)
+        });
+
+        //Read the text file
+        picReader.readAsText(file);
+
+    });
+
+    $("#mapForm").change(f=>{
+        const file = f.target.files[0];
+        $("#mapText").text(file.name);
+
+        var picReader = new FileReader();
+
+        picReader.addEventListener("load", function(event) {
+
+            var textFile = event.target;
+            control.resetMap(file.name.split(".").slice(-1)[0],textFile.result);
+        });
+
+        //Read the text file
+        picReader.readAsText(file);
+
+    });
 
 });

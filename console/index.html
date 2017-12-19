@@ -38,6 +38,7 @@
     <script src="js/Utility/Vectors.js"></script>
     <script src="js/Utility/svgelement.js"></script>
     <script src="js/Utility/PLYParser.js"></script>
+    <script src="js/Utility/MAParser.js"></script>
     <script src="js/Map.js"></script>
     <script src="js/Legend.js"></script>
     <script src="js/FloatBox.js"></script>
@@ -103,13 +104,15 @@
             <a class="fullScreenbtn btn"><i class="material-icons">personal_video</i></a>
             <span style="padding-left: 10px">Full Screen</span>
         </div>
-
-
-        <div id="uploadzone" class="uploadbtn col-sm-2 col-md-2">
-            <button data-target="modal1" class="btn modal-trigger" style="width: 100%">Upload JSON</button>
-
+        <div class="col-sm-3 col-md-3" >
+            <input type="button" class="uploadbtn" id="loadDataFileBtn" value="Upload Debug" onclick="document.getElementById('dataForm').click();"/>
+            <input id="dataForm" type="file" name="datafile" size="40"  style="display:none;">
+            <span id="dataText">No Data</span>
+            <br>
+            <input type="button" class="uploadbtn" id="loadMapFileBtn" value="Upload Map" onclick="document.getElementById('mapForm').click();"/>
+            <input id="mapForm" type="file" name="datafile" size="40" style="display:none;">
+            <span id="mapText">No Map</span>
         </div>
-
         <div class="btn4 col-sm-1 col-md-1 col-lg-1">
             <a class="btn"><i class="material-icons" href="https://pathfindingdebugger.github.io/">exit_to_app</i></a>
             <span style="padding-left: 10px">Exit</span>
@@ -117,12 +120,11 @@
 
     </div>
 
-    <!-- Input Modal -->
+    <!-- Input Modal
     <div id="modal1" class="modal modal-fixed-footer">
         <div class="modal-content">
             <h4>Enter JSON here:</h4>
             <form id='nameForm' style="height: 90%;">
-                <!--<input id='nameField' type='text' maxlength='25'></input>-->
                 <textarea id="JSONinput" placeholder="Paste your JSON here..." value=></textarea>
             </form>
         </div>
@@ -133,6 +135,7 @@
         </div>
 
     </div>
+    -->
 
     <div id="graphBox" class="graphBox row">
         <!--style="width:100%;padding-top:100px"-->
@@ -281,6 +284,8 @@
                 <div id="otherSettings" class="tabcontent">
                     <h3>Show Lines:</h3>
                     <label class="switch"> <input type="checkbox" id = "Lines"> <span class="slider1"></span> </label>
+                    <h3>Change Opacity:</h3>
+                    <label class="switch"> <input type="checkbox" id = "Opacity"> <span class="slider1"></span> </label>
 
                 </div>
 

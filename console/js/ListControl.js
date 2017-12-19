@@ -28,7 +28,6 @@ class ListControl
                 break;
 
             case lists.open:
-                console.log("this.type");
 
                 this.openList.push({id:event.id,data:"id: "+event.id +" data: "+event.data+ " h:" + (event.f-event.g).toPrecision(5) +" g:"+event.g+" f:"+event.f});
 

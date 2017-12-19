@@ -30,7 +30,7 @@ class DebugCommand
         this.listControl = new ListControl(); // In a similar vein to visualControl (which controls, how did you guess it
 
         this.completedLists = [];
-
+        this.map = null;
         this.legend = new Legend(states);
     }
     complete()
@@ -271,7 +271,17 @@ class DebugCommand
         return true;
 
     }
-
+    resetMap(type,newMap)
+    {
+        console.log("NG",this);
+        //Reset the debugger
+        if(this.map != undefined)
+        {
+            this.map.reset();
+        }
+        this.map = new Map(type,newMap,1);
+        this.reset()
+    }
     reset(data)
     {
         this.eventCounter = 0;
@@ -279,19 +289,23 @@ class DebugCommand
         if(this.visualControl !== undefined)
         {
             this.visualControl.clearVisual();
-
         }
 
         this.listControl.reset();
 
-        this.visualControl = new CustomVisualiser(data);
+        if(data !== undefined)
+            this.loadData(data);
+
+    }
+    loadData(data)
+    {
+        this.visualControl = new CustomVisualiser(data,this.map);
 
         const events = data.eventList;
         this.playing = false;
         this.eventList = events;
         this.currentId = null;
-        this.currentNodes = []; //
+        this.currentNodes = [];
         this.stepForward();
     }
-
 }

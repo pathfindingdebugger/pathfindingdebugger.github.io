@@ -1,6 +1,6 @@
 class CustomVisualiser
 {
-    constructor(data)
+    constructor(data,map)
     {
 
         this.breakPoints = new Array(0);
@@ -22,12 +22,11 @@ class CustomVisualiser
         this.strokeScale = this.scale/10;
 
         this.lineToggle = data.lines;
+        this.opacityToggle = true;
+
         document.getElementById("Lines").checked = this.lineToggle;
 
-        if(data.Map != undefined)
-        {
-            this.map = new Map(data.Map,this.nodeSize);
-        }
+        this.map = map;
 
         this.positionIndecies = {};
         this.nodePositions = [];
@@ -196,8 +195,11 @@ class CustomVisualiser
         //.filter(e => this.graphNode[id].svgElem.attr("fill") !== 'white'&&this.graphNode[id].attr("fill") !== '#fff220')
         .subscribe(a => {
 
-            this.svg.setAttribute('stroke-opacity',0.3);
-            this.svg.setAttribute('fill-opacity',0.3);
+            if(this.opacityToggle)
+            {
+                this.svg.setAttribute('stroke-opacity',0.3);
+                this.svg.setAttribute('fill-opacity',0.3);
+            }
             this.generateFloatBox(a.clientX,a.clientY,e.id);
             this.drawParentLines(e.id);
             this.drawLine(0,e.id);
@@ -246,7 +248,6 @@ class CustomVisualiser
         const nodePosition = vector3(node.svg.getCenterPosition());
         const parentPosition = vector3(parent.svg.getCenterPosition());
 
-        console.log(nodePosition,node.svg);
         let fill, triangle, textX, textY;
         if(node !== parent) {
 
@@ -261,7 +262,7 @@ class CustomVisualiser
             const base = add(nodePosition)(multiply(normLineVector)(this.nodeSize+1));
             const p2 = add(base)(multiply(perp)(this.scale*0.4));
             const p3 = add(base)(multiply(perp)(-this.scale*0.4));
-            console.log(base);
+
             triangle = new Elem(this.svg,'path',false).attr("d","M"+p1.x+" "+p1.y+" L"+p2.x+" "+p2.y+" L"+p3.x + " " + p3.y+" Z").attr('fill','#011627').attr('stroke-width',this.scale*this.strokeScale*2);
             fill = new Elem(this.svg, 'line', false).attr('x1', parentPosition.x).attr('y1', parentPosition.y).attr('x2', base.x).attr('y2', base.y).attr('stroke-width',this.scale*this.strokeScale*2).addClass('line');
 
@@ -286,7 +287,7 @@ class CustomVisualiser
         //Add line to parent
         node.incomingEdges.push(line);
         parent.outgoingEdges.push(line);
-        console.log(line);
+
         if(!this.lineToggle)
             this.hideEdge(line)
     }
@@ -476,7 +477,10 @@ class CustomVisualiser
             Object.keys(this.nodes).forEach(k=>this.nodes[k].outgoingEdges.forEach(edge=>this.showEdge(edge)));
         }
     }
-
+    toggleOpacity()
+    {
+        this.opacityToggle = !this.opacityToggle;
+    }
     clearVisual()
     {
 
@@ -499,10 +503,7 @@ class CustomVisualiser
 
         this.floatBoxControl.deleteSideBar();
 
-        if(this.map !== undefined)
-        {
-            this.map.reset();
-        }
+
     }
     showStart(event)
     {
@@ -534,7 +535,6 @@ class CustomVisualiser
                 });
         }
 
-        console.log(this.breakPoints,this.breakPointVisual);
     }
     isBreakPoint(id)
     {
@@ -542,7 +542,6 @@ class CustomVisualiser
     }
     removeBreakPoint(id)
     {
-        console.log("hit?");
         const index = this.breakPoints.indexOf(id);
         console.log(index);
         this.removeBreakPointAtIndex(index);

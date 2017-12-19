@@ -1,8 +1,7 @@
 //NOTE PLY SHOULD HAVE A X AND Y FOR VERTEX AND A VERTICES_LIST AND TRAVERSABLE FOR FACES
-
 function parsePLY(plyString)
 {
-    const data = plyString.split('\r').length > 0 ? plyString.split('\r'):plyString.split('\n') ;
+    const data = plyString.split('\r').length > 0 ? plyString.split('\r\n'):plyString.split('\n') ;
     console.log("TEST",data);
     if (data[0] !== "ply")
         throw Error;
@@ -58,7 +57,7 @@ function parsePLY(plyString)
                 //we are processing a vertex
                 const v = {};
                 vertProperties.forEach((prop,index)=>v[prop]=Number(lineData[index]));
-                console.log(i,v);
+
                 returnObj.vertex.push(v);
             }
             else if(i <= headerLength+vertexCount+faceCount)

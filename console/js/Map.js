@@ -1,32 +1,35 @@
 class Map
 {
-    constructor(mapData,scale)
+    constructor(mapType,mapData,scale)
     {
         this.tileSize = scale;
         this.svg  = document.getElementById("viewport");
-        if(mapData.type === "Grid")
+        if(mapType === "map")
         {
             this.type = "Grid";
             this.mapWidth = mapData.mWidth;
             this.mapHeight = mapData.mHeight;
-            this.map = this.drawGrid(mapData.mapData,this.mapWidth,this.mapHeight);
+            this.map = this.drawGrid(mapData);
         }
-        else if(mapData.type === "Graph")
+        else if(mapType === "Graph")
         {
             this.map = this.drawGraph();
         }
-        else if(mapData.type === "Polygon")
+        else if(mapType === "ply")
         {
-            this.map = this.drawMesh(mapData.data)
+            this.map = this.drawMesh(mapData)
         }
     }
 
-    drawGrid(mapString,mapWidth,mapHeight)
+    drawGrid(mapString)
     {
-        this.mapWidth = parseInt(mapWidth);
-        this.mapHeight = parseInt(mapHeight);
+        const mapData = maParser(mapString);
+        this.mapWidth = parseInt(mapData.width);
+        this.mapHeight = parseInt(mapData.height);
+        mapString = mapData.mapData;
+        console.log(mapData);
         this.background = new Elem(this.svg,'rect').attr('x',0).attr('y',0).attr('width',this.tileSize*this.mapWidth).attr('height',this.tileSize*this.mapHeight).attr('fill','black');
-        const size = parseInt(mapWidth) * parseInt(mapHeight);
+        const size = parseInt(this.mapWidth) * parseInt(this.mapHeight);
 
         this.nodes = {};
         //mapString = mapString.replace('\n','');
@@ -46,10 +49,13 @@ class Map
     }
     drawMesh(data)
     {
+        this.map = new Elem(this.svg,'g');
         this.nodes = [];
         const mapData = parsePLY(data);
         mapData.faces.map(face=>face.vertex_indices.reduce((pathString,v,i)=> pathString+(i === 0? "M":"L") + mapData.vertex[v].x + " " + mapData.vertex[v].y+" ","")+"Z")
-            .forEach((path,i)=>this.nodes.push(new Elem(this.svg,'path').attr('d',path).attr('fill',mapData.faces[i].traversable !== undefined && mapData.faces[i].traversable === 0? "black":"white").attr("stroke","black").attr('stroke-width',this.tileSize*0.1)));
+            .forEach((path,i)=>this.nodes.push(new Elem(this.map.elem,'path').attr('d',path).attr('fill',mapData.faces[i].traversable !== undefined && mapData.faces[i].traversable === 0? "black":"white").attr("stroke","black").attr('stroke-width',this.tileSize*0.1)));
+
+        this.map.translate(this.tileSize/2,this.tileSize/2);
     }
     setGoal(id)
     {

@@ -215,6 +215,15 @@ body {
     background: #fff;
     color:black;
 }
+
+.uploadbtn{
+    margin: 1%;
+    width:150px;
+    border-radius: 9%;
+    background-color: #889DB5;
+    color: whitesmoke;
+}
+
 .btn i{
     font-size: 28px;
     padding: 0px;
