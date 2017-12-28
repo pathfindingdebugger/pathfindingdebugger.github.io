@@ -32,6 +32,18 @@ class DebugCommand
         this.completedLists = [];
         this.map = null;
         this.legend = new Legend(states);
+
+        this.resetMap = type => newMap =>
+        {
+            console.log("NG",this);
+            //Reset the debugger
+            if(this.map != undefined)
+            {
+                this.map.reset();
+            }
+            this.map = new Map(type,newMap,1);
+            this.reset()
+        };
     }
     complete()
     {
@@ -271,16 +283,9 @@ class DebugCommand
         return true;
 
     }
-    resetMap(type,newMap)
+    clearMap()
     {
-        console.log("NG",this);
-        //Reset the debugger
-        if(this.map != undefined)
-        {
-            this.map.reset();
-        }
-        this.map = new Map(type,newMap,1);
-        this.reset()
+        this.map.reset();
     }
     reset(data)
     {

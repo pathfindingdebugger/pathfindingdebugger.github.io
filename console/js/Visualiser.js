@@ -232,6 +232,8 @@ class CustomVisualiser
         }
         else
         {
+            centerCamera(this.svg,this.nodes[e.id].svg.getCenterPosition(),this.scale)
+            /*
             const scaleFactor = this.scale + 12;
             this.svg.setAttribute('transform','scale('+scaleFactor+')'); //Zoom so the graph isn't super small, is based off of scale
             //Center camera on node
@@ -240,7 +242,7 @@ class CustomVisualiser
 
             //const view = add(multiply(nodeVector)(-1))(multiply(bounds)(0.5));
             const view = sub(nodeVector)(multiply(multiply(bounds)(1/scaleFactor))(0.5)); //Need to take into account scale
-            this.svg.setAttribute('transform',this.svg.getAttribute('transform')+'translate('+view.x +','+ view.y+') ');
+            this.svg.setAttribute('transform',this.svg.getAttribute('transform')+'translate('+view.x +','+ view.y+') ');*/
         }
     }
     addLine(node,parent,weightValue = null)

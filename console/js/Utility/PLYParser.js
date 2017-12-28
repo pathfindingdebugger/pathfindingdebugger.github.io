@@ -16,6 +16,8 @@ function parsePLY(plyString)
     const vertProperties = [];
     const faceProperties = [];
 
+    const min = {x:0,y:0};
+    const max = {x:0,y:0};
     data.forEach((line,i)=>{
         const lineData = line.split(' ');
 
@@ -58,6 +60,15 @@ function parsePLY(plyString)
                 const v = {};
                 vertProperties.forEach((prop,index)=>v[prop]=Number(lineData[index]));
 
+                if(v.x < min.x)
+                    min.x = v.x;
+                if(v.y < min.y)
+                    min.y = v.y;
+                if(v.x > min.x)
+                    max.x = v.x;
+                if(v.y > min.y)
+                    max.y = v.y;
+
                 returnObj.vertex.push(v);
             }
             else if(i <= headerLength+vertexCount+faceCount)
@@ -90,6 +101,8 @@ function parsePLY(plyString)
 
 
     });
+    returnObj.min = min;
+    returnObj.max = max;
     console.log(vertexCount,faceCount,vertProperties,faceProperties,returnObj);
     return returnObj;
 }

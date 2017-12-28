@@ -68,7 +68,6 @@ function changeSpeed(num) {
 $(document).ready(function () {
 
     $("#defaultSubmit").click(function(event){
-        //$.getAsFile('DebugFiles/')
         $.getJSON('DebugFiles/newGrid.json', upload);
 
     });
@@ -170,20 +169,48 @@ $(document).ready(function () {
 
     });
 
-    $("#mapForm").change(f=>{
-        const file = f.target.files[0];
-        $("#mapText").text(file.name);
-
+    function readFile(file,func)
+    {
         var picReader = new FileReader();
 
         picReader.addEventListener("load", function(event) {
 
             var textFile = event.target;
-            control.resetMap(file.name.split(".").slice(-1)[0],textFile.result);
+            func(textFile.result);
         });
 
         //Read the text file
         picReader.readAsText(file);
+    }
+
+    $("#mapForm").change(f=>{
+
+        const file = f.target.files[0];
+        $("#mapText").text(file.name);
+
+        if(f.target.files.length == 2)
+        {
+            let co, gr;
+            console.log(f.target.files[0].name.split('.').pop());
+            if(f.target.files[0].name.split('.').pop() === ".co")
+            {
+                co =  f.target.files[0];
+                gr =  f.target.files[1];
+            }
+            else
+            {
+                co =  f.target.files[1];
+                gr =  f.target.files[0];
+            }
+
+            readFile(co,c => readFile(gr,g => control.resetMap("Graph")({gr:c,co:g})))
+        }
+        else
+        {
+
+            readFile(file,control.resetMap(file.name.split(".").slice(-1)[0]))
+        }
+
 
     });
 

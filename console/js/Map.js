@@ -13,7 +13,7 @@ class Map
         }
         else if(mapType === "Graph")
         {
-            this.map = this.drawGraph();
+            this.map = this.drawGraph(mapData);
         }
         else if(mapType === "ply")
         {
@@ -46,6 +46,32 @@ class Map
                     .attr('stroke-width','0.1')
             }
         }
+        centerCamera(this.svg,{x:0,y:0},1)
+    }
+    drawGraph(mapData)
+    {
+        this.nodes = [];
+        const graphData = parseGraph(mapData.co,mapData.gr);
+
+        graphData.vertex.forEach(v=>{
+            this.nodes.push(new Elem(this.svg,'circle')
+                                .attr('cx',v.x)
+                                .attr('cy',v.y)
+                                .attr('r',this.tileSize*200)
+                                .attr('fill','black')
+            );
+        });
+        const a  = this.nodes.length;
+        graphData.edges.forEach(e=>{
+            if(graphData.vertex[e.v1] == null || graphData.vertex[e.v2] == null)
+                console.log(e);
+           this.nodes.push(new Elem(this.svg,'path').attr('stroke-width',40).attr('d','M'+graphData.vertex[e.v1].x+" "+graphData.vertex[e.v1].y+" L"+graphData.vertex[e.v2].x+" "+graphData.vertex[e.v2].y)
+               .attr('stroke',"black"));
+
+        });
+        console.log("WHAT?",this.nodes.length - a);
+
+        centerCamera(this.svg,graphData.vertex[0],1);
     }
     drawMesh(data)
     {
@@ -56,6 +82,8 @@ class Map
             .forEach((path,i)=>this.nodes.push(new Elem(this.map.elem,'path').attr('d',path).attr('fill',mapData.faces[i].traversable !== undefined && mapData.faces[i].traversable === 0? "black":"white").attr("stroke","black").attr('stroke-width',this.tileSize*0.1)));
 
         //this.map.translate(this.tileSize/2,this.tileSize/2);
+        console.log(mapData);
+        centerCamera(this.svg,mapData.vertex[0],1)
     }
     setGoal(id)
     {
