@@ -19,34 +19,32 @@ const states = {
     CurrentFrontier:"CurrentFrontier"
 };
 
-class DebugCommand
-{
+class DebugCommand {
     // The debug control has domain over the control flow of the debug
     //It is initiated when the user uploads a file
-    constructor()
-    {
+    constructor() {
         this.testStatus = [true];
-       // this.visualControl = new CustomVisualiser(data);
+        // this.visualControl = new CustomVisualiser(data);
         this.listControl = new ListControl(); // In a similar vein to visualControl (which controls, how did you guess it
 
         this.completedLists = [];
         this.map = null;
         this.legend = new Legend(states);
 
-        this.resetMap = type => newMap =>
-        {
-            console.log("NG",this);
+        this.resetMap = type => newMap => {
+            console.log("NG", this);
             //Reset the debugger
-            if(this.map != undefined)
-            {
+            if (this.map != undefined) {
                 this.map.reset();
             }
-            this.map = new Map(type,newMap,1);
+            this.map = new Map(type, newMap, 1);
             this.reset()
         };
+
+
     }
-    complete()
-    {
+
+    complete() {
         return this.eventCounter >= this.eventList.length
     }
 
@@ -55,18 +53,24 @@ class DebugCommand
         this.currentId = setInterval(
             () => {
                 if (!this.complete()) {
-                    let result = "generating";
-                    while(result !== "expanding")
-                    {
-
+                    let result = true;/// = this.eventList[this.eventCounter].type;
+                    while (result !== "expanding" || result === false) {
                         result = this.runEvent(this.eventList[this.eventCounter]);
-                        this.eventCounter++;
+                        //if(result !== "expanding")
+                           this.eventCounter++;
+
+                        console.log(result);
                         if (result === false) {
                             this.stop();
-                            result = "expanding";
+                            console.log("Should've stopped");
+                            return;
                         }
                     }
 
+                    if(this.defaultSpeed !== this.currentSpeed)
+                    {
+                       this.changeSpeed(this.defaultSpeed);
+                    }
                 }
                 else {
                     clearInterval(this.currentId);
@@ -78,10 +82,14 @@ class DebugCommand
     }
 
 
-    stop()
-    {
+    stop() {
         this.playing = false;
         clearInterval(this.currentId);
+    }
+
+    setDefaultSpeed(speed)
+    {
+        this.defaultSpeed = speed;
     }
     changeSpeed(speed)
     {
@@ -95,7 +103,7 @@ class DebugCommand
             this.play(speed);
 
         }
-
+        this.currentSpeed = speed;
     }
     //
     stepForward()
@@ -143,12 +151,23 @@ class DebugCommand
     runEvent(event)
     {
         let nodeData = null;
-
+        let result;
         if(event.type !== "start" && event.type !== "end")
         {
             this.listControl.addToList(lists.events,event)
         }
+        if(event.comment !== undefined && event.waitTime !== undefined)
+        {
+            this.visualControl.showMessage(event.comment,event.waitTime);
 
+        }
+        if(event.waitTime !== undefined)
+        {
+            console.log("established");
+            result = false;
+
+            setTimeout(()=>{this.play(this.defaultSpeed)},event.waitTime);
+        }
         switch (event.type) {
             case "start":
                 this.visualControl.showStart(event);
@@ -165,7 +184,7 @@ class DebugCommand
                 if(this.visualControl.isBreakPoint(event.id))
                 {
                     this.visualControl.removeBreakPoint(event.id);
-                    return false;
+                    result = false;
                 }
 
                 break;
@@ -186,11 +205,11 @@ class DebugCommand
 
                 if(!this.heuristicCheck(nodeData))
                 {
-                    return false;
+                    result = false;
                 }if(this.visualControl.isBreakPoint(event))
                 {
                     this.visualControl.removeBreakPoint(event);
-                    return false;
+                    result = false;
                 }
                 break;
 
@@ -211,7 +230,7 @@ class DebugCommand
                 nodeData =  this.visualControl.getNodeData(event);
                 if(!this.heuristicCheck(nodeData))
                 {
-                    return false;
+                    result = false;
                 }
                 break;
 
@@ -236,12 +255,12 @@ class DebugCommand
                     this.listControl.reset();
                 }else{
                     this.stop();
-                    return false;
+                    result = false;
                 }
 
                 break;
         }
-        return event.type;
+        return result !== false ? event.type : false;
     }
     showSavedPath(index)
     {

@@ -61,7 +61,7 @@ function showList(evt, listName) {
 
 function changeSpeed(num) {
 
-    control.changeSpeed(num);
+    control.setDefaultSpeed(num);
 }
 
 

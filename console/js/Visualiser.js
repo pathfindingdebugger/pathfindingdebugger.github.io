@@ -557,6 +557,43 @@ class CustomVisualiser
         this.breakPointVisual.splice(index,1);
     }
 
+    showMessage(message,time)
+    {
+        console.log("SHOW THE BOX");
+        const svgWindow = document.getElementById("svg");
+
+        const svgDimensions = {hieght:svgWindow.getBoundingClientRect().height, width:svgWindow.getBoundingClientRect().width};
+        console.log(svgWindow,svgDimensions);
+        //make text box for clearing
+        this.textArea = new Elem(svgWindow,'g')
+            .attr('id',"textArea");
+        this.textArea.translate(0,svgDimensions.hieght*0.9);
+
+        console.log(this.textArea);
+        //Draw textbox
+        const rect = new Elem(this.textArea.elem,'rect')
+
+            .attr('width','100%')
+            .attr('height','20%')
+            .attr('fill','white')
+            .attr('fill-opacity','0.7')
+            .attr('stroke','black');
+
+        //Write text
+        const text = new Elem(this.textArea.elem,'text')
+            .attr('x',0)
+            .attr('y',25)
+            .attr('font-size',20)
+            .attr('fill','black');
+
+        text.elem.append(document.createTextNode(message));
+
+        setTimeout(()=>{
+                this.textArea.removeElement();
+            }
+            ,time);
+    }
+
 }
 
 
