@@ -6,3 +6,4 @@ const multiply = vec => n => ({x:vec.x*n, y:vec.y*n, z:vec.z*n});
 const add = v1 => v2 => ({x:v1.x + v2.x, y: v1.y + v2.y, z:v1.z + v2.z});
 const sub = origin => destination  => ({x:destination.x - origin.x, y: destination.y-origin.y, z: destination.z - origin.z});
 const vector3 = v2 => ({x:v2.x, y:v2.y, z:0});
+const equal =  v1 => v2 => v1.x === v2.x && v1.y === v2.y && v1.z === v2.z;

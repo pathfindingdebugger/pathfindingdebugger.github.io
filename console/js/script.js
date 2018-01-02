@@ -63,7 +63,10 @@ function changeSpeed(num) {
 
     control.setDefaultSpeed(num);
 }
-
+function changeOpacity(a){
+    $("#opacityOption").text(a);
+    control.visualControl.toggleLines(a);
+}
 
 $(document).ready(function () {
 
@@ -213,5 +216,6 @@ $(document).ready(function () {
 
 
     });
+
 
 });

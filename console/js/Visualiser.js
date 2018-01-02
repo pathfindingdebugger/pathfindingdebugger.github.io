@@ -252,6 +252,10 @@ class CustomVisualiser
         const nodePosition = vector3(node.svg.getCenterPosition());
         const parentPosition = vector3(parent.svg.getCenterPosition());
 
+        if(equal(nodePosition)(parentPosition))
+        {
+            return;
+        }
         let fill, triangle, textX, textY;
         if(node !== parent) {
 
@@ -412,10 +416,19 @@ class CustomVisualiser
             {
                 [0,1,2,3].map(i=>"line"+i).forEach( i =>Object.values(e).filter(s=>s instanceof Elem).forEach(s=>s.removeClass(i)));
                 Object.values(e).filter(s=>s instanceof Elem).forEach(s=>s.removeClass("lineActive"));
+                if(this.lineToggle === "On Mouse Over")
+                {
+                    this.hideEdge(e);
+                }
             }
             else
             {
                 Object.values(e).filter(s=>s instanceof Elem).forEach(s=>s.addClass("line"+index).addClass("lineActive"));
+                if(this.lineToggle === "On Mouse Over")
+                {
+                    this.showEdge(e);
+                }
+
             }
 
         }
@@ -465,22 +478,31 @@ class CustomVisualiser
             .subscribe(e=>(fb !== null)? fb.attr('transform','translate('+(e.clientX+xOffset)+','+(e.clientY+yOffset)+')') : move.unsub);
 
     }
-    toggleLines()
+    toggleLines(type)
     {
-
-        if(this.lineToggle)
+        if (type === "On")
         {
-            //toggle off
-            Object.keys(this.nodes).forEach(k=>this.nodes[k].outgoingEdges.forEach(edge=>this.hideEdge(edge)));
-            this.lineToggle = false;
-        }
-        else
-        {
-            //toggle on
+            //Show all edges
             this.lineToggle = true;
-            Object.keys(this.nodes).forEach(k=>this.nodes[k].outgoingEdges.forEach(edge=>this.showEdge(edge)));
+            this.showLines();
         }
+        if(type === "Off" || type === "On Mouse Over")
+        {
+            //Hide all edges
+            this.hideLines();
+            this.lineToggle = false;
+            if(type === "On Mouse Over")
+            {
+                //Set this.line toggle to show lines
+                this.lineToggle = "On Mouse Over"
+            }
+        }
+
     }
+    showLines(){Object.keys(this.nodes).forEach(k=>this.nodes[k].outgoingEdges.forEach(edge=>this.showEdge(edge)))};
+    hideLines(){Object.keys(this.nodes).forEach(k=>this.nodes[k].outgoingEdges.forEach(edge=>this.hideEdge(edge)))};
+
+
     toggleOpacity()
     {
         this.opacityToggle = !this.opacityToggle;

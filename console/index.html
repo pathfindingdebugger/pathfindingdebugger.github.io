@@ -116,6 +116,10 @@
             <span id="mapText">No Map</span>
         </div>
         <div class="btn4 col-sm-1 col-md-1 col-lg-1">
+            <a class="btn"><i class="material-icons" href="https://pathfindingdebugger.github.io/"></i></a>
+            <span style="padding-left: 10px">Center Camera</span>
+        </div>
+        <div class="btn4 col-sm-1 col-md-1 col-lg-1">
             <a class="btn"><i class="material-icons" href="https://pathfindingdebugger.github.io/">exit_to_app</i></a>
             <span style="padding-left: 10px">Exit</span>
         </div>
@@ -286,7 +290,16 @@
 
                 <div id="otherSettings" class="tabcontent">
                     <h3>Show Lines:</h3>
-                    <label class="switch"> <input type="checkbox" id = "Lines"> <span class="slider1"></span> </label>
+
+                        <a class="changeSpeed dropdown-button btn"  href='#' data-activates='Lines'> <span id="opacityOption">No Data</span></a>
+
+
+                    <ul id='Lines' class='dropdown-content'>
+                        <li><a onclick="changeOpacity('On')" style="color: #7592B5">On</a></li>
+                        <li><a onclick="changeOpacity('On Mouse Over')" style="color: #7592B5">On Highlight</a></li>
+                        <li><a onclick="changeOpacity('Off')" style="color: #7592B5">Off</a></li>
+                    </ul>
+
                     <h3>Change Opacity:</h3>
                     <label class="switch"> <input type="checkbox" id = "Opacity"> <span class="slider1"></span> </label>
 
