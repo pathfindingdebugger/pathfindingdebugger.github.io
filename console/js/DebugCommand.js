@@ -335,7 +335,6 @@ class DebugCommand {
     }
     centerCameraOnCurrent()
     {
-        console.log(this.visualControl.getNodePosition(this.current));
         centerCamera(this.visualControl.svg,this.visualControl.getNodePosition(this.current),this.visualControl.scale)
     }
 }

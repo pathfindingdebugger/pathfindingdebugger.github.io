@@ -215,7 +215,14 @@ $(document).ready(function () {
         }
 
 
-    });
 
+    });
+    $("#centerCameraBtn").click(e=>{
+        control.centerCameraOnCurrent();
+        console.log("THIS ISN't WoRKing")
+    });
+    $("#fitCameraBtn").click(e=>{
+        control.visualControl.fitCamera();
+    })
 
 });

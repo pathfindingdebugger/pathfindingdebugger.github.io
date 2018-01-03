@@ -247,11 +247,11 @@ class CustomVisualiser
     }
     addLine(node,parent,weightValue = null)
     {
-        //if(!node.svg.hasCentre() || !parent.svg.hasCentre())
-        //    return;
+
         const nodePosition = vector3(node.svg.getCenterPosition());
         const parentPosition = vector3(parent.svg.getCenterPosition());
-
+        if(equal(nodePosition)(parentPosition))
+            return;
         let fill, triangle, textX, textY;
         if(node !== parent) {
 
@@ -398,6 +398,10 @@ class CustomVisualiser
             f:this.nodes[e.id].f,
             pId:this.nodes[e.id].pId
         }
+    }
+    getNodePosition(id)
+    {
+        return this.nodes[id].svg.getTransform();
     }
     getParentData(e)
     {
