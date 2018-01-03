@@ -176,6 +176,7 @@ class DebugCommand {
                 console.log(this.costToGoal);
                 break;
             case "expanding":
+                this.current = event.id;
                 this.listControl.removeFromList(lists.open,event);
                 this.visualControl.deleteLine(1);
                 this.visualControl.drawLine(1,event.id);
@@ -331,5 +332,10 @@ class DebugCommand {
         this.currentId = null;
         this.currentNodes = [];
         this.stepForward();
+    }
+    centerCameraOnCurrent()
+    {
+        console.log(this.visualControl.getNodePosition(this.current));
+        centerCamera(this.visualControl.svg,this.visualControl.getNodePosition(this.current),this.visualControl.scale)
     }
 }

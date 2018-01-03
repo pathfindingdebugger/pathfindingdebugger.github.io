@@ -252,10 +252,6 @@ class CustomVisualiser
         const nodePosition = vector3(node.svg.getCenterPosition());
         const parentPosition = vector3(parent.svg.getCenterPosition());
 
-        if(equal(nodePosition)(parentPosition))
-        {
-            return;
-        }
         let fill, triangle, textX, textY;
         if(node !== parent) {
 
@@ -484,7 +480,7 @@ class CustomVisualiser
         {
             //Show all edges
             this.lineToggle = true;
-            this.showLines();
+            Object.keys(this.nodes).forEach(k=>this.nodes[k].outgoingEdges.forEach(edge=>this.showEdge(edge)));
         }
         if(type === "Off" || type === "On Mouse Over")
         {
@@ -616,6 +612,17 @@ class CustomVisualiser
             ,time);
     }
 
+    fitCamera() {
+        this.svg.setAttribute('transform','');
+        const svgBB = document.getElementById("svg").getBoundingClientRect();
+        const viewPortBB = this.svg.getBoundingClientRect();
+        const scaleFactor = Math.min(svgBB.height /viewPortBB.height, svgBB.width /viewPortBB.width);
+        console.log(viewPortBB);
+        const position = {x:viewPortBB.top,y:viewPortBB.left};
+        //new Elem(this.svg,'circle').attr('cx',position.x).attr('cy',position.y).attr('r',10).attr('stroke',"black");
+        //new Elem(this.svg,'path').attr('d','M '+viewPortBB.left+" "+viewPortBB.top+" L"+ viewPortBB.right+" "+viewPortBB.top).attr('stroke','black');
+        centerCamera(this.svg,position,scaleFactor)
+    }
 }
 
 

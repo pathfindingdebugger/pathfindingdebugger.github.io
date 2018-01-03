@@ -7,7 +7,7 @@ function maParser(mapData)
     const height = Number(data.shift().split(' ').pop());
     const width = Number(data.shift().split(' ').pop());
     data.shift();
-    const mData = data.reduce((f,e)=>f+e,'');
+    const mData = data.slice(0,100).reduce((f,e)=>f+e,'');
 
     return {height:height, width:width, mapData:mData};
 }
