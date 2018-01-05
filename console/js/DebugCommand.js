@@ -27,7 +27,7 @@ class DebugCommand {
         // this.visualControl = new CustomVisualiser(data);
         this.listControl = new ListControl(); // In a similar vein to visualControl (which controls, how did you guess it
 
-        this.completedLists = [];
+        this.path = undefined;
         this.map = null;
         this.legend = new Legend(states);
 
@@ -172,6 +172,7 @@ class DebugCommand {
             case "start":
                 this.visualControl.showStart(event);
                 this.visualControl.showGoal(event);
+                this.setPathSaveButton(false);
                 this.costToGoal = this.getCostOfSearch(this.eventCounter);
                 console.log(this.costToGoal);
                 break;
@@ -249,8 +250,10 @@ class DebugCommand {
             case "end":
                 this.visualControl.showGoal(event.id);
                 this.visualControl.drawLine(1,event.id);
-                this.completedLists.push(this.visualControl.lineVisual[1]);
-                this.listControl.addCompletedPath(this,this.completedLists.length-1);
+                this.path = this.visualControl.lineVisual[1];
+
+                this.setPathSaveButton(true);
+
                 if(this.eventCounter+1 < this.eventList.length) {
                     this.visualControl.clearVisual();
                     this.listControl.reset();
@@ -336,5 +339,12 @@ class DebugCommand {
     centerCameraOnCurrent()
     {
         centerCamera(this.visualControl.svg,this.visualControl.getNodePosition(this.current),this.visualControl.scale)
+    }
+
+    setPathSaveButton(value)
+    {
+        document.getElementById("pathCompareTabBtn").disabled = !value;
+        document.getElementById("loadPathBtn").disabled = !value;
+        document.getElementById("savePathBtn").disabled = !value;
     }
 }

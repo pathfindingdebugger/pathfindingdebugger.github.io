@@ -34,6 +34,9 @@ class Elem {
 
         const transformString = this.attr("transform") !== null? this.attr("transform") :  "";
         this.attr("transform",transformString+" translate("+x+","+y+")");
+
+        Elem.center = add(Elem.center)({x:x,y:y,z:0});
+        Elem.centerCount ++;
     }
     addClass(c)
     {
@@ -59,4 +62,7 @@ class Elem {
         return Observable.fromEvent(this.elem, event);
     }
 }
+Elem.center = {x:0,y:0,z:0};
+Elem.centerCount = 0;
+Elem.getCenter = () => {console.log(Elem.center);return divideNumber(Elem.center)(Elem.centerCount)};
 //# sourceMappingURL=svgelement.js.map

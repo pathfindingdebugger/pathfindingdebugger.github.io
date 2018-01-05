@@ -164,9 +164,10 @@
         <!--Event Log Console-->
 
         <div class="tab">
-            <button class="ovrBtn" onclick="showTab(event, 'lists')"style="width:150px">Logs</button>
-            <button class="ovrBtn" onclick="showTab(event, 'sample')"style="width:150px">Samples</button>
-            <button class="ovrBtn" onclick="showTab(event, 'settings')"style="width:150px">Settings</button>
+            <button class="ovrBtn" onclick="showTab(event, 'lists')"style="width:100px">Logs</button>
+            <button class="ovrBtn" onclick="showTab(event, 'validation')" style="width:100px">Validation</button>
+            <button class="ovrBtn" onclick="showTab(event, 'sample')"style="width:100px">Samples</button>
+            <button class="ovrBtn" onclick="showTab(event, 'settings')"style="width:100px">Settings</button>
         </div>
 
         <div id="lists"  class="overTab">
@@ -175,7 +176,6 @@
                     <button class="btn" id="eventListTabClick" onclick="showList(event, 'eventListTab')">EventList</button>
                     <button class="btn" onclick="showList(event, 'openList')">OpenList</button>
                     <button class="btn" onclick="showList(event, 'closedList')">ClosedList</button>
-                    <button class="btn" onclick="showList(event, 'savedPaths')">Saved Paths</button>
                 </div>
 
                 <div id="eventListTab" class="tabcontent">
@@ -190,8 +190,6 @@
                 </div>
 
                 <div id="closedList" class="tabcontent">
-                </div>
-                <div id="savedPaths" class="tabcontent">
                 </div>
                 <script>
                     function showList(evt, listName) {
@@ -216,6 +214,40 @@
                     }
                     document.getElementById("eventListTabClick").click();
                 </script>
+
+            </div>
+
+
+        </div>
+        <div id="validation"  class="overTab">
+            <div class="eventPart col-lg-3">
+                <div class="tab">
+                    <button class="btn" id="pathCompareTabBtn" onclick="showList(event, 'PathCompare')">Path Compare</button>
+                    <button class="btn" onclick="showList(event, 'BPE')">Custom Tests</button>
+                    <button class="btn" onclick="showList(event, 'CommonTest')">Common Tests</button>
+
+                </div>
+
+                <div id="PathCompare" class="tabcontent">
+                    <h3>Save Path</h3>
+                    FileName: <input type="text" id="pathSaveName" value="Path" max="20" size="4">
+                    <a href="javascript:void(0)" id="dlbtn"><input type="button" class="uploadbtn" id="savePathBtn" value="Save Debug"  disabled/></a>
+                    <br>
+                    <h3>Load Path</h3>   <input type="button" class="uploadbtn" id="loadPathBtn" value="Upload Debug" onclick="document.getElementById('pathDataForm').click();"/>
+                    <input id="pathDataForm" type="file" name="datafile" size="40"  style="display:none;" multiple>
+                    <span id="pathDataText">No Data</span><br>
+                </div>
+
+                <div id="BPE" class="tabcontent">
+                    Break Point Expressions
+                </div>
+
+                <div id="CommonTest" class="tabcontent">
+                    Common Tests
+                    <div><h3>Monotonic</h3>   <label class="switch"> <input type="checkbox" id = "Monotonicity" checked> <span class="slider1"></span> </label></div>
+
+                </div>
+
 
             </div>
 
@@ -248,44 +280,14 @@
                     <button id="defaultSubmitPolyAnya" class="modal-action modal-close btn" type='button' style="width:150px">Test Poly Anya</button>
                 </div>
 
-                <script>
-                    function showList(evt, listName) {
-                        // Declare all variables
-                        var i, tabcontent, tablinks;
 
-                        // Get all elements with class="tabcontent" and hide them
-                        tabcontent = document.getElementsByClassName("tabcontent");
-                        for (i = 0; i < tabcontent.length; i++) {
-                            tabcontent[i].style.display = "none";
-                        }
-
-                        // Get all elements with class="tablinks" and remove the class "active"
-                        tablinks = document.getElementsByClassName("tablinks");
-                        for (i = 0; i < tablinks.length; i++) {
-                            tablinks[i].className = tablinks[i].className.replace(" active", "");
-                        }
-
-                        // Show the current tab, and add an "active" class to the button that opened the tab
-                        document.getElementById(listName).style.display = "block";
-                        evt.currentTarget.className += " active";
-                    }
-                    document.getElementById("eventListTabClick").click();
-                </script>
             </div>
         </div>
         <div id="settings" class="overTab">
             <div class="eventPart col-lg-3">
                 <div class="tab">
-                    <button class="btn" onclick="showList(event, 'checks')">Checks</button>
                     <button class="btn" onclick="showList(event, 'floatbox')">Floatbox</button>
                     <button class="btn" onclick="showList(event, 'otherSettings')">Other</button>
-                </div>
-
-                <div id="checks" class="tabcontent">
-                    <div><h3>Monotonic</h3>   <label class="switch"> <input type="checkbox" id = "Monotonicity" checked> <span class="slider1"></span> </label></div>
-                    <h3>Test</h3>   <label class="switch"> <input type="checkbox" id = "pie"> <span class="slider1"></span> </label> <br>
-                    <h3>AnotherTest</h3>   <label class="switch"> <input type="checkbox" id = "cake"> <span class="slider1"></span> </label> <br>
-
                 </div>
 
                 <div id="floatbox" class="tabcontent">
@@ -309,27 +311,7 @@
                 </div>
 
                 <script>
-                    function showList(evt, listName) {
-                        // Declare all variables
-                        var i, tabcontent, tablinks;
 
-                        // Get all elements with class="tabcontent" and hide them
-                        tabcontent = document.getElementsByClassName("tabcontent");
-                        for (i = 0; i < tabcontent.length; i++) {
-                            tabcontent[i].style.display = "none";
-                        }
-
-                        // Get all elements with class="tablinks" and remove the class "active"
-                        tablinks = document.getElementsByClassName("tablinks");
-                        for (i = 0; i < tablinks.length; i++) {
-                            tablinks[i].className = tablinks[i].className.replace(" active", "");
-                        }
-
-                        // Show the current tab, and add an "active" class to the button that opened the tab
-                        document.getElementById(listName).style.display = "block";
-                        evt.currentTarget.className += " active";
-                    }
-                    document.getElementById("eventListTabClick").click();
                 </script>
             </div>
         </div>
@@ -363,7 +345,7 @@
 
 <!--Footer-->
 <div class="footer">
-    <p>As part of the units: FIT1041 and FIT2028 at Monash University, this is a research project supervised by Daniel Harabor and Michael Wybrow, and conducted by Jay John Wingate and Surayez Rahman</p>
+    <p>As part of the units: FIT1041 and FIT2028 at Monash University, this is a research project supervised by Daniel Harabor and Michael Wybrow, and conducted by Jay Wingate and Surayez Rahman</p>
     <h4>Developed at Monash University <img width="40px" height="40px" src="images/monash.png"></h4>
 </div>
 

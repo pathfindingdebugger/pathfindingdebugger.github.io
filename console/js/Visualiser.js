@@ -64,6 +64,7 @@ class CustomVisualiser
         svgElements.push({ "key":"Square", "object":{ "type":"rect", "attributes": [[{"key":"tag","value":"rect"},{"key":"cx","value":" 5 "},{"key":"cy","value":" 5 "},{"key":"x","value":" 0 "},{"key":"y","value":" 0 "},{"key":"width","value":" 1 "},{"key":"height","value":" 10 "},{"key":"stroke","value":"black"}]], "variableNames": []}});
         svgElements.push({ "key":"GridSpace", "object":{ "type":"rect", "attributes": [[{"key":"tag","value":"rect"},{"key":"stroke-alignment","value":"inner"},{"key":"cx","value":" 0.6"},{"key":"cy","value":" 0.6"},{"key":"x","value":" 0.6 "},{"key":"y","value":" 0.6 "},{"key":"width","value":"0.8"},{"key":"height","value":"0.8"},{"key":"stroke-width","value":"0.1"}]], "variableNames": []}});
         svgElements.push({ "key":"Node", "object":{ "type":"circle", "attributes":[[{"key":"tag","value":"circle"},{"key":"cx","value":"0"},{"key":"cy","value":"0"},{"key":"r","value":"1"}]],"variableNames": []}});
+        svgElements.push({ "key":"RoadNode", "object":{ "type":"circle", "attributes":[[{"key":"tag","value":"circle"},{"key":"cx","value":"0"},{"key":"cy","value":"0"},{"key":"r","value":"200"}]],"variableNames": []}});
         svgElements.push({ "key":"AnyaNode", "object":{ "attributes": [[{"key":"r","value":"0.3"},{"key":"cx","value":"0"},{"key":"cy","value":"0"},{"key":"tag","value":"circle"}],[{"key":"x","value":"lx"},{"key":"width","value":"ll"},{"key":"y","value":"lh"},{"key":"tag","value":"rect"},{"key":"stroke-width","value":"0.1"},{"key":"height","value":"0.3"}],[{"key":"d","value":"M 0 0 L lex lh"},{"key":"tag","value":"path"},{"key":"stroke-width","value":"0.3"}],[{"key":"d","value":"M 0 0 L lx lh"},{"key":"tag","value":"path"},{"key":"stroke-width","value":"0.3"}]], "variableNames": ["lx","ll","lh","lex"]}});
         svgElements.push({ "key":"PolyAnyaNode", "object":{ "attributes": [[{"key":"r","value":"0.3"},{"key":"cx","value":"0"},{"key":"cy","value":"0"},{"key":"tag","value":"circle"}],[{"key":"tag","value":"path"},{"key":"fill-opacity","value":"0.3"},{"key":"d","value":"M 0 0 L p1x p1y L p2x p2y Z"}]], "variableNames": ["p1x","p1y","p2x","p2y"]}});
 
@@ -581,7 +582,6 @@ class CustomVisualiser
 
     showMessage(message,time)
     {
-        console.log("SHOW THE BOX");
         const svgWindow = document.getElementById("svg");
 
         const svgDimensions = {hieght:svgWindow.getBoundingClientRect().height, width:svgWindow.getBoundingClientRect().width};
@@ -625,7 +625,51 @@ class CustomVisualiser
         const position = {x:viewPortBB.top,y:viewPortBB.left};
         //new Elem(this.svg,'circle').attr('cx',position.x).attr('cy',position.y).attr('r',10).attr('stroke',"black");
         //new Elem(this.svg,'path').attr('d','M '+viewPortBB.left+" "+viewPortBB.top+" L"+ viewPortBB.right+" "+viewPortBB.top).attr('stroke','black');
-        centerCamera(this.svg,position,scaleFactor)
+
+        console.log();
+        centerMap(this.svg,scaleFactor)
+    }
+
+    getPathData(path){ return path.map(id => ({id:id, g:this.nodes[id].g}))};
+
+    comparePath(pathData)
+    {
+        if(this.path !== undefined)
+            this.clearComparePath();
+        this.path = pathData;
+        console.log(pathData);
+        pathData.reduce((v,node)=>{
+            //Compare values
+            if(this.nodes[node.id] !== undefined)
+            {
+                if( this.nodes[node.id].g !== node.g)
+                {
+                    console.log(node.id,"FAIL");
+                    //Colour node
+                    this.nodes[node.id].svg.addClass("badPath");
+                    //Message log
+
+                    //return status
+                    return false;
+                }
+                else {
+                    console.log(node.id,"PASS");
+
+                    //Colour node
+                    this.nodes[node.id].svg.addClass("goodPath");
+                    //return status
+                    return true
+                }
+            }
+            return true;
+
+
+
+        })
+    }
+    clearComparePath()
+    {
+        this.path.forEach(n => this.nodes[n.id] !== undefined? this.nodes[n.id].svg.removeClass("goodPath").removeClass("badPath"):null);
     }
 }
 

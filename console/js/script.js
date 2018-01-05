@@ -37,7 +37,9 @@ var playing = false;
 
 
 
+
 function showList(evt, listName) {
+    console.log("CAKE");
     // Declare all variables
     var i, tabcontent, tablinks;
 
@@ -223,6 +225,29 @@ $(document).ready(function () {
     });
     $("#fitCameraBtn").click(e=>{
         control.visualControl.fitCamera();
-    })
+    });
+    $("#savePathBtn").click(e=>{
+        var dlbtn = document.getElementById("dlbtn");
+        console.log(control.path);
+        var file = new Blob([JSON.stringify(control.visualControl.getPathData(control.path))], {type: "text/plain"});
+        dlbtn.href = URL.createObjectURL(file);
+        dlbtn.download = document.getElementById("pathSaveName").value+".path";
+    });
 
+    $("#pathDataForm").change(f=>{
+        const file = f.target.files[0];
+        $("#dataText").text(file.name);
+
+        var picReader = new FileReader();
+
+        picReader.addEventListener("load", function(event) {
+
+            var currentJSON = JSON.parse(event.target.result);
+            control.visualControl.comparePath(currentJSON)
+        });
+
+        //Read the text file
+        picReader.readAsText(file);
+
+    })
 });
