@@ -192,7 +192,6 @@ class DebugCommand {
                 break;
 
             case "generating":
-
                 this.currentNodes.push(event);
                 this.visualControl.addNodeFromEvent(event);
                 this.visualControl.setNodeState(event.id,states.CurrentFrontier);
@@ -338,7 +337,8 @@ class DebugCommand {
     }
     centerCameraOnCurrent()
     {
-        centerCamera(this.visualControl.svg,this.visualControl.getNodePosition(this.current),this.visualControl.scale)
+        //centerCamera(this.visualControl.svg,this.visualControl.getNodePosition(this.current),this.visualControl.scale)
+        scaleSVGGroupToView("svg","viewport",10)
     }
 
     setPathSaveButton(value)

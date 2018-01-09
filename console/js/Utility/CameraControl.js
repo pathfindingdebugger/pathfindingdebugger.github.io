@@ -37,3 +37,52 @@ function centerMap(currentSvg,scale)
     console.log(view);
     currentSvg.setAttribute('transform',currentSvg.getAttribute('transform')+'translate('+view.x +','+ view.y+')');
 }
+
+function setCTM(element, matrix)
+{
+    var s = "matrix(" + matrix.a + "," + matrix.b + "," + matrix.c + "," + matrix.d + "," + matrix.e + "," + matrix.f + ")";
+
+    element.setAttribute("transform", s);
+}
+
+function scaleSVGGroupToView(svgId, svgGroupId, padding)
+{
+    var svg = document.getElementById(svgId);
+    var svgW = parseInt(document.defaultView.getComputedStyle(svg, "").getPropertyValue("width"));
+    var svgH = parseInt(document.defaultView.getComputedStyle(svg, "").getPropertyValue("height"));
+
+    // Get group within SVG document that we want to scale to fit.
+    var doc = svg.contentDocument;
+    var group = document.getElementById(svgGroupId);
+
+    // Width and height of group.
+    var groupW = group.getBoundingClientRect().width;
+    var groupH = group.getBoundingClientRect().height;
+
+    // Center positions of group.
+    var groupCX = group.getBoundingClientRect().x + (groupW / 2);
+    var groupCY = group.getBoundingClientRect().y + (groupH / 2);
+
+    // Work out how much we need to scale to fit in X and Y,
+    // then use the smaller of the two.
+    var scaleX = (svgW - padding) / groupW;
+    var scaleY = (svgH - padding) / groupH;
+    var scale = Math.min(scaleY, scaleX);
+
+    // Centre the scaled group in the view.
+    var desiredX = (svgW / 2) - (groupCX * scale);
+    var desiredY = (svgH / 2) - (groupCY * scale);
+
+    var matrix = group.getCTM();
+    matrix.a = 1;
+    matrix.b = 0;
+    matrix.c = 0;
+    matrix.d = 1;
+    matrix.e = 0;
+    matrix.f = 0;
+
+    matrix = matrix.translate(desiredX, desiredY);
+    matrix = matrix.scale(scale);
+
+    setCTM(group, matrix);
+}

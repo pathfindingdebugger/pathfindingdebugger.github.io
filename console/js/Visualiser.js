@@ -140,10 +140,17 @@ class CustomVisualiser
 
     addNodeFromEvent(e)
     {
-
+        console.log(this.nodes);
+        if(this.endNode !== e.id && this.nodes[e.id] !== undefined )
+        {
+            this.setNodeValues(e);
+            return;
+        }
+        let parentRecordCount;
         if(e.pId !== "null" && e.pId !== null && this.nodes[e.pId] !== undefined)
         {
-            this.nodes[e.pId].children.push(e.id);
+            parentRecordCount = this.nodes[e.pId].records.length-1;
+            this.getLastRecord(e.pId).children.push(e.id);
         }
         else
         {
@@ -173,49 +180,70 @@ class CustomVisualiser
         const point = this.nodePositions[this.positionIndecies[e.id]];
         newElement.translate(point.x,point.y);
         newElement.attr('initialStroke',newElement.attr('stroke'));
-
         //Node data
         this.nodes[e.id] = {
             id:e.id,
-            pId: e.pId,
-            childIndex: e.pId !== null && e.pId !== "null" && this.nodes[e.pId] !== undefined ? this.nodes[e.pId].children.indexOf(e.id):0,
 
-            state:states.inFrontier,
+            records:[{
+                    eventId:e.id,
+                    pId: e.pId,
+                    pRecord:parentRecordCount,
+                    childIndex: e.pId !== null && e.pId !== "null" && this.nodes[e.pId] !== undefined ? this.getLastRecord(e.pId).children.indexOf(e.id):0,
 
-            g: e.g,
-            f: e.f,
-            h: e.f - e.g,
+                    state:states.inFrontier,
+                    eventData:e,
+                    children:[]
+            }],
 
-            svg:newElement,
-            children:[],
+            svg:newElement.attr('id',e.id),
             incomingEdges:[],
             outgoingEdges:[],
 
-            eventData:e
+
         };
 
         this.nodes[e.id].svg.observeEvent('mouseover')
         //.filter(e => this.graphNode[id].svgElem.attr("fill") !== 'white'&&this.graphNode[id].attr("fill") !== '#fff220')
         .subscribe(a => {
-
+            let currentRecord = this.nodes[e.id].records.length-1;
             if(this.opacityToggle)
             {
                 this.svg.setAttribute('stroke-opacity',0.3);
                 this.svg.setAttribute('fill-opacity',0.3);
             }
-            this.generateFloatBox(a.clientX,a.clientY,e.id);
-            this.drawParentLines(e.id);
+
+            this.nodes[e.id].svg.observeEvent('mousedown')
+                .subscribe(f=>{
+                    //Delete last box
+                    this.deleteFloatBox();
+
+                    //Step the current record
+                    currentRecord = (currentRecord + 1)%this.nodes[e.id].records.length;
+
+                    //Make new box
+                    this.generateFloatBox(f.clientX,f.clientY,e.id,currentRecord);
+
+                    //Update lines and node state
+                    this.drawLine(0,e.id,currentRecord);
+                    this.setNodeState(e.id,this.nodes.records[currentRecord].state);
+                });
+
+            this.generateFloatBox(a.clientX,a.clientY,e.id,currentRecord);
             this.drawLine(0,e.id);
+
             this.nodes[e.id].outgoingEdges.forEach(e=>this.activateEdge(e,2));
+            //this.getLastRecord(e.id).forEach(e=>this.activateEdge(e,2));
             this.nodes[e.id].svg.observeEvent('mouseout')
                 .subscribe(ev =>{
                     this.svg.setAttribute('stroke-opacity',1);
                     this.svg.setAttribute('fill-opacity',1);
                     this.nodes[e.id].outgoingEdges.forEach(l=>this.activateEdge(l,-1));
-                    this.clearParentLines(e.id);
-                    this.deleteLine(e.id);
+                    //this.getLastRecord(e.id).forEach(l=>this.activateEdge(l,-1));
+                    this.deleteLine(0);
                     this.unhighlightNode(e.id);
-                    this.renderLine(1)
+                    this.renderLine(1);
+                    console.log(this.nodes[e.id].records);
+                    this.setNodeState(e.id,this.getLastRecord(e.id).state)
                 });
         });
 
@@ -234,16 +262,6 @@ class CustomVisualiser
         else
         {
             centerCamera(this.svg,this.nodes[e.id].svg.getCenterPosition(),this.scale)
-            /*
-            const scaleFactor = this.scale + 12;
-            this.svg.setAttribute('transform','scale('+scaleFactor+')'); //Zoom so the graph isn't super small, is based off of scale
-            //Center camera on node
-            const nodeVector = vector3(this.nodes[e.id].svg.getCenterPosition());
-            const bounds = {x:document.getElementById("svg").getBoundingClientRect().width,y:document.getElementById("svg").getBoundingClientRect().height};
-
-            //const view = add(multiply(nodeVector)(-1))(multiply(bounds)(0.5));
-            const view = sub(nodeVector)(multiply(multiply(bounds)(1/scaleFactor))(0.5)); //Need to take into account scale
-            this.svg.setAttribute('transform',this.svg.getAttribute('transform')+'translate('+view.x +','+ view.y+') ');*/
         }
     }
     addLine(node,parent,weightValue = null)
@@ -284,7 +302,7 @@ class CustomVisualiser
         }
         const weight = new Elem(this.svg,'text').attr('x',textX).attr('y',textY).attr('font-size',this.nodeSize/2).attr('fill','black').attr('stroke-width',0);
 
-        const weightText = weightValue === null ? node.g - parent.g : weightValue;
+        const weightText = weightValue === null ? this.getLastRecord(node.id).eventData.g - this.getLastRecord(parent.id).eventData.g : weightValue;
 
         weight.elem.append(document.createTextNode(weightText));
 
@@ -296,69 +314,74 @@ class CustomVisualiser
         if(!this.lineToggle)
             this.hideEdge(line)
     }
-    drawParentLines(id)
-    {
-        this.nodes[id].incomingEdges.forEach((e,i)=>{
-            this.activateEdge(e,3);
-            this.drawLine(i+3,e.pId);
-        })
-    }
-    clearParentLines(id)
-    {
-        this.nodes[id].incomingEdges.forEach((e,i)=>{
-            this.activateEdge(e,-1);
-            this.deleteLine(i+3);
-        })
-    }
-    drawLine(index,childId)
+    drawLine(index,childId,recordNumber = this.nodes[childId].records.length-1)
     {
         if(this.lineVisual[index] !== null)
         {
             this.deleteLine(index);
         }
         //Get each node on path
-        const pointList = (id,list)=> id !== null && id !== undefined ? pointList(this.nodes[id].pId, list.concat([id])) : list;
+        const pointList = (id,recNum,list)=> {
+            if(id !== null && id !== undefined)
+            {
+                return pointList(this.getRecord(id,recNum).pId,this.getRecord(id,recNum).pRecord, list.concat([{id:id,pR:this.getRecord(id,recNum).pRecord}]))
+            }else{
+              return list;
+            }
+        };
+
+        //const pointList = (id,list)=> id !== null && id !== undefined ? pointList(this.getLastRecord(id).pId, list.concat([id])) : list;
+
         //Change their stroke color
-        this.lineVisual[index] = pointList(childId,[]);
+        this.lineVisual[index] = pointList(childId,recordNumber,[]);
         this.renderLine(index);
 
     }
-    renderLine(index)
+    renderLine(lineIndex,render=true)
     {
-        if(this.lineVisual[index] !== null)
-            this.lineVisual[index].forEach((id,i)=>{
+        if(this.lineVisual[lineIndex] !== null)
+        {
+            this.lineVisual[lineIndex].forEach(({id,pR},i)=>{
                 if(this.nodes[id] != undefined)
                 {
-                    this.nodes[id].svg.addClass("path"+Math.min(index,3));
-                    this.nodes[id].svg.attr('stroke-width',this.scale*this.strokeScale*2);
-                    if(this.nodes[id].pId !== null && this.nodes[id].pId !== undefined)
+                    if(render)
                     {
-                        const parent = this.nodes[id].pId;
-                        if(parent !== undefined && this.nodes[parent] !== undefined)
-                           //this.setLineColor(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],index === 0? 'red': index === 1 ?'#FF9F1C': index === 2 ? 'blue' :'green')
-                            this.activateEdge(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],Math.min(index,3))
+                        this.nodes[id].svg.addClass("path"+Math.min(lineIndex,3));
+                        this.nodes[id].svg.attr('stroke-width',this.scale*this.strokeScale*2);
+                    }
+                    else
+                    {
+                        this.unhighlightNode(id);
+                    }
+                    if(this.getRecord(id,pR) != null && this.getRecord(id,pR).pId !== null && this.getRecord(id,pR).pId !== undefined)
+                    {
+                        const parent = this.getRecord(id,pR).pId;
+                        if(parent !== undefined && this.nodes[parent] !== undefined){
+                            const line = this.nodes[parent].outgoingEdges.filter(l=>l.cId == id)[0];
+
+                            this.activateEdge(line,Math.min(render?lineIndex:-1,3));
+                        }
+
                     }
                 }
             });
-    }
-    deleteLine(index)
-    {
-        if(this.lineVisual[index] !== null && this.lineVisual[index] !== undefined)
-        {
-            this.lineVisual[index].forEach(id =>this.unhighlightNode(id));
         }
 
     }
-    unhighlightNode(id){
+    deleteLine(index)
+    {
+        this.renderLine(index,false)
+    }
+    unhighlightNode(id,recordNumber = -1){
+            const record = recordNumber !== -1 ? this.getRecord(id,recordNumber) : this.getLastRecord(id);
             [0,1,2,3].map(i=>"path"+i).forEach(i=> this.nodes[id].svg.removeClass(i));
 
             this.nodes[id].svg.attr('stroke-width',this.scale*this.strokeScale);
-
-            if(this.nodes[id].pId !== null && this.nodes[id].pId !== "null")
+            /*if(record.pId !== null && record.pId !== "null")
             {
-                const parent = this.nodes[id].pId;
-                this.activateEdge(this.nodes[parent].outgoingEdges[this.nodes[id].childIndex],-1)
-            }
+                const parent = this.getLastRecord(id).pId;
+                this.activateEdge(this.nodes[parent].outgoingEdges[record.childIndex],-1)
+            }*/
     }
     setNodeState(id,state)
     {
@@ -375,29 +398,53 @@ class CustomVisualiser
     }
     setNodeValues(event)
     {
-        this.nodes[event.id].f = event.f;
-        this.nodes[event.id].g = event.g;
-        this.nodes[event.id].h = event.f - event.g;
+        const records = this.nodes[event.id].records;
+        const currentRecord = records[records.length-1];
+        const newRecord =
+        {
+            state:"inFrontier",
+            eventData:{},
+            children:currentRecord.children
+        };
 
-        Object.keys(event).forEach(k=>this.nodes[event.id].eventData[k] = event[k]);
+        Object.keys(event).forEach(k=>newRecord.eventData[k] = event[k]);
 
         //set parent if different
-        if(event.pId !== this.nodes[event.id].pId)
+        if(event.pId !== currentRecord.pId)
         {
-            this.nodes[event.id].pId = event.pId;
-            this.nodes[event.pId].children.push(event.id);
-            this.nodes[event.id].childIndex = this.nodes[event.pId].children.indexOf(event.id);
+
+            newRecord.pId = event.pId;
+            newRecord.pRecord = this.nodes[event.pId].records.length-1;
+            newRecord.children.push(event.id);
+            newRecord.childIndex = this.getLastRecord(event.pId).children.indexOf(event.id);
             this.addLine(this.nodes[event.id],this.nodes[event.pId]);
+
         }
+        else
+        {
+            newRecord.pId = currentRecord.pId;
+            newRecord.pRecord = currentRecord.pRecord;
+            newRecord.childIndex = currentRecord.childIndex;
+
+            //Check if there are any differences
+            if(currentRecord.state == newRecord.state &&
+               Object.keys(currentRecord.eventData).reduce((a,key)=>a && currentRecord.eventData[key] === newRecord.eventData[key]))
+               return;
+        }
+
+        this.nodes[event.id].records.push(newRecord);
     }
-    getNodeData(e)
+    getNodeData(e,r)
     {
+        const records = this.nodes[e.id].records;
+        const currentRecord = records[r !== undefined? r : records.length-1];
         return{
             id:e.id,
-            h:this.nodes[e.id].h,
-            g:this.nodes[e.id].g,
-            f:this.nodes[e.id].f,
-            pId:this.nodes[e.id].pId
+            h:currentRecord.h,
+            g:currentRecord.g,
+            f:currentRecord.f,
+            pId:currentRecord.pId,
+            pr:currentRecord.pRecord
         }
     }
     getNodePosition(id)
@@ -406,8 +453,9 @@ class CustomVisualiser
     }
     getParentData(e)
     {
+
         const currentNode = this.getNodeData(e);
-        return currentNode.pId !== null && currentNode.pId !== "null" ? this.getNodeData({id:currentNode.pId}) : null;
+        return currentNode.pId != null && currentNode.pId != "null" ? this.getNodeData({id:currentNode.pId}) : null;
     }
     activateEdge(e,index)
     {
@@ -448,14 +496,17 @@ class CustomVisualiser
         edge.triangle.attr('visibility',"hidden");
     }
 
-    generateFloatBox(mouseX,mouseY,id) {
+    generateFloatBox(mouseX,mouseY,id,recordNumber = -1) {
 
+
+        const record = recordNumber !== -1 ? this.getRecord(id,recordNumber) : this.getLastRecord(id);
+        console.log(record);
         const svg =document.getElementById("svg");
         //Calculate position based on parent position
-        const parent = this.nodes[this.nodes[id].pId];
+        const parent = this.nodes[record.pId];
 
-        const xDir = this.nodes[id].pId !== null ? Math.sign(Number(this.nodes[id].svg.attr('cx')) -Number(parent.svg.attr('cx'))):0;
-        const yDir = xDir === 0? 1 : this.nodes[id].pId !== null ? Math.sign(Number(this.nodes[id].svg.attr('cy')) -Number(parent.svg.attr('cy'))):-1;
+        const xDir = record.pId !== null ? Math.sign(Number(this.nodes[id].svg.attr('cx')) -Number(parent.svg.attr('cx'))):0;
+        const yDir = xDir === 0? 1 : record.pId !== null ? Math.sign(Number(this.nodes[id].svg.attr('cy')) -Number(parent.svg.attr('cy'))):-1;
 
         const xOffset = 100*xDir;
         const yOffset = yDir*100; //Just to move it away from mouse
@@ -464,7 +515,7 @@ class CustomVisualiser
         const newY = mouseY + yOffset;
 
         //Hand position and node data to fbController to generate the box, get the returned box
-        const fb = this.floatBoxControl.generateFloatBox(newX,newY,this.nodes[id]);
+        const fb = this.floatBoxControl.generateFloatBox(newX,newY,this.nodes[id],recordNumber);
 
         const mout = this.nodes[id].svg.observeEvent('mouseout')
             .subscribe(e=>{this.floatBoxControl.deleteFloatBox()});
@@ -479,13 +530,18 @@ class CustomVisualiser
             .subscribe(e=>(fb !== null)? fb.attr('transform','translate('+(e.clientX+xOffset)+','+(e.clientY+yOffset)+')') : move.unsub);
 
     }
+    deleteFloatBox()
+    {
+        this.floatBoxControl.deleteFloatBox()
+    }
     toggleLines(type)
     {
         if (type === "On")
         {
             //Show all edges
             this.lineToggle = true;
-            Object.keys(this.nodes).forEach(k=>this.nodes[k].outgoingEdges.forEach(edge=>this.showEdge(edge)));
+            this.showLines();
+            //Object.keys(this.nodes).forEach(k=>this.nodes[k].outgoingEdges.forEach(edge=>this.showEdge(edge)));
         }
         if(type === "Off" || type === "On Mouse Over")
         {
@@ -570,7 +626,6 @@ class CustomVisualiser
     removeBreakPoint(id)
     {
         const index = this.breakPoints.indexOf(id);
-        console.log(index);
         this.removeBreakPointAtIndex(index);
     }
     removeBreakPointAtIndex(index)
@@ -585,13 +640,11 @@ class CustomVisualiser
         const svgWindow = document.getElementById("svg");
 
         const svgDimensions = {hieght:svgWindow.getBoundingClientRect().height, width:svgWindow.getBoundingClientRect().width};
-        console.log(svgWindow,svgDimensions);
         //make text box for clearing
         this.textArea = new Elem(svgWindow,'g')
             .attr('id',"textArea");
         this.textArea.translate(0,svgDimensions.hieght*0.9);
 
-        console.log(this.textArea);
         //Draw textbox
         const rect = new Elem(this.textArea.elem,'rect')
 
@@ -621,12 +674,10 @@ class CustomVisualiser
         const svgBB = document.getElementById("svg").getBoundingClientRect();
         const viewPortBB = this.svg.getBoundingClientRect();
         const scaleFactor = Math.min(svgBB.height /viewPortBB.height, svgBB.width /viewPortBB.width);
-        console.log(viewPortBB);
         const position = {x:viewPortBB.top,y:viewPortBB.left};
         //new Elem(this.svg,'circle').attr('cx',position.x).attr('cy',position.y).attr('r',10).attr('stroke',"black");
         //new Elem(this.svg,'path').attr('d','M '+viewPortBB.left+" "+viewPortBB.top+" L"+ viewPortBB.right+" "+viewPortBB.top).attr('stroke','black');
 
-        console.log();
         centerMap(this.svg,scaleFactor)
     }
 
@@ -637,7 +688,6 @@ class CustomVisualiser
         if(this.path !== undefined)
             this.clearComparePath();
         this.path = pathData;
-        console.log(pathData);
         pathData.reduce((v,node)=>{
             //Compare values
             if(this.nodes[node.id] !== undefined)
@@ -671,6 +721,15 @@ class CustomVisualiser
     {
         this.path.forEach(n => this.nodes[n.id] !== undefined? this.nodes[n.id].svg.removeClass("goodPath").removeClass("badPath"):null);
     }
+
+    getLastRecord(id)
+    {
+        const records = this.nodes[id].records;
+        return records[records.length-1];
+    }
+    getRecord(id,i)
+    {
+        const records = this.nodes[id].records;
+        return records[i];
+    }
 }
-
-

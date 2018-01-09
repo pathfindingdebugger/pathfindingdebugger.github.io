@@ -3,7 +3,6 @@ class FloatBoxControl
     constructor(data,svgElem)
     {
         this.svg = document.getElementById("svg");
-        console.log(data.svgObjects);
         if(data.svgObjects !== undefined)
         {
             this.variableNames = data.svgObjects.reduce((m,k)=>{m[k.key] = k.object.variableNames;return m},{});
@@ -66,7 +65,7 @@ class FloatBoxControl
         return this.getShown().length;
     }
 
-    generateFloatBox(x,y,node)
+    generateFloatBox(x,y,node,recordId)
     {
         //Delete current floatbox
         this.deleteFloatBox();
@@ -79,10 +78,10 @@ class FloatBoxControl
         const nonVariableList = indexOfVariable === -1? showList : showList.filter((e,i)=>i!==indexOfVariable);
 
         //If variables are to be shown we get a list which consists of name value pairs
-        const variableList = indexOfVariable !== -1? this.variableNames[node.eventData.svgType].map((name,i)=>({key:name,value:node.eventData["variables"][i]})):[];
+        const variableList = indexOfVariable !== -1? this.variableNames[node.records[recordId].eventData.svgType].map((name, i)=>({key:name,value:node.eventData["variables"][i]})):[];
 
         //we take the non variable list and map it to also have name value pairs
-        const shownValues = nonVariableList.map(e=>({key:e.key,value:node.eventData[e.key]})).concat(variableList);
+        const shownValues = nonVariableList.map(e=>({key:e.key,value:node.records[recordId].eventData[e.key]})).concat(variableList);
 
         //We then can draw the floatbox and use the shownValues list which includes all data
         const textFont = 20;
@@ -107,6 +106,17 @@ class FloatBoxControl
             .attr("stroke-width",3)
             .attr("stroke",getComputedStyle(node.svg.elem).fill)
             .attr('fill-opacity',0.8);
+
+        //Draw a circle for each records
+        for(let i = 0; i < node.records.length; i++)
+        {
+            const record = new Elem(this.floatBox.elem,'circle')
+                .attr('cx',(i*20)-50)
+                .attr('cy',-(textFont+5))
+                .attr('r',10)
+                .attr('stroke','black')
+                .attr('fill',i === recordId?'red':'white')
+        }
 
         //For each shown value
         shownValues.forEach((v,i)=>{
