@@ -67,6 +67,7 @@ class FloatBoxControl
 
     generateFloatBox(x,y,node,recordId)
     {
+        console.log("Coords : ",x,y);
         //Delete current floatbox
         this.deleteFloatBox();
 
@@ -136,7 +137,7 @@ class FloatBoxControl
         const maxSize = elements.map(e=>e.elem.getBoundingClientRect().right - e.elem.getBoundingClientRect().left).reduce((i,j)=> i > j ? i : j);
         box.attr('width',maxSize+8);
         this.floatBox.attr('transform','translate('+x+','+y+')');
-
+        console.log(this.floatBox.attr('transform'));
         return this.floatBox;
     }
 

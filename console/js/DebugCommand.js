@@ -24,6 +24,7 @@ class DebugCommand {
     //It is initiated when the user uploads a file
     constructor() {
         this.testStatus = [true];
+        this.mapData = {matchingId:true};
         // this.visualControl = new CustomVisualiser(data);
         this.listControl = new ListControl(); // In a similar vein to visualControl (which controls, how did you guess it
 
@@ -32,14 +33,21 @@ class DebugCommand {
         this.legend = new Legend(states);
 
         this.resetMap = type => newMap => {
-            console.log("NG", this);
+            this.mapData.type = type;
+            this.mapData.data = newMap;
             //Reset the debugger
             if (this.map != undefined) {
                 this.map.reset();
             }
-            this.map = new Map(type, newMap, 1);
-            this.reset()
+            this.map = new Map(type, newMap, 1,this.mapData.matchingId);
+
         };
+        this.changeMap = type => newMap => {
+            this.mapData.type = type;
+            this.mapData.data = newMap;
+            this.resetMap(type, newMap);
+            this.reset()
+        }
 
 
     }
@@ -59,10 +67,8 @@ class DebugCommand {
                         //if(result !== "expanding")
                            this.eventCounter++;
 
-                        console.log(result);
                         if (result === false) {
                             this.stop();
-                            console.log("Should've stopped");
                             return;
                         }
                     }
@@ -77,7 +83,7 @@ class DebugCommand {
                 }
 
 
-            }, speed);
+            }, this.defaultSpeed);
 
     }
 
@@ -135,7 +141,7 @@ class DebugCommand {
             if(this.eventList[i].type === "end")
             {
                 console.log("End is at"+i);
-                for(j = i ; j > 0 ; j--)
+                for(let j = i ; j > 0 ; j--)
                 {
                     if(this.eventList[j].x === this.eventList[startIndex].endX && this.eventList[j].y === this.eventList[startIndex].endY)
                     {
@@ -197,12 +203,14 @@ class DebugCommand {
                 this.visualControl.setNodeState(event.id,states.CurrentFrontier);
                 this.visualControl.setNodeValues(event);
 
+                if(this.eventCounter !== 0)
                 this.listControl.addToList(lists.open,event);
 
 
                 this.visualControl.drawLine(1,event.id);
 
-                nodeData =  this.visualControl.getNodeData(event);
+                nodeData =  this.visualControl.getNodeData(event.id);
+                console.log(nodeData);
 
                 if(!this.heuristicCheck(nodeData))
                 {
@@ -219,7 +227,7 @@ class DebugCommand {
                 this.currentNodes.push(event);
                 this.visualControl.setNodeState(event.id, states.CurrentFrontier);
                 this.listControl.updateList(lists.open,event);
-                nodeData = this.visualControl.getNodeData(event);
+                nodeData = this.visualControl.getNodeData(event.id);
 
 
 
@@ -228,7 +236,7 @@ class DebugCommand {
 
                 this.visualControl.deleteLine(1);
                 this.visualControl.drawLine(1,event.id);
-                nodeData =  this.visualControl.getNodeData(event);
+                nodeData =  this.visualControl.getNodeData(event.id);
                 if(!this.heuristicCheck(nodeData))
                 {
                     result = false;
@@ -265,12 +273,7 @@ class DebugCommand {
         }
         return result !== false ? event.type : false;
     }
-    showSavedPath(index)
-    {
-        console.log(this,"CAKE!");
-        this.visualControl.lineVisual[2] = this.completedLists[index];
-        this.visualControl.renderLine(2);
-    }
+
     toggleTest(test)
     {
         console.log("TOGGLE ",test);
@@ -280,7 +283,8 @@ class DebugCommand {
     heuristicCheck(nodeData)
     {
         const marginError = 0.0005;
-        const parentData = this.visualControl.getParentData(nodeData);
+        console.log(nodeData);
+        const parentData = this.visualControl.getParentData(nodeData.id);
         if(parentData === null || parentData === "null")
         {
             return true;
@@ -302,22 +306,20 @@ class DebugCommand {
             this.listControl.addErrorAt(nodeData,"Might not be admissible");
             //return false;
         }
+
         return true;
 
     }
-    clearMap()
-    {
-        this.map.reset();
-    }
     reset(data)
     {
+
         this.eventCounter = 0;
         this.stop();
         if(this.visualControl !== undefined)
         {
             this.visualControl.clearVisual();
         }
-
+        if(this.mapData !== undefined) this.resetMap(this.mapData.type)(this.mapData.data);
         this.listControl.reset();
 
         if(data !== undefined)
@@ -346,5 +348,10 @@ class DebugCommand {
         document.getElementById("pathCompareTabBtn").disabled = !value;
         document.getElementById("loadPathBtn").disabled = !value;
         document.getElementById("savePathBtn").disabled = !value;
+    }
+
+    toggleMatchingId()
+    {
+        this.mapData.matchingId = !this.mapData.matchingId;
     }
 }

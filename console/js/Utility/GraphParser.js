@@ -1,5 +1,6 @@
 function parseGraph(co,gr)
 {
+    console.log(co.slice(0,100),gr.slice(0,100));
     const points = [];
     const coordData = co.split('\n');
     let firstX = null, firstY = null;
@@ -14,10 +15,10 @@ function parseGraph(co,gr)
 
                 console.log(firstX);
             }
-
             points.push({id:Number(lineData[1])-1,x:Number(lineData[2]) - firstX,y:Number(lineData[3]) - firstY})
         }
     });
+    console.log(points);
     const edges = [];
     const edgeData = gr.split('\n');
     edgeData.forEach(e=> {
@@ -27,6 +28,5 @@ function parseGraph(co,gr)
             edges.push({v1:Number(edgeData[1])-1,v2:Number(edgeData[2])-1,weight:edgeData[3]});
         }
     });
-
     return {vertex:points,edges:edges};
 }

@@ -1,6 +1,7 @@
+const elemType = {line:"line", node:"node",background:"background"};
 class Elem {
 
-    constructor(svg, tag,front=true) {
+    constructor(svg, tag,type = "node") {
         if(typeof(tag) === "string")
         {
             this.elem = document.createElementNS(svg.namespaceURI, tag);
@@ -21,7 +22,17 @@ class Elem {
 
         }
         this.translates = [];
-        (front) ? svg.appendChild(this.elem) : svg.insertBefore(this.elem, svg.childNodes[0]);
+        switch(type)
+        {
+            case "node":
+                svg.appendChild(this.elem);
+                break;
+            case "line":
+                svg.insertBefore(this.elem, document.getElementById("lines"));
+                break;
+            case "background":
+                svg.insertBefore(this.elem, document.getElementById("background"));
+        }
 
     }
     removeElement()

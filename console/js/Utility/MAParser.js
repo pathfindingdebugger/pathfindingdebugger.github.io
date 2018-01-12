@@ -1,5 +1,6 @@
 function maParser(mapData)
 {
+    console.log(mapData);
     const data = mapData.split('\n');
 
     data.shift();

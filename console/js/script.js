@@ -12,9 +12,6 @@
  *
  *
  *
- * Known issues:
- *
- *  - Zooming (while panning) on Chrome has some issues
  *
  * Releases:
  *
@@ -24,19 +21,12 @@
  */
 
 
-var currentEventNum = 0;
-var eventItems = [];
 var openList = [];
 var closedList = [];
 var dataReceived;
 let i = 0;
-var j = 0;
 var speed = 1;
 let control = new DebugCommand();
-var playing = false;
-
-
-
 
 function showList(evt, listName) {
     console.log("CAKE");
@@ -199,21 +189,21 @@ $(document).ready(function () {
             console.log(f.target.files[0].name.split('.').pop());
             if(f.target.files[0].name.split('.').pop() === ".co")
             {
-                co =  f.target.files[0];
-                gr =  f.target.files[1];
+                co =  f.target.files[1];//0
+                gr =  f.target.files[0];
             }
             else
             {
-                co =  f.target.files[1];
-                gr =  f.target.files[0];
+                co =  f.target.files[0];
+                gr =  f.target.files[1];//0
             }
 
-            readFile(co,c => readFile(gr,g => control.resetMap("Graph")({gr:c,co:g})))
+            readFile(co,c => readFile(gr,g => control.changeMap("Graph")({gr:c,co:g})))
         }
         else
         {
 
-            readFile(file,control.resetMap(file.name.split(".").slice(-1)[0]))
+            readFile(file,control.changeMap(file.name.split(".").slice(-1)[0]))
         }
 
 
@@ -249,5 +239,10 @@ $(document).ready(function () {
         //Read the text file
         picReader.readAsText(file);
 
-    })
+    });
+
+    $("#matchingId").click(e=> {
+        control.toggleMatchingId();
+    });
+
 });

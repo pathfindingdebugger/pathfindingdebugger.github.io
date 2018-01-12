@@ -95,6 +95,7 @@ class CustomVisualiser
     //Takes an event and adds it to positionList returns false if unconstrained
     addEventToPositionList(e)
     {
+        //this.max = {x:0,y:0};
         //If event generated a node we want to add it to node positions and add its parent line
         const nodeIndex = this.nodePositions.length;
         let returnValue;
@@ -102,12 +103,14 @@ class CustomVisualiser
         {
             this.showStart(e);
             this.showGoal(e.end);
+            this.endNode = e.id;
         }
         if(e.type === "generating")
         {
 
             if(e.x !== undefined && e.y !== undefined)
             {
+                //this.max = max(this.max)({x:x,y:y});
                 this.nodePositions.push({id:e.id,fixed:true,x:e.x,y:e.y});
                 returnValue = true;
 
@@ -140,7 +143,6 @@ class CustomVisualiser
 
     addNodeFromEvent(e)
     {
-        console.log(this.nodes);
         if(this.endNode !== e.id && this.nodes[e.id] !== undefined )
         {
             this.setNodeValues(e);
@@ -171,12 +173,18 @@ class CustomVisualiser
                 e.variables = [];
             //Draw an svg of that type with those perameters
             newElement = this.svgObj[e.svgType](e.variables);
-
+            if((this.map !== undefined && this.map !==null) && (e.svgType == "GridSpace" || e.svgType == "Node" || e.svgType == "RoadNode") && this.map.hasKey(e.id))
+            {
+                this.map.reveal(e.id,10);
+                this.map.removeNode(e.id);
+            }
         }
         else
         {
             console.log("NO SVG DATA GIVEN")
         }
+
+
         const point = this.nodePositions[this.positionIndecies[e.id]];
         newElement.translate(point.x,point.y);
         newElement.attr('initialStroke',newElement.attr('stroke'));
@@ -214,9 +222,6 @@ class CustomVisualiser
 
             this.nodes[e.id].svg.observeEvent('mousedown')
                 .subscribe(f=>{
-                    //Delete last box
-                    this.deleteFloatBox();
-
                     //Step the current record
                     currentRecord = (currentRecord + 1)%this.nodes[e.id].records.length;
 
@@ -225,25 +230,20 @@ class CustomVisualiser
 
                     //Update lines and node state
                     this.drawLine(0,e.id,currentRecord);
-                    this.setNodeState(e.id,this.nodes.records[currentRecord].state);
                 });
 
             this.generateFloatBox(a.clientX,a.clientY,e.id,currentRecord);
             this.drawLine(0,e.id);
 
             this.nodes[e.id].outgoingEdges.forEach(e=>this.activateEdge(e,2));
-            //this.getLastRecord(e.id).forEach(e=>this.activateEdge(e,2));
             this.nodes[e.id].svg.observeEvent('mouseout')
                 .subscribe(ev =>{
                     this.svg.setAttribute('stroke-opacity',1);
                     this.svg.setAttribute('fill-opacity',1);
                     this.nodes[e.id].outgoingEdges.forEach(l=>this.activateEdge(l,-1));
-                    //this.getLastRecord(e.id).forEach(l=>this.activateEdge(l,-1));
                     this.deleteLine(0);
                     this.unhighlightNode(e.id);
                     this.renderLine(1);
-                    console.log(this.nodes[e.id].records);
-                    this.setNodeState(e.id,this.getLastRecord(e.id).state)
                 });
         });
 
@@ -286,8 +286,8 @@ class CustomVisualiser
             const p2 = add(base)(multiply(perp)(this.scale*0.4));
             const p3 = add(base)(multiply(perp)(-this.scale*0.4));
 
-            triangle = new Elem(this.svg,'path',false).attr("d","M"+p1.x+" "+p1.y+" L"+p2.x+" "+p2.y+" L"+p3.x + " " + p3.y+" Z").attr('fill','#011627').attr('stroke-width',this.scale*this.strokeScale*2);
-            fill = new Elem(this.svg, 'line', false).attr('x1', parentPosition.x).attr('y1', parentPosition.y).attr('x2', base.x).attr('y2', base.y).attr('stroke-width',this.scale*this.strokeScale*2).addClass('line');
+            triangle = new Elem(this.svg,'path',elemType.line).attr("d","M"+p1.x+" "+p1.y+" L"+p2.x+" "+p2.y+" L"+p3.x + " " + p3.y+" Z").attr('fill','#011627').attr('stroke-width',this.scale*this.strokeScale*2);
+            fill = new Elem(this.svg, 'line', elemType.line).attr('x1', parentPosition.x).attr('y1', parentPosition.y).attr('x2', base.x).attr('y2', base.y).attr('stroke-width',this.scale*this.strokeScale*2).addClass('line');
 
             textX = turnPoint.x;
             textY = turnPoint.y;
@@ -295,12 +295,12 @@ class CustomVisualiser
         else
         {
             triangle = new Elem(this.svg,'circle');
-            fill   = new Elem(this.svg,'path',false).attr("d","M"+node.svg.attr('cx')+','+node.svg.attr('cy')+" A"+this.nodeSize+" "+this.nodeSize+" 0 1 1 "+(Number(node.svg.attr('cx'))-1+','+node.svg.attr('cy'))).attr('fill',"none").attr('stroke','#011627').attr('stroke-width',1);
+            fill   = new Elem(this.svg,'path',elemType.line).attr("d","M"+node.svg.attr('cx')+','+node.svg.attr('cy')+" A"+this.nodeSize+" "+this.nodeSize+" 0 1 1 "+(Number(node.svg.attr('cx'))-1+','+node.svg.attr('cy'))).attr('fill',"none").attr('stroke','#011627').attr('stroke-width',1);
 
             textX = node.svg.attr('cx')-5;
             textY = Number(node.svg.attr('cy'))+30;
         }
-        const weight = new Elem(this.svg,'text').attr('x',textX).attr('y',textY).attr('font-size',this.nodeSize/2).attr('fill','black').attr('stroke-width',0);
+        const weight = new Elem(this.svg,'text',elemType.line).attr('x',textX).attr('y',textY).attr('font-size',this.nodeSize/2).attr('fill','black').attr('stroke-width',0);
 
         const weightText = weightValue === null ? this.getLastRecord(node.id).eventData.g - this.getLastRecord(parent.id).eventData.g : weightValue;
 
@@ -322,8 +322,9 @@ class CustomVisualiser
         }
         //Get each node on path
         const pointList = (id,recNum,list)=> {
-            if(id !== null && id !== undefined)
+            if(id !== null && id !== "null" && id !== undefined)
             {
+                console.log(id);
                 return pointList(this.getRecord(id,recNum).pId,this.getRecord(id,recNum).pRecord, list.concat([{id:id,pR:this.getRecord(id,recNum).pRecord}]))
             }else{
               return list;
@@ -334,6 +335,7 @@ class CustomVisualiser
 
         //Change their stroke color
         this.lineVisual[index] = pointList(childId,recordNumber,[]);
+
         this.renderLine(index);
 
     }
@@ -357,8 +359,8 @@ class CustomVisualiser
                     {
                         const parent = this.getRecord(id,pR).pId;
                         if(parent !== undefined && this.nodes[parent] !== undefined){
-                            const line = this.nodes[parent].outgoingEdges.filter(l=>l.cId == id)[0];
-
+                            const line = this.nodes[parent].outgoingEdges.filter(l=>l.cId === id)[0];
+                            //console.log("Line info:",this.nodes[parent].outgoingEdges.filter(l=>l.cId === id),this.nodes[parent].outgoingEdges);
                             this.activateEdge(line,Math.min(render?lineIndex:-1,3));
                         }
 
@@ -402,11 +404,10 @@ class CustomVisualiser
         const currentRecord = records[records.length-1];
         const newRecord =
         {
-            state:"inFrontier",
             eventData:{},
             children:currentRecord.children
         };
-
+        Object.keys(currentRecord).forEach(k=>newRecord.eventData[k] = currentRecord[k]);
         Object.keys(event).forEach(k=>newRecord.eventData[k] = event[k]);
 
         //set parent if different
@@ -434,28 +435,26 @@ class CustomVisualiser
 
         this.nodes[event.id].records.push(newRecord);
     }
-    getNodeData(e,r)
+    getNodeData(id,r)
     {
-        const records = this.nodes[e.id].records;
-        const currentRecord = records[r !== undefined? r : records.length-1];
-        return{
-            id:e.id,
-            h:currentRecord.h,
-            g:currentRecord.g,
-            f:currentRecord.f,
-            pId:currentRecord.pId,
-            pr:currentRecord.pRecord
-        }
+        const currentRecord = r !== undefined ? this.getRecord(id,r) : this.getLastRecord(id);
+        const returnObject = {};
+        Object.keys(currentRecord.eventData).forEach(key => returnObject[key] = currentRecord.eventData[key]);
+        returnObject['id'] = id;
+        returnObject['pId'] = currentRecord.pId;
+        returnObject['pRecord'] = currentRecord.pRecord;
+        if(returnObject['h'] === undefined) returnObject['h'] = currentRecord.eventData.f - currentRecord.eventData.g;
+        return returnObject;
     }
     getNodePosition(id)
     {
         return this.nodes[id].svg.getTransform();
     }
-    getParentData(e)
+    getParentData(id)
     {
 
-        const currentNode = this.getNodeData(e);
-        return currentNode.pId != null && currentNode.pId != "null" ? this.getNodeData({id:currentNode.pId}) : null;
+        const currentNode = this.getNodeData(id);
+        return currentNode.pId != null && currentNode.pId != "null" ? this.getNodeData(currentNode.pId) : null;
     }
     activateEdge(e,index)
     {
@@ -498,14 +497,13 @@ class CustomVisualiser
 
     generateFloatBox(mouseX,mouseY,id,recordNumber = -1) {
 
-
+        console.log(id,this.nodes,this.nodes[id]);
         const record = recordNumber !== -1 ? this.getRecord(id,recordNumber) : this.getLastRecord(id);
-        console.log(record);
         const svg =document.getElementById("svg");
         //Calculate position based on parent position
         const parent = this.nodes[record.pId];
 
-        const xDir = record.pId !== null ? Math.sign(Number(this.nodes[id].svg.attr('cx')) -Number(parent.svg.attr('cx'))):0;
+        const xDir = record.pId !== null  && record.pId !== "null" ? Math.sign(Number(this.nodes[id].svg.attr('cx')) -Number(parent.svg.attr('cx'))):0;
         const yDir = xDir === 0? 1 : record.pId !== null ? Math.sign(Number(this.nodes[id].svg.attr('cy')) -Number(parent.svg.attr('cy'))):-1;
 
         const xOffset = 100*xDir;
@@ -513,7 +511,7 @@ class CustomVisualiser
 
         const newX = mouseX + xOffset;//These offsets correspond to the svg
         const newY = mouseY + yOffset;
-
+        console.log("New coords :",newX,newY);
         //Hand position and node data to fbController to generate the box, get the returned box
         const fb = this.floatBoxControl.generateFloatBox(newX,newY,this.nodes[id],recordNumber);
 
@@ -541,7 +539,6 @@ class CustomVisualiser
             //Show all edges
             this.lineToggle = true;
             this.showLines();
-            //Object.keys(this.nodes).forEach(k=>this.nodes[k].outgoingEdges.forEach(edge=>this.showEdge(edge)));
         }
         if(type === "Off" || type === "On Mouse Over")
         {
@@ -729,7 +726,13 @@ class CustomVisualiser
     }
     getRecord(id,i)
     {
+        console.log(id,this.nodes,this.nodes[0].records);
         const records = this.nodes[id].records;
         return records[i];
+    }
+
+    getInternalId(x,y)
+    {
+        return this.max.x*y + x;
     }
 }

@@ -32,7 +32,9 @@
 				<!-- Nav -->
 					<nav id="nav">
 						<ul>
-							<li><a href="#console" class="active">Debugger</a></li>
+							<li><a href="#console" class="active">Introduction</a></li>
+							<li><a href="#gettingStarted">Getting Started</a></li>
+							<li><a href="#gettingYourHandsDirty">Getting your hands dirty</a></li>
 							<li><a href="#about">About Us</a></li>
 						</ul>
 					</nav>
@@ -43,31 +45,73 @@
 						<!-- Console -->
 							<section id="console" class="main special">
 								<div class="spotlight">
-									<div class="content">
+									<div class="content" style="margin-left: 10%;margin-right: 10%">
 										<header class="major">
-											<h2>Debugger Features</h2>
-                                            <p>What makes us different</p>
+											<h2>Introduction</h2>
 										</header>
-										<img height="1100x" width="960px" src="images/sshot2.png">
-                                        <br>
-                                        <br>
-                                        <br>
-
-                                        <ul class="actions">
-                                            <li>Initialize console to check it out now!</li>
-                                            <li><a href="console" class="button">Console</a></li>
-                                        </ul>
+										<h3> What is this? </h3>
+										<p style="text-align: left">
+											The Pathfinding Debugger is aptly named. It is a tool which has been built to
+											visualise pathfinding problems for primarily debugging purposes. This portable
+											web app has been developed with the goal of being able to visualise any kind
+											of search.
+										</p>
+										<h3> Why is this?</h3>
+										<p style="text-align: left">
+											The motivation behind the project is twofold. Firstly we wanted to provide a
+											more elegant approach to debugging pathfinding algorithms. Secondly we wanted
+											to provide a platform for pathfinding researchers to share and explain their works
+											by using the power of visualisation.
+										</p>
+										<h3>What makes it different?</h3>
+										<p style="text-align: left">
+											We have all seen many pathfinding visualisers. These are tools that can be
+											greatly explanatory, however you cannot debug your own code with them. To
+											debug your own code with a visualiser would typically mean you need to make a
+											debugger that works with your code. This is the problem which this tool fixes.
+										</p>
+										<h3>How does it work?</h3>
+										<p style="text-align: left">
+											The debugger makes use of a JSON file format as an intermediary between your
+											search engine and the debugger to allow for maximum portability. It doesn't
+											matter if your programming in C++ or Malbolge, as long as you can output a
+                                            file this program is for you.
+										</p>
 
 									</div>
 								</div>
 							</section>
+						<!-- About Us Section -->
+						<section id="gettingStarted" class="main special">
+							<header class="major">
+								<h2>Getting Started</h2>
+							</header>
+                            The best place to start is with the samples. If you are running this from github or a local
+                            host then the sample files are available from the samples tab in the debugger. this can be
+                            found here.
+                            *INSERT IMAGE*
+                            Currently we have three classes of searches to sample between.
+                            Grid holds a list of grid based
+                            search algorithms. From the classic Breath First Search to the cutting edge Jump Point Search.
+                            Graph holds a mix of graph searches from a 1d tile problem and Road hog.
+                            <ul class="actions">
+                                <li>Get started now! </li>
+                                <li><a href="console" class="button">Console</a></li>
+                            </ul>
+						</section>
+						<section id="gettingYourHandsDirty" class="main special">
+							<header class="major">
+								<h2>Getting your hands dirty</h2>
+							</header>
+							Texty Text
 
+						</section>
 						<!-- About Us Section -->
 							<section id="about" class="main special">
 								<header class="major">
 									<h2>About Us</h2>
                                     <p>As part of the units: FIT1041 and FIT2028 at Monash University, this is a research project supervised by Daniel Harabor and Michael Wybrow, and conducted by Jay John Wingate and Surayez Rahman</p>
-
+									<p>The project was then continued by Jay Wingate under a summer scholarship supervised by Daniel Harabor and Michael Wybrow</p>
 
                                 </header>
 
