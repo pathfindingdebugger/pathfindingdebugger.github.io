@@ -176,24 +176,25 @@ class Map
     {
         if(this.type === "Grid")
         {
-            this.bgObject.removeElement();
-            if(this.bgObject !== null)
-            {
 
+            if(this.bgObject != null)
+            {
                 this.bgObject = null;
             }
             if (this.nodes !== null) {
                 for (let i = 0; i < this.mapHeight; i++) {
                     for (let j = 0; j < this.mapWidth; j++) {
                         if(this.nodes[i * this.mapWidth + j] !== undefined && typeof (this.nodes[i*this.mapWidth + j]) !== "function")
+                        {
                             this.nodes[i * this.mapWidth + j].removeElement();
+                        }
                     }
                 }
             }
         }
         if(this.type === "Graphs")
         {
-            Object.keys(this.nodes).forEach(e=>typeof(e) !== "function" ? console.log(e)/*.removeElement()*/:null);
+            Object.keys(this.nodes).forEach(e=>typeof(e) !== "function" ? e.removeElement():null);
             Object.keys(this.lines).forEach(edgeObj=>Object.values(edgeObj).forEach(e=>typeof(e) === "function" ? null : e.removeElement()));
         }
         if(this.type === "Polygon")

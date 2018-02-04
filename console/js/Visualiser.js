@@ -324,7 +324,6 @@ class CustomVisualiser
         const pointList = (id,recNum,list)=> {
             if(id !== null && id !== "null" && id !== undefined)
             {
-                console.log(id);
                 return pointList(this.getRecord(id,recNum).pId,this.getRecord(id,recNum).pRecord, list.concat([{id:id,pR:this.getRecord(id,recNum).pRecord}]))
             }else{
               return list;
@@ -497,7 +496,6 @@ class CustomVisualiser
 
     generateFloatBox(mouseX,mouseY,id,recordNumber = -1) {
 
-        console.log(id,this.nodes,this.nodes[id]);
         const record = recordNumber !== -1 ? this.getRecord(id,recordNumber) : this.getLastRecord(id);
         const svg =document.getElementById("svg");
         //Calculate position based on parent position
@@ -511,7 +509,6 @@ class CustomVisualiser
 
         const newX = mouseX + xOffset;//These offsets correspond to the svg
         const newY = mouseY + yOffset;
-        console.log("New coords :",newX,newY);
         //Hand position and node data to fbController to generate the box, get the returned box
         const fb = this.floatBoxControl.generateFloatBox(newX,newY,this.nodes[id],recordNumber);
 
@@ -726,7 +723,6 @@ class CustomVisualiser
     }
     getRecord(id,i)
     {
-        console.log(id,this.nodes,this.nodes[0].records);
         const records = this.nodes[id].records;
         return records[i];
     }
