@@ -1,0 +1,179 @@
+wgm: false
+id	alg	expd	gend	touched	time	cost	sfile
+search: startid=1994 goalid=14773
+expanding (74, 15)...search_node id:1994 g: 0 f: 108.698 expanded: 0  pdir: 0 
+  generating (86, 30)...search_node id:3926 g: 19.9704 f: 118.639 expanded: 0  pdir: 2 
+  generating (70, 16)...search_node id:2118 g: 4.4142 f: 110.456 expanded: 0  pdir: 8 
+closing (74, 15)...search_node id:1994 g: 0 f: 108.698 expanded: 1  pdir: 0 
+expanding (70, 16)...search_node id:2118 g: 4.4142 f: 110.456 expanded: 0  pdir: 8 
+closing (70, 16)...search_node id:2118 g: 4.4142 f: 110.456 expanded: 1  pdir: 8 
+expanding (86, 30)...search_node id:3926 g: 19.9704 f: 118.639 expanded: 0  pdir: 2 
+  generating (85, 32)...search_node id:4181 g: 22.3846 f: 118.639 expanded: 0  pdir: 2 
+closing (86, 30)...search_node id:3926 g: 19.9704 f: 118.639 expanded: 1  pdir: 2 
+expanding (85, 32)...search_node id:4181 g: 22.3846 f: 118.639 expanded: 0  pdir: 2 
+  generating (84, 34)...search_node id:4436 g: 24.7988 f: 118.639 expanded: 0  pdir: 2 
+closing (85, 32)...search_node id:4181 g: 22.3846 f: 118.639 expanded: 1  pdir: 2 
+expanding (84, 34)...search_node id:4436 g: 24.7988 f: 118.639 expanded: 0  pdir: 2 
+  generating (83, 36)...search_node id:4691 g: 27.213 f: 118.639 expanded: 0  pdir: 2 
+closing (84, 34)...search_node id:4436 g: 24.7988 f: 118.639 expanded: 1  pdir: 2 
+expanding (83, 36)...search_node id:4691 g: 27.213 f: 118.639 expanded: 0  pdir: 2 
+  generating (82, 38)...search_node id:4946 g: 29.6272 f: 118.639 expanded: 0  pdir: 2 
+closing (83, 36)...search_node id:4691 g: 27.213 f: 118.639 expanded: 1  pdir: 2 
+expanding (82, 38)...search_node id:4946 g: 29.6272 f: 118.639 expanded: 0  pdir: 2 
+  generating (81, 40)...search_node id:5201 g: 32.0414 f: 118.639 expanded: 0  pdir: 2 
+closing (82, 38)...search_node id:4946 g: 29.6272 f: 118.639 expanded: 1  pdir: 2 
+expanding (81, 40)...search_node id:5201 g: 32.0414 f: 118.639 expanded: 0  pdir: 2 
+  generating (79, 40)...search_node id:5199 g: 34.0414 f: 119.811 expanded: 0  pdir: 8 
+  generating (75, 42)...search_node id:5451 g: 38.8698 f: 120.982 expanded: 0  pdir: 8 
+closing (81, 40)...search_node id:5201 g: 32.0414 f: 118.639 expanded: 1  pdir: 2 
+expanding (79, 40)...search_node id:5199 g: 34.0414 f: 119.811 expanded: 0  pdir: 8 
+  generating (77, 40)...search_node id:5197 g: 36.0414 f: 120.982 expanded: 0  pdir: 8 
+closing (79, 40)...search_node id:5199 g: 34.0414 f: 119.811 expanded: 1  pdir: 8 
+expanding (75, 42)...search_node id:5451 g: 38.8698 f: 120.982 expanded: 0  pdir: 8 
+  generating (70, 46)...search_node id:5958 g: 45.5266 f: 121.568 expanded: 0  pdir: 8 
+closing (75, 42)...search_node id:5451 g: 38.8698 f: 120.982 expanded: 1  pdir: 8 
+expanding (77, 40)...search_node id:5197 g: 36.0414 f: 120.982 expanded: 0  pdir: 8 
+  generating (65, 40)...search_node id:5185 g: 48.0414 f: 128.012 expanded: 0  pdir: 8 
+  generating (76, 36)...search_node id:4684 g: 40.4556 f: 128.982 expanded: 0  pdir: 1 
+  generating (70, 34)...search_node id:4422 g: 45.5266 f: 133.568 expanded: 0  pdir: 8 
+closing (77, 40)...search_node id:5197 g: 36.0414 f: 120.982 expanded: 1  pdir: 8 
+expanding (70, 46)...search_node id:5958 g: 45.5266 f: 121.568 expanded: 0  pdir: 8 
+  generating (70, 48)...search_node id:6214 g: 47.5266 f: 121.568 expanded: 0  pdir: 2 
+  generating (58, 47)...search_node id:6074 g: 57.9408 f: 128.012 expanded: 0  pdir: 8 
+closing (70, 46)...search_node id:5958 g: 45.5266 f: 121.568 expanded: 1  pdir: 8 
+expanding (70, 48)...search_node id:6214 g: 47.5266 f: 121.568 expanded: 0  pdir: 2 
+closing (70, 48)...search_node id:6214 g: 47.5266 f: 121.568 expanded: 1  pdir: 2 
+expanding (58, 47)...search_node id:6074 g: 57.9408 f: 128.012 expanded: 0  pdir: 8 
+  generating (56, 48)...search_node id:6200 g: 60.355 f: 128.598 expanded: 0  pdir: 8 
+closing (58, 47)...search_node id:6074 g: 57.9408 f: 128.012 expanded: 1  pdir: 8 
+expanding (65, 40)...search_node id:5185 g: 48.0414 f: 128.012 expanded: 0  pdir: 8 
+  generating (62, 40)...search_node id:5182 g: 51.0414 f: 129.769 expanded: 0  pdir: 8 
+  generating (59, 38)...search_node id:4923 g: 54.8698 f: 134.355 expanded: 0  pdir: 8 
+  generating (62, 35)...search_node id:4542 g: 54.284 f: 138.012 expanded: 0  pdir: 1 
+closing (65, 40)...search_node id:5185 g: 48.0414 f: 128.012 expanded: 1  pdir: 8 
+expanding (56, 48)...search_node id:6200 g: 60.355 f: 128.598 expanded: 0  pdir: 8 
+  generating (56, 50)...search_node id:6456 g: 62.355 f: 128.598 expanded: 0  pdir: 2 
+  generating (54, 48)...search_node id:6198 g: 62.355 f: 129.769 expanded: 0  pdir: 8 
+  generating (54, 56)...search_node id:7222 g: 69.1834 f: 128.598 expanded: 0  pdir: 2 
+  generating (45, 53)...search_node id:6829 g: 73.426 f: 138.74 expanded: 0  pdir: 8 
+  generating (50, 65)...search_node id:8370 g: 79.8402 f: 131.083 expanded: 0  pdir: 2 
+  generating (41, 55)...search_node id:7081 g: 78.2544 f: 143.225 expanded: 0  pdir: 8 
+  generating (48, 87)...search_node id:11184 g: 102.669 f: 132.74 expanded: 0  pdir: 2 
+  generating (46, 77)...search_node id:9902 g: 93.497 f: 134.396 expanded: 0  pdir: 2 
+  generating (37, 64)...search_node id:8229 g: 85.9822 f: 143.609 expanded: 0  pdir: 8 
+  generating (36, 74)...search_node id:9508 g: 94.639 f: 142.68 expanded: 0  pdir: 2 
+  generating (34, 80)...search_node id:10274 g: 101.467 f: 144.337 expanded: 0  pdir: 2 
+  generating (30, 71)...search_node id:9118 g: 95.8816 f: 149.408 expanded: 0  pdir: 8 
+  generating (21, 75)...search_node id:9621 g: 106.538 f: 159.793 expanded: 0  pdir: 8 
+  generating (26, 85)...search_node id:10906 g: 109.781 f: 150.964 expanded: 0  pdir: 2 
+  generating (17, 78)...search_node id:10001 g: 111.781 f: 163.692 expanded: 0  pdir: 8 
+closing (56, 48)...search_node id:6200 g: 60.355 f: 128.598 expanded: 1  pdir: 8 
+expanding (54, 56)...search_node id:7222 g: 69.1834 f: 128.598 expanded: 0  pdir: 2 
+  generating (57, 68)...search_node id:8761 g: 82.426 f: 131.083 expanded: 0  pdir: 2 
+  generating (68, 64)...search_node id:8260 g: 86.497 f: 143.71 expanded: 0  pdir: 4 
+  generating (72, 65)...search_node id:8392 g: 90.9112 f: 148.781 expanded: 0  pdir: 4 
+  generating (79, 66)...search_node id:8527 g: 98.3254 f: 158.095 expanded: 0  pdir: 4 
+  generating (66, 76)...search_node id:9794 g: 94.1538 f: 138.538 expanded: 0  pdir: 2 
+  generating (73, 88)...search_node id:11337 g: 109.053 f: 144.337 expanded: 0  pdir: 2 
+  generating (83, 79)...search_node id:10195 g: 107.71 f: 156.136 expanded: 0  pdir: 4 
+closing (54, 56)...search_node id:7222 g: 69.1834 f: 128.598 expanded: 1  pdir: 2 
+expanding (56, 50)...search_node id:6456 g: 62.355 f: 128.598 expanded: 0  pdir: 2 
+closing (56, 50)...search_node id:6456 g: 62.355 f: 128.598 expanded: 1  pdir: 2 
+expanding (76, 36)...search_node id:4684 g: 40.4556 f: 128.982 expanded: 0  pdir: 1 
+  generating (78, 30)...search_node id:3918 g: 47.284 f: 142.639 expanded: 0  pdir: 1 
+closing (76, 36)...search_node id:4684 g: 40.4556 f: 128.982 expanded: 1  pdir: 1 
+expanding (54, 48)...search_node id:6198 g: 62.355 f: 129.769 expanded: 0  pdir: 8 
+  generating (50, 46)...search_node id:5938 g: 67.1834 f: 137.426 expanded: 0  pdir: 8 
+closing (54, 48)...search_node id:6198 g: 62.355 f: 129.769 expanded: 1  pdir: 8 
+expanding (62, 40)...search_node id:5182 g: 51.0414 f: 129.769 expanded: 0  pdir: 8 
+  generating (55, 40)...search_node id:5175 g: 58.0414 f: 133.87 expanded: 0  pdir: 8 
+closing (62, 40)...search_node id:5182 g: 51.0414 f: 129.769 expanded: 1  pdir: 8 
+expanding (57, 68)...search_node id:8761 g: 82.426 f: 131.083 expanded: 0  pdir: 2 
+  generating (57, 72)...search_node id:9273 g: 86.426 f: 131.083 expanded: 0  pdir: 2 
+  generating (53, 68)...search_node id:8757 g: 86.426 f: 133.426 expanded: 0  pdir: 8 
+  generating (53, 69)...search_node id:8885 g: 86.8402 f: 132.84 expanded: 0  pdir: 8 
+closing (57, 68)...search_node id:8761 g: 82.426 f: 131.083 expanded: 1  pdir: 2 
+expanding (57, 72)...search_node id:9273 g: 86.426 f: 131.083 expanded: 0  pdir: 2 
+  generating (57, 77)...search_node id:9913 g: 91.426 f: 131.083 expanded: 0  pdir: 2 
+  generating (53, 72)...search_node id:9269 g: 90.426 f: 133.426 expanded: 0  pdir: 8 
+  generating (54, 86)...search_node id:11062 g: 101.669 f: 131.083 expanded: 0  pdir: 2 
+  generating (41, 78)...search_node id:10025 g: 104.911 f: 146.882 expanded: 0  pdir: 8 
+  updating (48, 87)...search_node id:11184 g: 102.669 f: 132.74 expanded: 0  pdir: 2 
+  generating (38, 82)...search_node id:10534 g: 109.568 f: 148.781 expanded: 0  pdir: 8 
+closing (57, 72)...search_node id:9273 g: 86.426 f: 131.083 expanded: 1  pdir: 2 
+expanding (54, 86)...search_node id:11062 g: 101.669 f: 131.083 expanded: 0  pdir: 2 
+  generating (55, 88)...search_node id:11319 g: 104.083 f: 131.911 expanded: 0  pdir: 2 
+closing (54, 86)...search_node id:11062 g: 101.669 f: 131.083 expanded: 1  pdir: 2 
+expanding (57, 77)...search_node id:9913 g: 91.426 f: 131.083 expanded: 0  pdir: 2 
+  generating (60, 81)...search_node id:10428 g: 96.6686 f: 133.568 expanded: 0  pdir: 2 
+closing (57, 77)...search_node id:9913 g: 91.426 f: 131.083 expanded: 1  pdir: 2 
+expanding (50, 65)...search_node id:8370 g: 79.8402 f: 131.083 expanded: 0  pdir: 2 
+  updating (53, 72)...search_node id:9269 g: 88.0828 f: 131.083 expanded: 0  pdir: 2 
+  generating (57, 69)...search_node id:8889 g: 88.497 f: 136.154 expanded: 0  pdir: 4 
+closing (50, 65)...search_node id:8370 g: 79.8402 f: 131.083 expanded: 1  pdir: 2 
+expanding (53, 72)...search_node id:9269 g: 88.0828 f: 131.083 expanded: 0  pdir: 2 
+closing (53, 72)...search_node id:9269 g: 88.0828 f: 131.083 expanded: 1  pdir: 2 
+expanding (55, 88)...search_node id:11319 g: 104.083 f: 131.911 expanded: 0  pdir: 2 
+  generating (58, 88)...search_node id:11322 g: 107.083 f: 136.154 expanded: 0  pdir: 4 
+closing (55, 88)...search_node id:11319 g: 104.083 f: 131.911 expanded: 1  pdir: 2 
+expanding (48, 87)...search_node id:11184 g: 102.669 f: 132.74 expanded: 0  pdir: 2 
+  generating (47, 92)...search_node id:11823 g: 108.083 f: 133.568 expanded: 0  pdir: 2 
+  generating (46, 100)...search_node id:12846 g: 116.497 f: 134.396 expanded: 0  pdir: 2 
+  generating (44, 89)...search_node id:11436 g: 107.497 f: 137.225 expanded: 0  pdir: 8 
+  generating (43, 94)...search_node id:12075 g: 111.74 f: 136.882 expanded: 0  pdir: 2 
+closing (48, 87)...search_node id:11184 g: 102.669 f: 132.74 expanded: 1  pdir: 2 
+expanding (53, 69)...search_node id:8885 g: 86.8402 f: 132.84 expanded: 0  pdir: 8 
+  updating (46, 77)...search_node id:9902 g: 93.497 f: 134.396 expanded: 0  pdir: 2 
+closing (53, 69)...search_node id:8885 g: 86.8402 f: 132.84 expanded: 1  pdir: 8 
+expanding (53, 68)...search_node id:8757 g: 86.426 f: 133.426 expanded: 0  pdir: 8 
+  generating (38, 68)...search_node id:8742 g: 101.426 f: 154.639 expanded: 0  pdir: 8 
+  generating (50, 61)...search_node id:7858 g: 94.6686 f: 149.911 expanded: 0  pdir: 1 
+  updating (37, 64)...search_node id:8229 g: 85.9822 f: 143.609 expanded: 0  pdir: 8 
+  generating (47, 48)...search_node id:6191 g: 108.911 f: 178.396 expanded: 0  pdir: 1 
+  generating (44, 53)...search_node id:6828 g: 105.154 f: 170.882 expanded: 0  pdir: 1 
+closing (53, 68)...search_node id:8757 g: 86.426 f: 133.426 expanded: 1  pdir: 8 
+expanding (47, 92)...search_node id:11823 g: 108.083 f: 133.568 expanded: 0  pdir: 2 
+closing (47, 92)...search_node id:11823 g: 108.083 f: 133.568 expanded: 1  pdir: 2 
+expanding (60, 81)...search_node id:10428 g: 96.6686 f: 133.568 expanded: 0  pdir: 2 
+  generating (64, 81)...search_node id:10432 g: 100.669 f: 139.225 expanded: 0  pdir: 4 
+  generating (61, 85)...search_node id:10941 g: 101.083 f: 134.396 expanded: 0  pdir: 2 
+  generating (70, 82)...search_node id:10566 g: 107.083 f: 147.124 expanded: 0  pdir: 4 
+closing (60, 81)...search_node id:10428 g: 96.6686 f: 133.568 expanded: 1  pdir: 2 
+expanding (70, 34)...search_node id:4422 g: 45.5266 f: 133.568 expanded: 0  pdir: 8 
+  generating (70, 29)...search_node id:3782 g: 50.5266 f: 143.568 expanded: 0  pdir: 1 
+  generating (68, 31)...search_node id:4036 g: 49.355 f: 139.568 expanded: 0  pdir: 1 
+closing (70, 34)...search_node id:4422 g: 45.5266 f: 133.568 expanded: 1  pdir: 8 
+expanding (55, 40)...search_node id:5175 g: 58.0414 f: 133.87 expanded: 0  pdir: 8 
+  generating (55, 36)...search_node id:4663 g: 62.0414 f: 141.87 expanded: 0  pdir: 1 
+  generating (53, 37)...search_node id:4789 g: 61.8698 f: 139.87 expanded: 0  pdir: 1 
+closing (55, 40)...search_node id:5175 g: 58.0414 f: 133.87 expanded: 1  pdir: 8 
+expanding (59, 38)...search_node id:4923 g: 54.8698 f: 134.355 expanded: 0  pdir: 8 
+  generating (59, 36)...search_node id:4667 g: 56.8698 f: 138.355 expanded: 0  pdir: 1 
+closing (59, 38)...search_node id:4923 g: 54.8698 f: 134.355 expanded: 1  pdir: 8 
+expanding (46, 100)...search_node id:12846 g: 116.497 f: 134.396 expanded: 0  pdir: 2 
+  generating (46, 107)...search_node id:13742 g: 123.497 f: 134.396 expanded: 0  pdir: 2 
+  generating (49, 101)...search_node id:12977 g: 119.911 f: 135.568 expanded: 0  pdir: 4 
+  generating (48, 107)...search_node id:13744 g: 124.325 f: 134.396 expanded: 0  pdir: 2 
+closing (46, 100)...search_node id:12846 g: 116.497 f: 134.396 expanded: 1  pdir: 2 
+expanding (48, 107)...search_node id:13744 g: 124.325 f: 134.396 expanded: 0  pdir: 2 
+  generating (52, 108)...search_node id:13876 g: 128.74 f: 136.154 expanded: 0  pdir: 4 
+  generating (53, 115)...search_node id:14773 g: 134.396 f: 134.396 expanded: 0  pdir: 2 
+closing (48, 107)...search_node id:13744 g: 124.325 f: 134.396 expanded: 1  pdir: 2 
+goal found (53, 115)...search_node id:14773 g: 134.396 f: 134.396 expanded: 0  pdir: 2 
+final path: (74, 15)...search_node id:1994 g: 0 f: 108.698 expanded: 1  pdir: 0 
+final path: (86, 30)...search_node id:3926 g: 19.9704 f: 118.639 expanded: 1  pdir: 2 
+final path: (85, 32)...search_node id:4181 g: 22.3846 f: 118.639 expanded: 1  pdir: 2 
+final path: (84, 34)...search_node id:4436 g: 24.7988 f: 118.639 expanded: 1  pdir: 2 
+final path: (83, 36)...search_node id:4691 g: 27.213 f: 118.639 expanded: 1  pdir: 2 
+final path: (82, 38)...search_node id:4946 g: 29.6272 f: 118.639 expanded: 1  pdir: 2 
+final path: (81, 40)...search_node id:5201 g: 32.0414 f: 118.639 expanded: 1  pdir: 2 
+final path: (75, 42)...search_node id:5451 g: 38.8698 f: 120.982 expanded: 1  pdir: 8 
+final path: (70, 46)...search_node id:5958 g: 45.5266 f: 121.568 expanded: 1  pdir: 8 
+final path: (58, 47)...search_node id:6074 g: 57.9408 f: 128.012 expanded: 1  pdir: 8 
+final path: (56, 48)...search_node id:6200 g: 60.355 f: 128.598 expanded: 1  pdir: 8 
+final path: (48, 87)...search_node id:11184 g: 102.669 f: 132.74 expanded: 1  pdir: 2 
+final path: (46, 100)...search_node id:12846 g: 116.497 f: 134.396 expanded: 1  pdir: 2 
+final path: (48, 107)...search_node id:13744 g: 124.325 f: 134.396 expanded: 1  pdir: 2 
+final path: (53, 115)...search_node id:14773 g: 134.396 f: 134.396 expanded: 0  pdir: 2 
+0	jps2	38	78	127	4668.12	134.396	../scenarios/local/test.scenario
+done. total memory: 6179704

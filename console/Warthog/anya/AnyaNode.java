@@ -11,6 +11,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class AnyaNode {
+    static int nextId = 0;
+    private int id;
     public AnyaNode parentNode;
     public AnyaInterval interval;
     public Point2D.Double root;
@@ -23,10 +25,12 @@ public class AnyaNode {
        
     public AnyaNode(AnyaNode parent, AnyaInterval interval, int rootx, int rooty)
     {
+
     	this(parent, interval, new Point2D.Double(rootx, rooty));
     }
     
     public AnyaNode(AnyaNode parent, AnyaInterval interval, Point2D.Double root) {
+        this.id = AnyaNode.getNextId();
         this.parentNode = parent;
         this.interval = interval;
         this.root = root;
@@ -80,7 +84,7 @@ public class AnyaNode {
 //        result = 31 * result + (root != null ? root.hashCode() : 0);
 //        return result;
     }
-
+    public int getId(){return id;}
     public AnyaNode getParentNode() {
         return parentNode;
     }
@@ -129,7 +133,11 @@ public class AnyaNode {
         }
         return true;
     }
-    
+    private static int getNextId()
+    {
+        nextId++;
+        return nextId-1;
+    }
     public String toString()
     {
     	return "root: "+root.toString() + " " + interval.toString();

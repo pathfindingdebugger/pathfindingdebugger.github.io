@@ -1,13 +1,14 @@
 function maParser(mapData)
 {
-    const data = mapData.split('\n');
+    const data = mapData.split('\r').split('\n');
 
     data.shift();
 
     const height = Number(data.shift().split(' ').pop());
     const width = Number(data.shift().split(' ').pop());
     data.shift();
-    const mData = data.slice(0,100).reduce((f,e)=>f+e,'');
-
+    const mData = data.reduce((f,e)=>f+e,'');
+    console.log("MapData",width,height,mData);
+    
     return {height:height, width:width, mapData:mData};
 }

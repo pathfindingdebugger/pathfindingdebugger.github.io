@@ -29,6 +29,7 @@ class Map
         mapString = mapData.mapData;
         console.log(mapData);
         this.background = new Elem(this.svg,'rect').attr('x',0).attr('y',0).attr('width',this.tileSize*this.mapWidth).attr('height',this.tileSize*this.mapHeight).attr('fill','black');
+
         const size = parseInt(this.mapWidth) * parseInt(this.mapHeight);
 
         this.nodes = {};
